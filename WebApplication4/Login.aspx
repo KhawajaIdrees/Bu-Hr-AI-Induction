@@ -23,7 +23,7 @@
         .login-card {
             width: 420px;
             border: none;
-            border-radius: 16px;
+            border-radius: 15px;
             box-shadow: 0 10px 40px rgba(45, 57, 141, 0.15) !important;
             padding: 2.25rem 2rem !important;
         }
