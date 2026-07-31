@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 
 <html>
-    <head runat="server">
+<head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Research Publications</title>
@@ -14,178 +14,191 @@
 
     <style>
         body {
-            background:#f4f7fb;
-            font-family:'Segoe UI', Arial, sans-serif;
-            font-size:17px;
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 17px;
         }
 
         .page-title h4 {
-            color:#2D398D;
+            color: #1a3a7a;
+            font-weight: 700;
+        }
+
+        .page-title h5 {
+            color: #6c757d;
         }
 
         .page-title hr {
-            border-top:2px solid #2D398D;
-            opacity:.15;
-            margin:.75rem 0 0;
+            border-top: 3px solid #1a3a7a;
+            opacity: 0.2;
+            width: 100%;
+            margin-top: 5px;
         }
 
         .form-card {
-            max-width:1100px;
-            margin:30px auto 60px;
-            background:white;
-            padding:0;
-            border-radius:16px;
-            box-shadow:0px 8px 30px rgba(45,57,141,.10);
-            overflow:hidden;
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            background: white;
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+            overflow: hidden;
         }
 
         .form-section {
-            padding:36px 45px;
-            border-bottom:1px solid #eef1f8;
+            padding: 36px 45px;
+            border-bottom: 1px solid #eef1f8;
         }
 
         .form-section:last-of-type {
-            border-bottom:none;
+            border-bottom: none;
         }
 
         .section-title {
-            display:flex;
-            align-items:center;
-            gap:10px;
-            color:#2D398D;
-            font-size:19px;
-            font-weight:700;
-            margin-bottom:24px;
-            text-transform:uppercase;
-            letter-spacing:.4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a3a7a;
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
         .section-title i {
-            font-size:20px;
+            font-size: 20px;
         }
 
         .sub-section-title {
-            font-size:15px;
-            font-weight:700;
-            color:#2D398D;
-            text-transform:uppercase;
-            letter-spacing:.3px;
-            border-bottom:1px solid #eef1f8;
-            padding-bottom:8px;
-            margin-top:8px;
-            margin-bottom:18px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a3a7a;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            border-bottom: 1px solid #eef1f8;
+            padding-bottom: 8px;
+            margin-top: 8px;
+            margin-bottom: 18px;
         }
 
         .sub-section-title:first-child {
-            margin-top:0;
+            margin-top: 0;
         }
 
         .form-label {
-            font-size:15px;
-            font-weight:600;
-            color:#44496b;
-            margin-bottom:6px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #44496b;
+            margin-bottom: 6px;
         }
 
         .required-asterisk {
-            color:#dc3545;
-            font-size:15px;
+            color: #dc3545;
+            font-size: 15px;
         }
 
         .form-control,
         .form-select {
-            font-size:15px;
-            height:48px;
-            border-radius:8px;
-            border:1px solid #ced4da;
-            padding:10px 14px;
-            transition:all .2s ease-in-out;
+            font-size: 15px;
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px 14px;
+            transition: all .2s ease-in-out;
         }
 
         .form-control::placeholder {
-            font-size:14px;
-            color:#a3a9bd;
+            font-size: 14px;
+            color: #a3a9bd;
         }
 
         .form-control:focus,
         .form-select:focus {
-            border-color:#2D398D;
-            box-shadow:0 0 0 .2rem rgba(45,57,141,.15);
+            border-color: #1a3a7a;
+            box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
         }
 
         .form-group {
-            margin-bottom:24px;
+            margin-bottom: 24px;
         }
 
         .btn-save {
-            background:#2D398D;
-            color:white;
-            border-radius:8px;
-            padding:14px 55px;
-            font-size:17px;
-            font-weight:600;
-            border:none;
-            transition:all .2s ease-in-out;
+            background: #1a3a7a;
+            color: white;
+            border-radius: 8px;
+            padding: 14px 55px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            transition: all .2s ease-in-out;
         }
 
         .btn-save:hover {
-            background:#232c70;
-            color:white;
-            transform:translateY(-1px);
-            box-shadow:0 6px 16px rgba(45,57,141,.3);
+            background: #2a5aaa;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
         .btn-add {
-            background:#2D398D;
-            color:white;
-            border-radius:8px;
-            padding:12px 34px;
-            font-size:16px;
-            font-weight:600;
-            border:none;
-            transition:all .2s ease-in-out;
+            background: #1a3a7a;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 34px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            transition: all .2s ease-in-out;
         }
 
         .btn-add:hover {
-            background:#232c70;
-            color:white;
-            transform:translateY(-1px);
-            box-shadow:0 6px 16px rgba(45,57,141,.3);
+            background: #2a5aaa;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
         }
 
         .text-danger {
-            font-size:13px;
+            font-size: 13px;
         }
 
         .table th {
-            background-color:#f8faff;
-            color:#2D398D;
-            font-weight:700;
-            font-size:13px;
-            text-transform:uppercase;
-            letter-spacing:.5px;
-            border-bottom:1px solid #eef1f8;
-            white-space:nowrap;
+            background-color: #e8edf5;
+            color: #1a3a7a;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            border-bottom: 2px solid #1a3a7a;
+            text-align: center;
         }
 
         .table td {
-            font-size:15px;
-            color:#44496b;
-            vertical-align:middle;
+            font-size: 15px;
+            color: #44496b;
+            vertical-align: middle;
+            text-align: center;
         }
 
         .table-hover tbody tr:hover {
-            background-color:#f8faff;
+            background-color: #f8faff;
         }
 
         .empty-row {
-            text-align:center;
-            color:#a3a9bd;
-            padding:30px 0;
+            text-align: center;
+            color: #a3a9bd;
+            padding: 30px 0;
         }
 
         .table-responsive-wrap {
-            overflow-x:auto;
+            overflow-x: auto;
+        }
+
+        /* Fix for alignment */
+        .form-group .form-control,
+        .form-group .form-select {
+            width: 100%;
         }
 
         @media(max-width:768px) {
@@ -201,7 +214,8 @@
                 font-size: 14px;
             }
 
-            .form-control, .form-select {
+            .form-control,
+            .form-select {
                 font-size: 14px;
                 height: 44px;
             }
@@ -364,33 +378,34 @@
                     </div>
                 </div>
 
-      <!-- SECTION: Publications List -->
-<div class="form-section">
-    <div class="section-title"><i class="bi bi-list-columns-reverse"></i>Publications List</div>
+                <!-- SECTION: Publications List -->
+                <div class="form-section">
+                    <div class="section-title"><i class="bi bi-list-columns-reverse"></i>Publications List</div>
 
-    <div class="table-responsive-wrap">
-        <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
-            CssClass="table table-hover mb-0" GridLines="None"
-            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" OnSelectedIndexChanged="gvPublications_SelectedIndexChanged">
-            <Columns>
-                <asp:BoundField DataField="ImpactFactor" HeaderText="Impact Factor" />
-                <asp:BoundField DataField="HECPublications" HeaderText="HEC Publications" />
-                <asp:BoundField DataField="ConferencePaper" HeaderText="Conference Paper" />
-                <asp:BoundField DataField="ImpactFactor2" HeaderText="Impact Factor 2" />
-                <asp:BoundField DataField="ConferencePaper2" HeaderText="Conference Paper 2" />
-                <asp:BoundField DataField="WCount" HeaderText="W" />
-                <asp:BoundField DataField="XCount" HeaderText="X" />
-                <asp:BoundField DataField="YCount" HeaderText="Y" />
-                <asp:BoundField DataField="TotalFundedProjects" HeaderText="Funded Projects" />
-                <asp:BoundField DataField="PIProjects" HeaderText="PI" />
-                <asp:BoundField DataField="CoPIProjects" HeaderText="Co-PI" />
-                <asp:BoundField DataField="MSStudents" HeaderText="MS" />
-                <asp:BoundField DataField="MPhilStudents" HeaderText="M.Phil" />
-                <asp:BoundField DataField="PhDStudents" HeaderText="PhD" />
-            </Columns>
-        </asp:GridView>
-    </div>
-</div>
+                    <div class="table-responsive-wrap">
+                        <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
+                            CssClass="table table-hover mb-0" GridLines="None"
+                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" OnSelectedIndexChanged="gvPublications_SelectedIndexChanged">
+                            <Columns>
+                                <asp:BoundField DataField="ImpactFactor" HeaderText="Impact Factor" />
+                                <asp:BoundField DataField="HECPublications" HeaderText="HEC Publications" />
+                                <asp:BoundField DataField="ConferencePaper" HeaderText="Conference Paper" />
+                                <asp:BoundField DataField="ImpactFactor2" HeaderText="Impact Factor 2" />
+                                <asp:BoundField DataField="ConferencePaper2" HeaderText="Conference Paper 2" />
+                                <asp:BoundField DataField="WCount" HeaderText="W" />
+                                <asp:BoundField DataField="XCount" HeaderText="X" />
+                                <asp:BoundField DataField="YCount" HeaderText="Y" />
+                                <asp:BoundField DataField="TotalFundedProjects" HeaderText="Funded Projects" />
+                                <asp:BoundField DataField="PIProjects" HeaderText="PI" />
+                                <asp:BoundField DataField="CoPIProjects" HeaderText="Co-PI" />
+                                <asp:BoundField DataField="MSStudents" HeaderText="MS" />
+                                <asp:BoundField DataField="MPhilStudents" HeaderText="M.Phil" />
+                                <asp:BoundField DataField="PhDStudents" HeaderText="PhD" />
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+
                 <!-- SECTION: Submit -->
                 <div class="form-section text-center">
                     <asp:Button ID="BtnSaveContinue" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnRegister_Click" />
@@ -405,5 +420,4 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

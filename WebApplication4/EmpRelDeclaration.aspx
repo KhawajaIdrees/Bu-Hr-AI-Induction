@@ -9,190 +9,208 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
-    body {
-        background:#f4f7fb;
-        font-family:'Segoe UI', Arial, sans-serif;
-        font-size:17px;
-    }
+    <style>
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 17px;
+        }
 
-    .page-title h4 {
-        color:#2D398D;
-    }
+        .page-title h4 {
+            color: #1a3a7a;
+            font-weight: 700;
+        }
 
-    .page-title hr {
-        border-top:2px solid #2D398D;
-        opacity:.15;
-     
-        margin:.75rem 0 0;
-    }
+        .page-title h5 {
+            color: #6c757d;
+        }
 
-    /* Main Form Card */
-    .form-card {
-        max-width:1100px;
-        margin:30px auto 60px;
-        background:white;
-        padding:45px 50px;
-        border-radius:16px;
-        box-shadow:0px 8px 30px rgba(45,57,141,.10);
-    }
+        .page-title hr {
+            border-top: 3px solid #1a3a7a;
+            opacity: 0.2;
+            width: 100%;
+            margin-top: 5px;
+        }
 
-    /* Section Titles */
-    .section-title {
-        display:flex;
-        align-items:center;
-        gap:10px;
-        font-size:19px;
-        font-weight:700;
-        color:#2D398D;
-        border-bottom:2px solid #eef1f8;
-        padding-bottom:15px;
-        margin-bottom:30px;
-        text-transform:uppercase;
-        letter-spacing:.4px;
-    }
+        /* Main Form Card */
+        .form-card {
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            background: white;
+            padding: 45px 50px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+        }
 
-    .section-title i {
-        font-size:20px;
-    }
+        /* Section Titles */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a3a7a;
+            border-bottom: 2px solid #eef1f8;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
 
-    /* Labels */
-    .form-label {
-        font-size:15px;
-        font-weight:600;
-        color:#44496b;
-        margin-bottom:8px;
-    }
+        .section-title i {
+            font-size: 20px;
+        }
 
-    .required-asterisk {
-        color:#dc3545;
-        font-size:15px;
-    }
+        /* Labels */
+        .form-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #44496b;
+            margin-bottom: 8px;
+        }
 
-    /* Input Fields */
-    .form-control,
-    .form-select {
-        height:48px;
-        font-size:15px;
-        border-radius:8px;
-        border:1px solid #ced4da;
-        padding:10px 14px;
-        transition:all .2s ease-in-out;
-    }
+        .required-asterisk {
+            color: #dc3545;
+            font-size: 15px;
+        }
 
-    .form-control:focus,
-    .form-select:focus {
-        border-color:#2D398D;
-        box-shadow:0 0 0 .2rem rgba(45,57,141,.15);
-    }
+        /* Input Fields */
+        .form-control,
+        .form-select {
+            height: 48px;
+            font-size: 15px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px 14px;
+            transition: all .2s ease-in-out;
+        }
 
-    textarea.form-control {
-        min-height:120px;
-    }
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #1a3a7a;
+            box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
+        }
 
-    /* Placeholder text */
-    .form-control::placeholder {
-        font-size:14px;
-        color:#a3a9bd;
-    }
+        textarea.form-control {
+            min-height: 120px;
+        }
 
-    /* Radio Buttons */
-    .radio-group {
-        font-size:16px;
-        margin-top:10px;
-    }
+        /* Placeholder text */
+        .form-control::placeholder {
+            font-size: 14px;
+            color: #a3a9bd;
+        }
 
-    .radio-group input[type="radio"] {
-        width:18px;
-        height:18px;
-        margin-right:8px;
-        vertical-align:middle;
-        cursor:pointer;
-    }
+        /* Radio Buttons */
+        .radio-group {
+            font-size: 16px;
+            margin-top: 10px;
+        }
 
-    .radio-group input[type="radio"]:checked {
-        background-color:#2D398D;
-        border-color:#2D398D;
-    }
+        .radio-group input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
 
-    .radio-group label {
-        margin-right:35px;
-        margin-bottom:0;
-        cursor:pointer;
-        font-weight:500;
-        color:#44496b;
-    }
+        .radio-group input[type="radio"]:checked {
+            background-color: #1a3a7a;
+            border-color: #1a3a7a;
+        }
 
-    /* Right Detail Panel */
-    .relative-details {
-        background:#f8faff;
-        border:1px solid #cddcff;
-        padding:28px;
-        border-radius:12px;
-    }
+        .radio-group label {
+            margin-right: 35px;
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #44496b;
+        }
 
-    /* Column Divider */
-    .col-divider {
-        border-left:2px solid #eef1f8;
-    }
+        /* Right Detail Panel */
+        .relative-details {
+            background: #f8faff;
+            border: 1px solid #cddcff;
+            padding: 28px;
+            border-radius: 12px;
+        }
 
-    /* Validation Text */
-    .text-danger {
-        font-size:13px;
-        font-weight:600;
-    }
+        /* Column Divider */
+        .col-divider {
+            border-left: 2px solid #eef1f8;
+        }
 
-    /* Buttons */
-    .btn-bu-blue {
-        background:#2D398D;
-        color:white;
-        border:none;
-        font-size:16px;
-        padding:12px 40px;
-        border-radius:8px;
-        font-weight:600;
-        transition:all .2s ease-in-out;
-    }
+        /* Validation Text */
+        .text-danger {
+            font-size: 13px;
+            font-weight: 600;
+        }
 
-    .btn-bu-blue:hover {
-        background:#232c70;
-        color:white;
-        transform:translateY(-1px);
-        box-shadow:0 6px 16px rgba(45,57,141,.3);
-    }
+        /* Buttons */
+        .btn-bu-blue {
+            background: #1a3a7a;
+            color: white;
+            border: none;
+            font-size: 16px;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all .2s ease-in-out;
+        }
 
-    .btn-outline-secondary {
-        border-radius:8px;
-        font-size:16px;
-        padding:12px 30px;
-        font-weight:600;
-    }
+        .btn-bu-blue:hover {
+            background: #2a5aaa;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
+        }
 
-    /* Field spacing */
-    .mb-3 {
-        margin-bottom:24px !important;
-    }
+        /* Field spacing */
+        .mb-3 {
+            margin-bottom: 24px !important;
+        }
 
-    /* Responsive adjustment */
-    @media(max-width:768px){
-        body { font-size:15px; }
-        .form-card { padding:25px; }
-        .section-title { font-size:17px; }
-        .form-label { font-size:14px; }
-        .form-control, .form-select { font-size:14px; height:44px; }
-    }
+        /* Responsive adjustment */
+        @media(max-width:768px) {
+            body {
+                font-size: 15px;
+            }
+            .form-card {
+                padding: 25px;
+            }
+            .section-title {
+                font-size: 17px;
+            }
+            .form-label {
+                font-size: 14px;
+            }
+            .form-control,
+            .form-select {
+                font-size: 14px;
+                height: 44px;
+            }
+        }
 
-    .text-bu-blue {
-        color: #2D398D !important;
-    }
+        .text-bu-blue {
+            color: #1a3a7a !important;
+        }
 
-    .bg-bu-blue {
-        background-color: #2D398D !important;
-        color: #ffffff;
-        border-color: #2D398D;
-    }
-</style>
+        .bg-bu-blue {
+            background-color: #1a3a7a !important;
+            color: #ffffff;
+            border-color: #1a3a7a;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #1a3a7a;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+    </style>
 
 </head>
 <body>
@@ -257,11 +275,10 @@
                     <div class="col-md-6 col-divider ps-md-4">
 
                         <div id="pnlRelativeDetailsWrapper"
-                             runat="server"
-                             style="display:none;">
+                            runat="server"
+                            style="display:none;">
 
-                            <div class="form-label"
-                                 style="font-size:16px;color:#2D398D;">
+                            <div class="section-subtitle">
                                 If Yes, please provide:
                             </div>
 
@@ -275,6 +292,7 @@
 
                                     <label class="form-label">
                                         Name
+                                        <span class="required-asterisk">*</span>
                                     </label>
 
                                     <asp:TextBox
@@ -299,35 +317,36 @@
 
                                     <label class="form-label">
                                         Relationship
+                                        <span class="required-asterisk">*</span>
                                     </label>
 
                                     <asp:DropDownList
-    ID="ddlRelationship"
-    runat="server"
-    CssClass="form-select">
+                                        ID="ddlRelationship"
+                                        runat="server"
+                                        CssClass="form-select">
 
-    <asp:ListItem Text="--Select--" Value=""></asp:ListItem>
-    <asp:ListItem Text="Father" Value="Father"></asp:ListItem>
-    <asp:ListItem Text="Mother" Value="Mother"></asp:ListItem>
-    <asp:ListItem Text="Spouse" Value="Spouse"></asp:ListItem>
-    <asp:ListItem Text="Son" Value="Son"></asp:ListItem>
-    <asp:ListItem Text="Daughter" Value="Daughter"></asp:ListItem>
-    <asp:ListItem Text="Brother" Value="Brother"></asp:ListItem>
-    <asp:ListItem Text="Sister" Value="Sister"></asp:ListItem>
-    <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
+                                        <asp:ListItem Text="--Select--" Value=""></asp:ListItem>
+                                        <asp:ListItem Text="Father" Value="Father"></asp:ListItem>
+                                        <asp:ListItem Text="Mother" Value="Mother"></asp:ListItem>
+                                        <asp:ListItem Text="Spouse" Value="Spouse"></asp:ListItem>
+                                        <asp:ListItem Text="Son" Value="Son"></asp:ListItem>
+                                        <asp:ListItem Text="Daughter" Value="Daughter"></asp:ListItem>
+                                        <asp:ListItem Text="Brother" Value="Brother"></asp:ListItem>
+                                        <asp:ListItem Text="Sister" Value="Sister"></asp:ListItem>
+                                        <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
 
-</asp:DropDownList>
+                                    </asp:DropDownList>
 
-<asp:RequiredFieldValidator
-    ID="rfvRelationship"
-    runat="server"
-    ControlToValidate="ddlRelationship"
-    InitialValue=""
-    ErrorMessage="Please select relationship."
-    CssClass="text-danger d-block mt-1"
-    Display="Static"
-    ValidationGroup="RelativeForm">
-</asp:RequiredFieldValidator>
+                                    <asp:RequiredFieldValidator
+                                        ID="rfvRelationship"
+                                        runat="server"
+                                        ControlToValidate="ddlRelationship"
+                                        InitialValue=""
+                                        ErrorMessage="Please select relationship."
+                                        CssClass="text-danger d-block mt-1"
+                                        Display="Static"
+                                        ValidationGroup="RelativeForm">
+                                    </asp:RequiredFieldValidator>
 
                                 </div>
 
@@ -336,6 +355,7 @@
 
                                     <label class="form-label">
                                         Department / Campus
+                                        <span class="required-asterisk">*</span>
                                     </label>
 
                                     <asp:TextBox
@@ -360,6 +380,7 @@
 
                                     <label class="form-label">
                                         Designation
+                                        <span class="required-asterisk">*</span>
                                     </label>
 
                                     <asp:TextBox
@@ -416,7 +437,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-
         function toggleRelativeDetails() {
 
             var wrapper = document.getElementById("<%= pnlRelativeDetailsWrapper.ClientID %>");
@@ -464,7 +484,7 @@
         };
 
         function setValidatorsEnabled(group, enabled) {
-            if (typeof(Page_Validators) === 'undefined') return;
+            if (typeof (Page_Validators) === 'undefined') return;
             for (var i = 0; i < Page_Validators.length; i++) {
                 var v = Page_Validators[i];
                 if (v.validationGroup === group) {
@@ -474,10 +494,7 @@
                 }
             }
         }
-
     </script>
 
 </body>
-
-
 </html>

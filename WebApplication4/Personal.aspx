@@ -15,161 +15,155 @@
 
     <style>
         body {
-            background:#f4f7fb;
-            font-family:'Segoe UI', Arial, sans-serif;
-            font-size:17px;
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 17px;
         }
 
         .page-title h4 {
-            color:#2D398D;
+            color: #1a3a7a;
         }
 
         .page-title hr {
-            border-top:2px solid #2D398D;
-            opacity:.15;
-          
-            margin:.75rem 0 0;
+            border-top: 3px solid #1a3a7a;
+            opacity: 0.2;
+            margin: .75rem 0 0;
         }
 
         .form-card {
-            max-width:1100px;
-            margin:30px auto 60px;
-            background:white;
-            padding:0;
-            border-radius:16px;
-            box-shadow:0px 8px 30px rgba(45,57,141,.10);
-            overflow:hidden;
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            background: white;
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+            overflow: hidden;
         }
 
-        /* Section styling */
         .form-section {
-            padding:36px 45px;
-            border-bottom:1px solid #eef1f8;
+            padding: 36px 45px;
+            border-bottom: 1px solid #eef1f8;
         }
 
         .form-section:last-of-type {
-            border-bottom:none;
+            border-bottom: none;
         }
 
         .section-title {
-            display:flex;
-            align-items:center;
-            gap:10px;
-            color:#2D398D;
-            font-size:19px;
-            font-weight:700;
-            margin-bottom:24px;
-            text-transform:uppercase;
-            letter-spacing:.4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a3a7a;
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
         .section-title i {
-            font-size:20px;
+            font-size: 20px;
         }
 
         .form-label {
-            font-size:15px;
-            font-weight:600;
-            color:#44496b;
-            margin-bottom:6px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #44496b;
+            margin-bottom: 6px;
         }
 
         .required-asterisk {
-            color:#dc3545;
-            font-size:15px;
+            color: #dc3545;
+            font-size: 15px;
         }
 
         .form-control,
         .form-select {
-            font-size:15px;
-            height:48px;
-            border-radius:8px;
-            border:1px solid #ced4da;
-            padding:10px 14px;
-            transition:all .2s ease-in-out;
+            font-size: 15px;
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px 14px;
+            transition: all .2s ease-in-out;
         }
 
         .form-control::placeholder {
-            font-size:14px;
-            color:#a3a9bd;
+            font-size: 14px;
+            color: #a3a9bd;
         }
 
         .form-control:focus,
         .form-select:focus {
-            border-color:#2D398D;
-            box-shadow:0 0 0 .2rem rgba(45,57,141,.15);
+            border-color: #1a3a7a;
+            box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
         }
 
         textarea.form-control {
-            min-height:100px;
-            height:auto;
-            resize:vertical;
+            min-height: 100px;
+            height: auto;
+            resize: vertical;
         }
 
         .form-group {
-            margin-bottom:24px;
+            margin-bottom: 24px;
         }
 
         .btn-save {
-            background:#2D398D;
-            color:white;
-            border-radius:8px;
-            padding:14px 55px;
-            font-size:17px;
-            font-weight:600;
-            border:none;
-            transition:all .2s ease-in-out;
+            background: #1a3a7a;
+            color: white;
+            border-radius: 8px;
+            padding: 14px 55px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            transition: all .2s ease-in-out;
         }
 
         .btn-save:hover {
-            background:#232c70;
-            color:white;
-            transform:translateY(-1px);
-            box-shadow:0 6px 16px rgba(45,57,141,.3);
+            background: #2a5aaa;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
         .text-danger {
-            font-size:13px;
+            font-size: 13px;
         }
 
-        /* Picture upload */
         .picture-upload-box {
-            display:flex;
-            align-items:center;
-            gap:20px;
-            background:#f8faff;
-            border:1px dashed #cddcff;
-            border-radius:12px;
-            padding:18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #f8faff;
+            border: 1px dashed #cddcff;
+            border-radius: 12px;
+            padding: 18px 20px;
         }
 
         .picture-preview {
-            width:90px;
-            height:90px;
-            object-fit:cover;
-            border-radius:10px;
-            border:2px solid #cddcff;
-            background:#ffffff;
-            flex-shrink:0;
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #cddcff;
+            background: #ffffff;
+            flex-shrink: 0;
         }
 
         .picture-placeholder {
-            width:90px;
-            height:90px;
-            border-radius:10px;
-            border:2px dashed #cddcff;
-            background:#ffffff;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#a3b3e0;
-            font-size:28px;
-            flex-shrink:0;
+            width: 90px;
+            height: 90px;
+            border-radius: 10px;
+            border: 2px dashed #cddcff;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a3b3e0;
+            font-size: 28px;
+            flex-shrink: 0;
         }
 
-       
-
-        /* Responsive adjustment */
         @media(max-width:768px) {
             body {
                 font-size: 15px;
@@ -183,40 +177,42 @@
                 font-size: 14px;
             }
 
-            .form-control, .form-select {
+            .form-control,
+            .form-select {
                 font-size: 14px;
                 height: 44px;
             }
         }
+
         .radio-group {
-    display: flex;
-    align-items: center;
-}
+            display: flex;
+            align-items: center;
+        }
 
-.radio-group span {
-    display: inline-flex;
-    align-items: center;
-}
+        .radio-group span {
+            display: inline-flex;
+            align-items: center;
+        }
 
-.radio-group span:not(:last-child) {
-    margin-right: 40px;
-}
+        .radio-group span:not(:last-child) {
+            margin-right: 40px;
+        }
 
-.radio-group input[type="radio"] {
-    margin-right: 8px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #1a3a7a;
+        }
 
-.radio-group label {
-    margin-bottom: 0;
-    margin-right: 30px;
-    cursor: pointer;
-    font-weight: 500;
-    color: #44496b;
-}
-          
+        .radio-group label {
+            margin-bottom: 0;
+            margin-right: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #44496b;
+        }
     </style>
 </head>
 <body>
@@ -241,21 +237,20 @@
                             Upload Picture <span class="required-asterisk">*</span>
                         </label>
                         <div class="picture-upload-box flex-wrap">
-                           <img id="imgPicturePreview" 
-                            runat="server"
-                            src="#" 
-                            alt="Picture preview" 
-                            class="picture-preview" 
-                            style="display:none;" />
-                           <div id="picturePlaceholder" 
-                            runat="server" 
-                            class="picture-placeholder">
-                            <i class="bi bi-camera-fill"></i>
+                            <img id="imgPicturePreview"
+                                runat="server"
+                                src="#"
+                                alt="Picture preview"
+                                class="picture-preview"
+                                style="display:none;" />
+                            <div id="picturePlaceholder"
+                                runat="server"
+                                class="picture-placeholder">
+                                <i class="bi bi-camera-fill"></i>
                             </div>
                             <asp:FileUpload ID="fuPicture" runat="server" CssClass="form-control" style="max-width:350px;" onchange="previewPicture(this);" />
                             <asp:Label ID="picMsg" runat="server" Text=""></asp:Label>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -504,32 +499,31 @@
                 </div>
 
                 <!-- SECTION: Declaration -->
-              <div class="form-section">
-    <div class="section-title"><i class="bi bi-clipboard-check-fill"></i>Declaration</div>
+                <div class="form-section">
+                    <div class="section-title"><i class="bi bi-clipboard-check-fill"></i>Declaration</div>
 
-    <div class="form-group mb-0">
-        <label class="form-label">
-            Have you previously applied to Bahria University? <span class="required-asterisk">*</span>
-        </label>
+                    <div class="form-group mb-0">
+                        <label class="form-label">
+                            Have you previously applied to Bahria University? <span class="required-asterisk">*</span>
+                        </label>
 
-        <div class="radio-group">
-            <asp:RadioButtonList ID="rblPreviouslyApplied" runat="server"
-                RepeatDirection="Horizontal"
-                RepeatLayout="Flow">
-                <asp:ListItem Text="Yes" Value="Yes" />
-                <asp:ListItem Text="No" Value="No" />
-            </asp:RadioButtonList>
-        </div>
+                        <div class="radio-group">
+                            <asp:RadioButtonList ID="rblPreviouslyApplied" runat="server"
+                                RepeatDirection="Horizontal"
+                                RepeatLayout="Flow">
+                                <asp:ListItem Text="Yes" Value="Yes" />
+                                <asp:ListItem Text="No" Value="No" />
+                            </asp:RadioButtonList>
+                        </div>
 
-        <asp:RequiredFieldValidator ID="rfvPreviouslyApplied" runat="server"
-            ControlToValidate="rblPreviouslyApplied"
-            ErrorMessage="Please select Yes or No."
-            CssClass="text-danger d-block mt-1"
-            Display="Static"
-            ValidationGroup="DeclarationForm" />
-    </div>
-</div>
-
+                        <asp:RequiredFieldValidator ID="rfvPreviouslyApplied" runat="server"
+                            ControlToValidate="rblPreviouslyApplied"
+                            ErrorMessage="Please select Yes or No."
+                            CssClass="text-danger d-block mt-1"
+                            Display="Static"
+                            ValidationGroup="DeclarationForm" />
+                    </div>
+                </div>
 
                 <!-- SECTION: Submit -->
                 <div class="form-section text-center">
@@ -567,5 +561,4 @@
         }
     </script>
 </body>
-
 </html>
