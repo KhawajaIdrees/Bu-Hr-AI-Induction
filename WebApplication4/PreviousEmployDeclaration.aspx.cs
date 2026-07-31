@@ -160,12 +160,6 @@ namespace WebApplication4
         {
             if (Session["UserId"] == null)
                 return;
-
-            // Server-side guard: RequiredFieldValidator handles this client-side,
-            // but validators can be bypassed (JS disabled, direct POST, etc.)
-            if (!Page.IsValid)
-                return;
-
             if (rblPreviouslyWorked.SelectedItem == null)
             {
                 lblMessage.Text = "Please select Yes or No.";
@@ -174,6 +168,34 @@ namespace WebApplication4
             }
 
             int userId = Convert.ToInt32(Session["UserId"]);
+
+            // If user selected No, allow save and continue without filling details
+            if (rblPreviouslyWorked.SelectedValue == "No")
+            {
+                try
+                {
+                    // Save will insert/update with hasworked = 0 and NULL details
+                    SavePrevEmpl(userId);
+
+                    lblMessage.Text = "Previous employment declaration saved successfully.";
+                    lblMessage.CssClass = "text-success";
+
+                    LoadCandidate();
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = ex.Message;
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                Response.Redirect("EmpRelDeclaration.aspx");
+                return;
+            }
+
+            // From here on user selected Yes. Ensure validators passed
+            if (!Page.IsValid)
+                return;
 
             try
             {
@@ -189,6 +211,8 @@ namespace WebApplication4
                 lblMessage.Text = ex.Message;
                 lblMessage.CssClass = "text-danger";
             }
+
+            Response.Redirect("EmpRelDeclaration.aspx");
         }
     }
 }

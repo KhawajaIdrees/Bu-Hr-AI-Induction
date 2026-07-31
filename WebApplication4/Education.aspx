@@ -172,7 +172,7 @@ body {
 </thead>
 <tbody>
 <tr>
-<td>SSC*</td>
+<td>SSC/O&#39;levels*</td>
 
 <td>
 <input type="text" id="ssc_duration" runat="server" class="form-control" required />
@@ -204,7 +204,7 @@ body {
 
 <tr>
 
-<td>HSSC *</td>
+<td>HSSC/A&#39;levels *</td>
 <td>
 <input type="text" id="hssc_duration" runat="server" class="form-control" required />
 </td>
@@ -264,7 +264,7 @@ body {
 </tr>
 
 <tr>
-<td>Masters</td>
+<td>Masters/MPhil</td>
 <td>
 <input type="text" id="ms_duration" runat="server" class="form-control"  />
 </td>

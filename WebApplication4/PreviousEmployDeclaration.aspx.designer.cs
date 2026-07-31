@@ -87,6 +87,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.TextBox txtDepartment;
 
         /// <summary>
+        /// rfvDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDepartment;
+
+        /// <summary>
         /// txtDesignation control.
         /// </summary>
         /// <remarks>
@@ -96,6 +105,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.TextBox txtDesignation;
 
         /// <summary>
+        /// rfvDesignation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDesignation;
+
+        /// <summary>
         /// txtDuration control.
         /// </summary>
         /// <remarks>
@@ -103,6 +121,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDuration;
+
+        /// <summary>
+        /// rfvDuration control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDuration;
 
         /// <summary>
         /// btnSubmit control.

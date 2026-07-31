@@ -156,7 +156,7 @@ namespace WebApplication4
 
         protected void BtnNext_Click(object sender, EventArgs e)
         {
-            Response.Redirect("NextPage.aspx");
+            Response.Redirect("ResearchData.aspx");
         }
     }
 }

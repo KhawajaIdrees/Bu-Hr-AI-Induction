@@ -39,7 +39,6 @@
             overflow:hidden;
         }
 
-        /* Section styling */
         .form-section {
             padding:36px 45px;
             border-bottom:1px solid #eef1f8;
@@ -65,7 +64,6 @@
             font-size:20px;
         }
 
-        /* Sub-section headings inside a form-section (e.g. Impact Factor 1 / 2) */
         .sub-section-title {
             font-size:15px;
             font-weight:700;
@@ -159,7 +157,6 @@
             font-size:13px;
         }
 
-        /* Publications table */
         .table th {
             background-color:#f8faff;
             color:#2D398D;
@@ -191,7 +188,6 @@
             overflow-x:auto;
         }
 
-        /* Responsive adjustment */
         @media(max-width:768px) {
             body {
                 font-size: 15px;
@@ -368,33 +364,33 @@
                     </div>
                 </div>
 
-                <!-- SECTION: Publications List -->
-                <div class="form-section">
-                    <div class="section-title"><i class="bi bi-list-columns-reverse"></i>Publications List</div>
+      <!-- SECTION: Publications List -->
+<div class="form-section">
+    <div class="section-title"><i class="bi bi-list-columns-reverse"></i>Publications List</div>
 
-                    <div class="table-responsive-wrap">
-                        <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
-                            CssClass="table table-hover mb-0" GridLines="None"
-                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" OnSelectedIndexChanged="gvPublications_SelectedIndexChanged">
-                            <Columns>
-                                <asp:BoundField DataField="ImpactFactor" HeaderText="Impact Factor" />
-                                <asp:BoundField DataField="HECPublications" HeaderText="HEC Publications" />
-                                <asp:BoundField DataField="ConferencePaper" HeaderText="Conference Paper" />
-                                <asp:BoundField DataField="ImpactFactor2" HeaderText="Impact Factor 2" />
-                                <asp:BoundField DataField="ConferencePaper2" HeaderText="Conference Paper 2" />
-                                <asp:BoundField DataField="WCount" HeaderText="W" />
-                                <asp:BoundField DataField="XCount" HeaderText="X" />
-                                <asp:BoundField DataField="YCount" HeaderText="Y" />
-                                <asp:BoundField DataField="TotalFundedProjects" HeaderText="Funded Projects" />
-                                <asp:BoundField DataField="PIProjects" HeaderText="PI" />
-                                <asp:BoundField DataField="CoPIProjects" HeaderText="Co-PI" />
-                                <asp:BoundField DataField="MSStudents" HeaderText="MS" />
-                                <asp:BoundField DataField="MPhilStudents" HeaderText="M.Phil" />
-                                <asp:BoundField DataField="PhDStudents" HeaderText="PhD" />
-                            </Columns>
-                        </asp:GridView>
-                    </div>
-                </div>
+    <div class="table-responsive-wrap">
+        <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
+            CssClass="table table-hover mb-0" GridLines="None"
+            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" OnSelectedIndexChanged="gvPublications_SelectedIndexChanged">
+            <Columns>
+                <asp:BoundField DataField="ImpactFactor" HeaderText="Impact Factor" />
+                <asp:BoundField DataField="HECPublications" HeaderText="HEC Publications" />
+                <asp:BoundField DataField="ConferencePaper" HeaderText="Conference Paper" />
+                <asp:BoundField DataField="ImpactFactor2" HeaderText="Impact Factor 2" />
+                <asp:BoundField DataField="ConferencePaper2" HeaderText="Conference Paper 2" />
+                <asp:BoundField DataField="WCount" HeaderText="W" />
+                <asp:BoundField DataField="XCount" HeaderText="X" />
+                <asp:BoundField DataField="YCount" HeaderText="Y" />
+                <asp:BoundField DataField="TotalFundedProjects" HeaderText="Funded Projects" />
+                <asp:BoundField DataField="PIProjects" HeaderText="PI" />
+                <asp:BoundField DataField="CoPIProjects" HeaderText="Co-PI" />
+                <asp:BoundField DataField="MSStudents" HeaderText="MS" />
+                <asp:BoundField DataField="MPhilStudents" HeaderText="M.Phil" />
+                <asp:BoundField DataField="PhDStudents" HeaderText="PhD" />
+            </Columns>
+        </asp:GridView>
+    </div>
+</div>
                 <!-- SECTION: Submit -->
                 <div class="form-section text-center">
                     <asp:Button ID="BtnSaveContinue" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnRegister_Click" />
@@ -411,6 +407,3 @@
 </body>
 
 </html>
-
-
-

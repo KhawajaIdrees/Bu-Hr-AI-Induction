@@ -248,52 +248,97 @@
 
                                 <div class="mb-3">
                                     <label for="<%= ddlCampus.ClientID %>" class="form-label">
-        Campus
-    </label>
+                                    Campus
+                                    </label>
                                      <asp:DropDownList
-        ID="ddlCampus"
+                                    ID="ddlCampus"
+                                    runat="server"
+                                    CssClass="form-select">
+
+                                    <asp:ListItem Text="-- Select Campus --" Value=""></asp:ListItem>
+                                    <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
+                                    <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
+                                    <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
+
+                                    </asp:DropDownList>
+
+                                <asp:RequiredFieldValidator
+                                ID="rfvCampus"
+                                runat="server"
+                                ControlToValidate="ddlCampus"
+                                InitialValue=""
+                                ErrorMessage="Please select a campus."
+                                CssClass="text-danger"
+                                Display="Static"
+                                ValidationGroup="DeclarationForm">
+                                </asp:RequiredFieldValidator>
+                                </div>
+
+                                <div class="mb-3">
+    <label for="<%= txtDepartment.ClientID %>" class="form-label">
+        Department
+    </label>
+
+    <asp:TextBox
+        ID="txtDepartment"
         runat="server"
-        CssClass="form-select">
+        CssClass="form-control"
+        placeholder="Enter department" />
 
-        <asp:ListItem Text="-- Select Campus --" Value=""></asp:ListItem>
-        <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
-        <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
-        <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
+                <asp:RequiredFieldValidator
+                ID="rfvDepartment"
+                runat="server"
+                ControlToValidate="txtDepartment"
+                ErrorMessage="Please enter the department."
+                CssClass="text-danger d-block mt-1"
+                Display="Static"
+                ValidationGroup="DeclarationForm">
+                </asp:RequiredFieldValidator>
+                </div>
 
-    </asp:DropDownList>
+                               <div class="mb-3">
+    <label for="<%= txtDesignation.ClientID %>" class="form-label">
+        Designation
+    </label>
+
+    <asp:TextBox
+        ID="txtDesignation"
+        runat="server"
+        CssClass="form-control"
+        placeholder="Enter designation" />
 
     <asp:RequiredFieldValidator
-        ID="rfvCampus"
+        ID="rfvDesignation"
         runat="server"
-        ControlToValidate="ddlCampus"
-        InitialValue=""
-        ErrorMessage="Please select a campus."
-        CssClass="text-danger"
+        ControlToValidate="txtDesignation"
+        ErrorMessage="Please enter the designation."
+        CssClass="text-danger d-block mt-1"
         Display="Static"
         ValidationGroup="DeclarationForm">
     </asp:RequiredFieldValidator>
-                                </div>
+</div>
 
                                 <div class="mb-3">
-                                    <label for="<%= txtDepartment.ClientID %>" class="form-label">
-                                        Department
-                                    </label>
-                                    <asp:TextBox ID="txtDepartment" runat="server" CssClass="form-control" placeholder="Enter department" />
-                                </div>
+    <label for="<%= txtDuration.ClientID %>" class="form-label">
+        Duration
+    </label>
 
-                                <div class="mb-3">
-                                    <label for="<%= txtDesignation.ClientID %>" class="form-label">
-                                        Designation
-                                    </label>
-                                    <asp:TextBox ID="txtDesignation" runat="server" CssClass="form-control" placeholder="Enter designation" />
-                                </div>
+    <asp:TextBox
+        ID="txtDuration"
+        runat="server"
+        CssClass="form-control"
+        placeholder="e.g. Jan 2021 - Dec 2023" />
 
-                                <div class="mb-3">
-                                    <label for="<%= txtDuration.ClientID %>" class="form-label">
-                                        Duration
-                                    </label>
-                                    <asp:TextBox ID="txtDuration" runat="server" CssClass="form-control" placeholder="e.g. Jan 2021 - Dec 2023" />
-                                </div>
+    <asp:RequiredFieldValidator
+        ID="rfvDuration"
+        runat="server"
+        ControlToValidate="txtDuration"
+        ErrorMessage="Please enter the duration."
+        CssClass="text-danger d-block mt-1"
+        Display="Static"
+        ValidationGroup="DeclarationForm">
+    </asp:RequiredFieldValidator>
+</div>
 
                             </asp:Panel>
                         </div>
@@ -339,7 +384,17 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            togglePreviousEmploymentDetails();
+            // Use a resilient initializer in case ASP.NET validation scripts
+            // haven't finished loading yet.
+            function ensureToggle(attempt) {
+                attempt = attempt || 0;
+                togglePreviousEmploymentDetails();
+                if (typeof(Page_Validators) === 'undefined' && attempt < 10) {
+                    setTimeout(function () { ensureToggle(attempt + 1); }, 100);
+                }
+            }
+
+            ensureToggle(0);
 
             // Delegate from the form so this keeps working even if the
             // radio inputs are re-rendered (e.g. inside an UpdatePanel)
@@ -352,8 +407,33 @@
 
          // expose globally in case you want to call it inline elsewhere
          window.togglePreviousEmploymentDetails = togglePreviousEmploymentDetails;
+
+        // Enable/disable validators for DeclarationForm so selecting No will allow postback
+        function setValidatorsEnabled(group, enabled) {
+            if (typeof(Page_Validators) === 'undefined') return;
+            for (var i = 0; i < Page_Validators.length; i++) {
+                var v = Page_Validators[i];
+                if (v.validationGroup === group) {
+                    v.enabled = enabled;
+                    var span = document.getElementById(v.id);
+                    if (span) span.style.display = enabled ? '' : 'none';
+                }
+            }
+        }
+
+        // Keep validator state in sync when toggling
+        (function () {
+            var original = togglePreviousEmploymentDetails;
+            togglePreviousEmploymentDetails = function () {
+                original();
+                var checked = document.querySelector("input[name='<%= rblPreviouslyWorked.UniqueID %>']:checked");
+                var value = checked ? checked.value : '';
+                setValidatorsEnabled('DeclarationForm', value === 'Yes');
+            };
+        })();
      })();
  </script>
 </body>
+
 
 </html>

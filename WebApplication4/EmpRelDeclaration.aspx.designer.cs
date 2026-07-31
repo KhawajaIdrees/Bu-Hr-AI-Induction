@@ -33,13 +33,22 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RadioButtonList rblHasRelative;
 
         /// <summary>
+        /// rfvHasRelative control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHasRelative;
+
+        /// <summary>
         /// pnlRelativeDetailsWrapper control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlRelativeDetailsWrapper;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlRelativeDetailsWrapper;
 
         /// <summary>
         /// pnlRelativeDetails control.
@@ -60,6 +69,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.TextBox txtName;
 
         /// <summary>
+        /// rfvName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvName;
+
+        /// <summary>
         /// ddlRelationship control.
         /// </summary>
         /// <remarks>
@@ -67,6 +85,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlRelationship;
+
+        /// <summary>
+        /// rfvRelationship control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRelationship;
 
         /// <summary>
         /// txtDepartment control.
@@ -78,6 +105,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.TextBox txtDepartment;
 
         /// <summary>
+        /// rfvDepartment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDepartment;
+
+        /// <summary>
         /// txtDesignation control.
         /// </summary>
         /// <remarks>
@@ -85,6 +121,24 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDesignation;
+
+        /// <summary>
+        /// rfvDesignation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDesignation;
+
+        /// <summary>
+        /// btnSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
 
         /// <summary>
         /// lblMessage control.

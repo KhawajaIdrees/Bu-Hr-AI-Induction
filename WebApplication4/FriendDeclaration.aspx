@@ -358,11 +358,41 @@
             }
 
             wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
+            // Enable/disable validators in the DeclarationForm group depending on selection
+            setValidatorsEnabled('DeclarationForm', selectedValue === 'Yes');
         }
 
-        // Run once on page load to set the correct initial state
-        window.addEventListener('DOMContentLoaded', function () {
+        function setValidatorsEnabled(group, enabled) {
+            if (typeof(Page_Validators) === 'undefined') return;
+            for (var i = 0; i < Page_Validators.length; i++) {
+                var v = Page_Validators[i];
+                if (v.validationGroup === group) {
+                    v.enabled = enabled;
+                    var span = document.getElementById(v.id);
+                    if (span) span.style.display = enabled ? '' : 'none';
+                }
+            }
+        }
+
+        // Run once on page load to set the correct initial state.
+        // Use both DOMContentLoaded and window.onload and retry in case Page_Validators
+        // hasn't been initialized yet by ASP.NET validation scripts.
+        function ensureToggleFriendDetails(attempt) {
+            attempt = attempt || 0;
             toggleFriendDetails();
+            // If validators are not yet available, retry a few times
+            if (typeof(Page_Validators) === 'undefined' && attempt < 10) {
+                setTimeout(function () { ensureToggleFriendDetails(attempt + 1); }, 100);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            ensureToggleFriendDetails(0);
+        });
+
+        // Also run on full load as a fallback
+        window.addEventListener('load', function () {
+            ensureToggleFriendDetails(0);
         });
     </script>
 </body>
