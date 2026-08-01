@@ -242,7 +242,8 @@
             margin-right: 8px;
             cursor: pointer;
             accent-color: #1a3a7a;
-            margin-top: 0;
+            position: relative;
+            top: 4px;  
         }
 
         .radio-group label {
