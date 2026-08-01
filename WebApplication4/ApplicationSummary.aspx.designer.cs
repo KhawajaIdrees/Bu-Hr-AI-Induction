@@ -11,7 +11,7 @@ namespace WebApplication4
 {
 
 
-    public partial class Dashboard
+    public partial class ApplicationSummary
     {
 
         /// <summary>

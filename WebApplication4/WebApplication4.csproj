@@ -128,7 +128,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Dashboard.aspx" />
+    <Content Include="ApplicationSummary.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Experience.aspx" />
     <Content Include="favicon.ico" />
@@ -240,12 +240,12 @@
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Dashboard.aspx.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
+    <Compile Include="ApplicationSummary.aspx.cs">
+      <DependentUpon>ApplicationSummary.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Dashboard.aspx.designer.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
+    <Compile Include="ApplicationSummary.aspx.designer.cs">
+      <DependentUpon>ApplicationSummary.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

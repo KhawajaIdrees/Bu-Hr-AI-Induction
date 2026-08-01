@@ -1,10 +1,10 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Dashboard.aspx.cs" Inherits="WebApplication4.Dashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ApplicationSummary.aspx.cs" Inherits="WebApplication4.ApplicationSummary" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Information Form</title>
+    <title>Application Summary</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -73,36 +73,36 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label class="form-label">Full Name</label>
-                                    <asp:TextBox ID="txtName" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtName" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">CNIC</label>
-                                    <asp:TextBox ID="txtIdentity" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtIdentity" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Date of Birth</label>
-                                    <asp:TextBox ID="txtBirthDate" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtBirthDate" runat="server" TextMode="Date" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
                             </div>
 
                             <div class="row mt-3">
                                 <div class="col-md-4">
                                     <label class="form-label">Nationality</label>
-                                    <asp:TextBox ID="txtNationality" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtNationality" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Mobile Number</label>
-                                    <asp:TextBox ID="txtCell" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtCell" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Gender</label><br />
-                                    <asp:RadioButton ID="rbMale" runat="server" GroupName="Gender" Text="Male" />
+                                    <asp:RadioButton ID="rbMale" runat="server" GroupName="Gender" Text="Male" Enabled="false" />
                                     &nbsp;&nbsp;
-                                    <asp:RadioButton ID="rbFemale" runat="server" GroupName="Gender" Text="Female" />
+                                    <asp:RadioButton ID="rbFemale" runat="server" GroupName="Gender" Text="Female" Enabled="false" />
                                 </div>
                             </div>
                         </div>

@@ -12,7 +12,7 @@ using System.Web.UI.WebControls;
 
 namespace WebApplication4
 {
-    public partial class Dashboard : System.Web.UI.Page
+    public partial class ApplicationSummary : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -201,12 +201,12 @@ namespace WebApplication4
         }
 
         protected void BtnEducationalInfo_Click(object sender, EventArgs e)
-        { 
-             Response.Redirect("EducationPhd.aspx");   
+        {
+            Response.Redirect("EducationPhd.aspx");
         }
         protected void BtnExperienceInfo_Click(object sender, EventArgs e)
         {
-                Response.Redirect("ExperiencePhd.aspx");   
+            Response.Redirect("ExperiencePhd.aspx");
         }
     }
 }
