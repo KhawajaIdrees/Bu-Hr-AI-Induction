@@ -18,6 +18,12 @@ namespace WebApplication4
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 LoadExperiences();
@@ -34,13 +40,29 @@ namespace WebApplication4
             string organization = txtOrganization.Text.Trim();
             string position = txtPosition.Text.Trim();
 
-            DateTime startDate = Convert.ToDateTime(txtStartDate.Text);
+            // Fixed: Use TryParse for safe date conversion
+            DateTime startDate;
+            if (!DateTime.TryParse(txtStartDate.Text, out startDate))
+            {
+                lblMessage.Text = "Please enter a valid Start Date.";
+                lblMessage.CssClass = "text-danger";
+                return;
+            }
 
             DateTime? endDate = null;
-
             if (!chkCurrentJob.Checked && !string.IsNullOrWhiteSpace(txtEndDate.Text))
             {
-                endDate = Convert.ToDateTime(txtEndDate.Text);
+                DateTime endDateTemp;
+                if (DateTime.TryParse(txtEndDate.Text, out endDateTemp))
+                {
+                    endDate = endDateTemp;
+                }
+                else
+                {
+                    lblMessage.Text = "Please enter a valid End Date.";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
             }
 
             bool currentJob = chkCurrentJob.Checked;
@@ -53,7 +75,6 @@ namespace WebApplication4
                            currentJob);
 
             ClearForm();
-
             LoadExperiences();
 
             lblMessage.Text = "Experience added successfully.";
@@ -111,6 +132,7 @@ namespace WebApplication4
             {
                 string query = @"
                     SELECT
+                        ExperienceId,
                         OrganizationName,
                         PositionTitle,
                         StartDate,
@@ -118,7 +140,6 @@ namespace WebApplication4
                             WHEN IsCurrentJob = 1 THEN NULL
                             ELSE EndDate
                         END AS EndDate,
-
                         CONCAT(
                             DATEDIFF(MONTH,
                                      StartDate,
@@ -129,7 +150,6 @@ namespace WebApplication4
                                      ISNULL(EndDate, GETDATE())) % 12,
                             ' Months'
                         ) AS Duration
-
                     FROM WorkExperience
                     WHERE UserId=@UserId
                     ORDER BY StartDate DESC";
@@ -145,6 +165,70 @@ namespace WebApplication4
             }
         }
 
+        // =========================================
+        // DELETE EXPERIENCE
+        // =========================================
+        protected void gvExperiences_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteExperience")
+            {
+                // CommandArgument is the row index; use DataKeys to get the true ExperienceId
+                int rowIndex;
+                if (int.TryParse(e.CommandArgument.ToString(), out rowIndex))
+                {
+                    if (rowIndex >= 0 && rowIndex < gvExperiences.Rows.Count)
+                    {
+                        object key = gvExperiences.DataKeys[rowIndex]?.Value;
+                        if (key != null)
+                        {
+                            int experienceId = Convert.ToInt32(key);
+                            DeleteExperience(experienceId);
+                        }
+                        else
+                        {
+                            lblMessage.Text = "Unable to determine which experience to delete.";
+                            lblMessage.CssClass = "text-danger";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        lblMessage.Text = "Invalid selection.";
+                        lblMessage.CssClass = "text-danger";
+                        return;
+                    }
+                }
+                else
+                {
+                    lblMessage.Text = "Invalid command argument.";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+                LoadExperiences();
+                lblMessage.Text = "Experience deleted successfully.";
+                lblMessage.CssClass = "text-success";
+            }
+        }
+
+        private void DeleteExperience(int experienceId)
+        {
+            int userId = Convert.ToInt32(Session["UserID"]);
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = @"DELETE FROM WorkExperience 
+                                WHERE ExperienceId = @ExperienceId 
+                                AND UserId = @UserId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@ExperienceId", experienceId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         private void ClearForm()
         {
             txtOrganization.Text = "";
@@ -156,6 +240,26 @@ namespace WebApplication4
 
         protected void BtnNext_Click(object sender, EventArgs e)
         {
+            // Check if user has at least one experience
+            int userId = Convert.ToInt32(Session["UserID"]);
+            int count = 0;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = "SELECT COUNT(*) FROM WorkExperience WHERE UserId = @UserId";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                con.Open();
+                count = (int)cmd.ExecuteScalar();
+            }
+
+            if (count == 0)
+            {
+                lblMessage.Text = "Please add at least one work experience before continuing.";
+                lblMessage.CssClass = "text-danger";
+                return;
+            }
+
             Response.Redirect("ResearchData.aspx");
         }
     }

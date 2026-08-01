@@ -143,6 +143,24 @@
             box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
         }
 
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all .2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background: #a71d2a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
         .text-danger {
             font-size: 13px;
         }
@@ -340,13 +358,26 @@
 
                     <asp:GridView ID="gvExperiences" runat="server" AutoGenerateColumns="false"
                         CssClass="table table-hover mb-0" GridLines="None"
-                        EmptyDataText="No work experience added yet." EmptyDataRowStyle-CssClass="empty-row">
+                        DataKeyNames="ExperienceId"
+                        EmptyDataText="No work experience added yet." EmptyDataRowStyle-CssClass="empty-row"
+                        OnRowCommand="gvExperiences_RowCommand">
                         <Columns>
+                            <asp:BoundField DataField="ExperienceId" HeaderText="ID" Visible="false" />
                             <asp:BoundField DataField="OrganizationName" HeaderText="Organization" />
                             <asp:BoundField DataField="PositionTitle" HeaderText="Position" />
                             <asp:BoundField DataField="StartDate" HeaderText="Start Date" DataFormatString="{0:MMM yyyy}" />
                             <asp:BoundField DataField="EndDate" HeaderText="End Date" DataFormatString="{0:MMM yyyy}" />
                             <asp:BoundField DataField="Duration" HeaderText="Duration" />
+                            <asp:TemplateField HeaderText="Action" ItemStyle-Width="80px">
+                                <ItemTemplate>
+                                    <asp:Button ID="btnDelete" runat="server" 
+                                        CommandName="DeleteExperience" 
+                                        CommandArgument='<%# Container.DataItemIndex %>'
+                                        Text="Delete" 
+                                        CssClass="btn-delete"
+                                        OnClientClick="return confirm('Are you sure you want to delete this experience?');" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
