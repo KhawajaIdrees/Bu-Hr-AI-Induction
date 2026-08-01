@@ -306,17 +306,17 @@
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label for="<%= txtWCount.ClientID %>" class="form-label">W</label>
-                            <asp:TextBox ID="txtWCount" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtWCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtXCount.ClientID %>" class="form-label">X</label>
-                            <asp:TextBox ID="txtXCount" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtXCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtYCount.ClientID %>" class="form-label">Y</label>
-                            <asp:TextBox ID="txtYCount" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtYCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
                     </div>
 
@@ -328,21 +328,21 @@
                             <label for="<%= txtTotalFundedProjects.ClientID %>" class="form-label">
                                 Number of Funded Projects
                             </label>
-                            <asp:TextBox ID="txtTotalFundedProjects" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtTotalFundedProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtPIProjects.ClientID %>" class="form-label">
                                 Number of Projects as Principal Investigator (PI)
                             </label>
-                            <asp:TextBox ID="txtPIProjects" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtCoPIProjects.ClientID %>" class="form-label">
                                 Number of Projects as Co-Principal Investigator (Co-PI)
                             </label>
-                            <asp:TextBox ID="txtCoPIProjects" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtCoPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
                     </div>
 
@@ -354,21 +354,72 @@
                             <label for="<%= txtMSStudents.ClientID %>" class="form-label">
                                 Number of MS Produced
                             </label>
-                            <asp:TextBox ID="txtMSStudents" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtMSStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtMPhilStudents.ClientID %>" class="form-label">
                                 Number of M.Phil Produced
                             </label>
-                            <asp:TextBox ID="txtMPhilStudents" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtMPhilStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-4 form-group">
                             <label for="<%= txtPhDStudents.ClientID %>" class="form-label">
                                 Number of PhD Produced
                             </label>
-                            <asp:TextBox ID="txtPhDStudents" runat="server" TextMode="Number" CssClass="form-control" />
+                            <asp:TextBox ID="txtPhDStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <!-- Publication Details -->
+                    <div class="sub-section-title">Publication Information</div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtArticleTitle.ClientID %>" class="form-label">
+                                Article Title <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:TextBox ID="txtArticleTitle" runat="server" CssClass="form-control" placeholder="Enter article title" />
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtAuthors.ClientID %>" class="form-label">
+                                Authors <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:TextBox ID="txtAuthors" runat="server" CssClass="form-control" placeholder="Enter author names" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtJournalName.ClientID %>" class="form-label">
+                                Journal Name <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:TextBox ID="txtJournalName" runat="server" CssClass="form-control" placeholder="Enter journal name" />
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label for="<%= txtPublicationDate.ClientID %>" class="form-label">
+                                Publication Date
+                            </label>
+                            <asp:TextBox ID="txtPublicationDate" runat="server" TextMode="Date" CssClass="form-control" />
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label for="<%= txtPublicationYear.ClientID %>" class="form-label">
+                                Publication Year <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:TextBox ID="txtPublicationYear" runat="server" TextMode="Number" CssClass="form-control" placeholder="YYYY" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="<%= txtDOI.ClientID %>" class="form-label">
+                                DOI (if available)
+                            </label>
+                            <asp:TextBox ID="txtDOI" runat="server" CssClass="form-control" placeholder="Enter DOI (e.g., 10.1234/abcd1234)" />
                         </div>
                     </div>
 
@@ -385,22 +436,17 @@
                     <div class="table-responsive-wrap">
                         <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
                             CssClass="table table-hover mb-0" GridLines="None"
-                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" OnSelectedIndexChanged="gvPublications_SelectedIndexChanged">
+                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" 
+                            OnRowCommand="gvPublications_RowCommand">
                             <Columns>
-                                <asp:BoundField DataField="ImpactFactor" HeaderText="Impact Factor" />
-                                <asp:BoundField DataField="HECPublications" HeaderText="HEC Publications" />
-                                <asp:BoundField DataField="ConferencePaper" HeaderText="Conference Paper" />
-                                <asp:BoundField DataField="ImpactFactor2" HeaderText="Impact Factor 2" />
-                                <asp:BoundField DataField="ConferencePaper2" HeaderText="Conference Paper 2" />
-                                <asp:BoundField DataField="WCount" HeaderText="W" />
-                                <asp:BoundField DataField="XCount" HeaderText="X" />
-                                <asp:BoundField DataField="YCount" HeaderText="Y" />
-                                <asp:BoundField DataField="TotalFundedProjects" HeaderText="Funded Projects" />
-                                <asp:BoundField DataField="PIProjects" HeaderText="PI" />
-                                <asp:BoundField DataField="CoPIProjects" HeaderText="Co-PI" />
-                                <asp:BoundField DataField="MSStudents" HeaderText="MS" />
-                                <asp:BoundField DataField="MPhilStudents" HeaderText="M.Phil" />
-                                <asp:BoundField DataField="PhDStudents" HeaderText="PhD" />
+                                <asp:BoundField DataField="PublicationID" HeaderText="S.No" />
+                                <asp:BoundField DataField="ArticleTitle" HeaderText="Article Title" />
+                                <asp:BoundField DataField="Authors" HeaderText="Authors" />
+                                <asp:BoundField DataField="JournalName" HeaderText="Journal Name" />
+                                <asp:BoundField DataField="PublicationDate" HeaderText="Pub. Date" DataFormatString="{0:d}" />
+                                <asp:BoundField DataField="PublicationYear" HeaderText="Pub. Year" />
+                                <asp:BoundField DataField="DOI" HeaderText="DOI" />
+                                <asp:ButtonField Text="Delete" CommandName="DeletePublication" ButtonType="Button" ControlStyle-CssClass="btn btn-danger btn-sm" />
                             </Columns>
                         </asp:GridView>
                     </div>
@@ -416,6 +462,78 @@
         </div>
 
     </form>
+
+    <!-- JavaScript to control spinner behavior - stops at 0 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all number inputs
+            var numberInputs = document.querySelectorAll('input[type="number"]');
+
+            numberInputs.forEach(function (input) {
+                // Store the current value before any change
+                var previousValue = input.value;
+
+                // Handle the spinner (up/down arrows) and manual input
+                input.addEventListener('input', function () {
+                    if (this.value !== '' && this.value !== '-') {
+                        var val = parseInt(this.value);
+                        // If value is negative, set to 0
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                        // If value is empty or just a minus sign, keep it empty
+                    } else if (this.value === '-') {
+                        // Allow the minus sign temporarily, but it will be caught on blur
+                    }
+                });
+
+                // Handle when the user clicks the spinner arrows
+                input.addEventListener('change', function () {
+                    if (this.value !== '' && this.value !== '-') {
+                        var val = parseInt(this.value);
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                    }
+                });
+
+                // Handle blur - if empty or negative, set to 0 or empty based on preference
+                input.addEventListener('blur', function () {
+                    if (this.value === '' || this.value === '-' || this.value === null) {
+                        // Keep it empty (blank)
+                        this.value = '';
+                    } else {
+                        var val = parseInt(this.value);
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                    }
+                });
+
+                // Prevent negative values from being entered via keyboard
+                input.addEventListener('keydown', function (e) {
+                    // Allow: backspace, delete, tab, escape, enter, home, end, left, right
+                    if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 9 ||
+                        e.keyCode === 27 || e.keyCode === 13 || e.keyCode === 35 ||
+                        e.keyCode === 36 || e.keyCode === 37 || e.keyCode === 39) {
+                        return;
+                    }
+
+                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if ((e.ctrlKey || e.metaKey) && (e.keyCode === 65 || e.keyCode === 67 ||
+                        e.keyCode === 86 || e.keyCode === 88)) {
+                        return;
+                    }
+
+                    // Prevent the minus sign
+                    if (e.key === '-' || e.keyCode === 189) {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            });
+        });
+    </script>
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

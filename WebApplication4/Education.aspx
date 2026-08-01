@@ -363,6 +363,74 @@
     </form>
 
     <script>
+        // =========================================
+        // CONTROL SPINNER BEHAVIOR - STOPS AT 0
+        // =========================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all number inputs
+            var numberInputs = document.querySelectorAll('input[type="number"]');
+
+            numberInputs.forEach(function (input) {
+                // Handle input event (when user types or uses spinner)
+                input.addEventListener('input', function () {
+                    if (this.value !== '' && this.value !== '-') {
+                        var val = parseInt(this.value);
+                        // If value is negative, set to 0
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                    }
+                });
+
+                // Handle change event (when spinner arrows are clicked)
+                input.addEventListener('change', function () {
+                    if (this.value !== '' && this.value !== '-') {
+                        var val = parseInt(this.value);
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                    }
+                });
+
+                // Handle blur - if empty or negative, set to 0
+                input.addEventListener('blur', function () {
+                    if (this.value === '' || this.value === '-' || this.value === null) {
+                        this.value = '';
+                    } else {
+                        var val = parseInt(this.value);
+                        if (val < 0) {
+                            this.value = 0;
+                        }
+                    }
+                });
+
+                // Prevent negative values from being entered via keyboard
+                input.addEventListener('keydown', function (e) {
+                    // Allow: backspace, delete, tab, escape, enter, home, end, left, right
+                    if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 9 ||
+                        e.keyCode === 27 || e.keyCode === 13 || e.keyCode === 35 ||
+                        e.keyCode === 36 || e.keyCode === 37 || e.keyCode === 39) {
+                        return;
+                    }
+
+                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if ((e.ctrlKey || e.metaKey) && (e.keyCode === 65 || e.keyCode === 67 ||
+                        e.keyCode === 86 || e.keyCode === 88)) {
+                        return;
+                    }
+
+                    // Prevent the minus sign
+                    if (e.key === '-' || e.keyCode === 189) {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            });
+        });
+
+        // =========================================
+        // OTHER QUALIFICATIONS FUNCTIONS
+        // =========================================
         let otherCounter = 0;
 
         function addOtherRow() {
