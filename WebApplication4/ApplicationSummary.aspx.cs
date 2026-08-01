@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -16,180 +11,223 @@ namespace WebApplication4
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            int userID = 0;
-
-            if (Session["UserID"] != null)
+            if (Session["UserID"] == null)
             {
-                userID = Convert.ToInt32(Session["UserID"]);
-                lblMessage.Text = userID.ToString();
-                FillPersonal(userID);
-                FillEducation(userID);
-                FillWork(userID);
+                Response.Redirect("Login.aspx");
+                return;
             }
 
+            int userID = Convert.ToInt32(Session["UserID"]);
+
+            if (!IsPostBack)
+            {
+                FillPersonal(userID);
+                FillEducation(userID);
+                FillWorkExperience(userID);
+                FillResearchProfile(userID);
+            }
         }
 
+        // ============================================
+        // FILL PERSONAL INFORMATION (from Personal table)
+        // ============================================
         protected void FillPersonal(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-            string query = "SELECT * FROM Candidate WHERE userId = @userID";
+            string query = "SELECT * FROM Personal WHERE userId = @userID";
 
             using (SqlConnection con = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand(query, con);
-
                 cmd.Parameters.AddWithValue("@userID", userID);
-
                 con.Open();
 
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 if (reader.Read())
                 {
-                    txtName.Text = reader["name"].ToString();
+                    txtName.Text = reader["fname"].ToString() + " " + reader["lname"].ToString();
                     txtNationality.Text = reader["nationality"].ToString();
-                    txtBirthDate.Text = reader["birthdate"].ToString();
+                    txtBirthDate.Text = Convert.ToDateTime(reader["birthdate"]).ToString("yyyy-MM-dd");
                     txtIdentity.Text = reader["cnic"].ToString();
                     txtCell.Text = reader["cellNumber"].ToString();
-                    rbMale.Text = reader["gender"].ToString();
+
+                    // Set gender radio button
+                    string gender = reader["gender"].ToString();
+                    if (gender.ToLower() == "male")
+                        rbMale.Checked = true;
+                    else if (gender.ToLower() == "female")
+                        rbFemale.Checked = true;
+
                     reader.Close();
                 }
                 else
                 {
-                    lblMessage.Text = "User session not found.";
+                    txtName.Text = "No personal information found.";
                 }
             }
         }
+
+        // ============================================
+        // FILL EDUCATION INFORMATION (from Education table)
+        // ============================================
         protected void FillEducation(int userID)
         {
-            string query = @"SELECT type,
-                            subject,
-                            board,
-                            year,
-                            result,
-                            grade
-                     FROM Degree
-                     WHERE userId = @UserID";
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = @"SELECT * FROM Education WHERE UserID = @UserID";
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
-
                 con.Open();
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        string degreeType = reader["type"].ToString().Trim();
+                        // SSC
+                        ssc_subject.Value = reader["SSC_Specialization"].ToString();
+                        ssc_board.Value = reader["SSC_University"].ToString();
+                        ssc_year.Value = reader["SSC_Year"].ToString();
+                        ssc_result.Value = reader["SSC_CGPA"].ToString();
+                        ssc_grade.Value = reader["SSC_CGPA"].ToString();
 
-                        switch (degreeType.ToUpper())
+                        // HSSC
+                        hssc_subject.Value = reader["HSSC_Specialization"].ToString();
+                        hssc_board.Value = reader["HSSC_University"].ToString();
+                        hssc_year.Value = reader["HSSC_Year"].ToString();
+                        hssc_result.Value = reader["HSSC_CGPA"].ToString();
+                        hssc_grade.Value = reader["HSSC_CGPA"].ToString();
+
+                        // BS
+                        bs_subject.Value = reader["BS_Specialization"].ToString();
+                        bs_board.Value = reader["BS_University"].ToString();
+                        bs_year.Value = reader["BS_Year"].ToString();
+                        bs_result.Value = reader["BS_CGPA"].ToString();
+                        bs_grade.Value = reader["BS_CGPA"].ToString();
+
+                        // MS (if exists)
+                        if (reader["MS_Specialization"] != DBNull.Value)
                         {
-                            case "SSC":
-                            case "MATRIC":
-                                ssc_subject.Value = reader["subject"].ToString();
-                                ssc_board.Value = reader["board"].ToString();
-                                ssc_year.Value = reader["year"].ToString();
-                                ssc_result.Value = reader["result"].ToString();
-                                ssc_grade.Value = reader["grade"].ToString();
-                                break;
+                            ms_subject.Value = reader["MS_Specialization"].ToString();
+                            ms_board.Value = reader["MS_University"].ToString();
+                            ms_year.Value = reader["MS_Year"].ToString();
+                            ms_result.Value = reader["MS_CGPA"].ToString();
+                            ms_grade.Value = reader["MS_CGPA"].ToString();
+                        }
 
-                            case "HSSC":
-                            case "INTERMEDIATE":
-                                hssc_subject.Value = reader["subject"].ToString();
-                                hssc_board.Value = reader["board"].ToString();
-                                hssc_year.Value = reader["year"].ToString();
-                                hssc_result.Value = reader["result"].ToString();
-                                hssc_grade.Value = reader["grade"].ToString();
-                                break;
-
-
-                            case "BS":
-                            case "BS(HONS)":
-                            case "BS (HONS)":
-                            case "BSC":
-                            case "B.SC":
-                            case "BACHELOR":
-                                bs_subject.Value = reader["subject"].ToString();
-                                bs_board.Value = reader["board"].ToString();
-                                bs_year.Value = reader["year"].ToString();
-                                bs_result.Value = reader["result"].ToString();
-                                bs_grade.Value = reader["grade"].ToString();
-                                break;
-
-                            case "MS":
-                            case "MPHIL":
-                            case "MS/MPHIL":
-                                ms_subject.Value = reader["subject"].ToString();
-                                ms_board.Value = reader["board"].ToString();
-                                ms_year.Value = reader["year"].ToString();
-                                ms_result.Value = reader["result"].ToString();
-                                ms_grade.Value = reader["grade"].ToString();
-                                break;
-
-                            case "PHD":
-                                phd_subject.Value = reader["subject"].ToString();
-                                phd_board.Value = reader["board"].ToString();
-                                phd_year.Value = reader["year"].ToString();
-                                phd_result.Value = reader["result"].ToString();
-                                phd_grade.Value = reader["grade"].ToString();
-                                break;
-                        } //switch
-
-                    } //while
-
-                } //reader
+                        // PhD (if exists)
+                        if (reader["PhD_Specialization"] != DBNull.Value)
+                        {
+                            phd_subject.Value = reader["PhD_Specialization"].ToString();
+                            phd_board.Value = reader["PhD_University"].ToString();
+                            phd_year.Value = reader["PhD_Year"].ToString();
+                            phd_result.Value = reader["PhD_CGPA"].ToString();
+                            phd_grade.Value = reader["PhD_CGPA"].ToString();
+                        }
+                    }
+                    else
+                    {
+                        ssc_subject.Value = "No education found";
+                    }
+                }
             }
         }
-        protected void FillWork(int userID)
+
+        // ============================================
+        // FILL WORK EXPERIENCE (from WorkExperience table)
+        // ============================================
+        protected void FillWorkExperience(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-            string query = @"SELECT HIndex,
-                            ExperienceBeforePhD,
-                            ExperienceAfterPhD,
-                            supervisedMSStudents, 
-                            supervisedPhDStudents
-                     FROM Research
-                     WHERE UserID = @UserID";
+            string query = @"SELECT 
+                                OrganizationName,
+                                PositionTitle,
+                                StartDate,
+                                EndDate,
+                                IsCurrentJob,
+                                DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE())) AS TotalYears
+                            FROM WorkExperience
+                            WHERE UserId = @UserID
+                            ORDER BY StartDate DESC";
 
             using (SqlConnection con = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                    con.Open();
 
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            string experienceSummary = "";
+                            int totalYears = 0;
+                            int count = 0;
+
+                            while (reader.Read())
+                            {
+                                count++;
+                                string org = reader["OrganizationName"].ToString();
+                                string pos = reader["PositionTitle"].ToString();
+                                string start = Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
+                                string end = reader["IsCurrentJob"].ToString() == "True" ? "Present" : Convert.ToDateTime(reader["EndDate"]).ToString("MMM yyyy");
+                                int years = Convert.ToInt32(reader["TotalYears"]);
+                                totalYears += years;
+
+                                experienceSummary += $"{org} - {pos} ({start} to {end}) - {years} years\n";
+                            }
+
+                            txtExperienceBeforePhD.Text = $"Total: {totalYears} years across {count} position(s)";
+                            txtExperienceBeforePhD.ToolTip = experienceSummary;
+                        }
+                        else
+                        {
+                            txtExperienceBeforePhD.Text = "No work experience found.";
+                        }
+                    }
+                }
+            }
+        }
+
+        // ============================================
+        // FILL RESEARCH PROFILE (from ResearchProfile table)
+        // ============================================
+        protected void FillResearchProfile(int userID)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = @"SELECT * FROM ResearchProfile WHERE user_id = @UserID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
                     con.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            txtHIndex.Text = reader["HIndex"].ToString();
-
-                            txtExperienceBeforePhD.Text =
-                                reader["ExperienceBeforePhD"].ToString();
-
-                            txtExperienceAfterPhD.Text =
-                                reader["ExperienceAfterPhD"].ToString();
-
-                            txtMSStudents.Text =
-                                reader["supervisedMSStudents"].ToString();
-
-                            txtPhDStudents.Text =
-                                reader["supervisedPhDStudents"].ToString();
+                            txtHIndex.Text = reader["WCount"].ToString();
+                            txtMSStudents.Text = reader["MSStudents"].ToString();
+                            txtPhDStudents.Text = reader["PhDStudents"].ToString();
+                            txtExperienceAfterPhD.Text = reader["TotalFundedProjects"].ToString();
                         }
                         else
                         {
-                            lblMessage.Text = "No record found.";
+                            txtHIndex.Text = "No research profile found.";
                         }
                     }
                 }
             }
-
-
         }
+
+        // ============================================
+        // BUTTON CLICK EVENTS
+        // ============================================
         protected void BtnPersonalInfo_Click(object sender, EventArgs e)
         {
             Response.Redirect("Personal.aspx");
@@ -197,16 +235,17 @@ namespace WebApplication4
 
         protected void BtnApplicationInfo_Click(object sender, EventArgs e)
         {
-
+            // You can add logic here if needed
         }
 
         protected void BtnEducationalInfo_Click(object sender, EventArgs e)
         {
-            Response.Redirect("EducationPhd.aspx");
+            Response.Redirect("Education.aspx");
         }
+
         protected void BtnExperienceInfo_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ExperiencePhd.aspx");
+            Response.Redirect("Experience.aspx");
         }
     }
 }

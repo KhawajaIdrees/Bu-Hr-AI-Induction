@@ -173,7 +173,8 @@ namespace WebApplication4
                 var otherQualifications = CollectOtherQualificationData();
                 SaveOtherQualifications(userID, otherQualifications);
 
-                Response.Redirect("Experience.aspx");
+                // FIXED: Redirect to Application Summary instead of Experience
+                Response.Redirect("ApplicationSummary.aspx");
             }
         }
 
