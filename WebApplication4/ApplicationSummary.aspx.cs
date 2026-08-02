@@ -86,45 +86,45 @@ namespace WebApplication4
                 {
                     if (reader.Read())
                     {
-                        // SSC
+                        // SSC - Using new column names
                         ssc_subject.Value = reader["SSC_Specialization"].ToString();
                         ssc_board.Value = reader["SSC_University"].ToString();
                         ssc_year.Value = reader["SSC_Year"].ToString();
-                        ssc_result.Value = reader["SSC_CGPA"].ToString();
-                        ssc_grade.Value = reader["SSC_CGPA"].ToString();
+                        ssc_result.Value = reader["SSC_Percentage"].ToString();
+                        ssc_grade.Value = reader["SSC_Percentage"].ToString();
 
-                        // HSSC
+                        // HSSC - Using new column names
                         hssc_subject.Value = reader["HSSC_Specialization"].ToString();
                         hssc_board.Value = reader["HSSC_University"].ToString();
                         hssc_year.Value = reader["HSSC_Year"].ToString();
-                        hssc_result.Value = reader["HSSC_CGPA"].ToString();
-                        hssc_grade.Value = reader["HSSC_CGPA"].ToString();
+                        hssc_result.Value = reader["HSSC_Percentage"].ToString();
+                        hssc_grade.Value = reader["HSSC_Percentage"].ToString();
 
-                        // BS
+                        // BS - Using new column names
                         bs_subject.Value = reader["BS_Specialization"].ToString();
                         bs_board.Value = reader["BS_University"].ToString();
                         bs_year.Value = reader["BS_Year"].ToString();
-                        bs_result.Value = reader["BS_CGPA"].ToString();
-                        bs_grade.Value = reader["BS_CGPA"].ToString();
+                        bs_result.Value = reader["BS_Percentage"].ToString();
+                        bs_grade.Value = reader["BS_Percentage"].ToString();
 
-                        // MS (if exists)
+                        // MS (if exists) - Using new column names
                         if (reader["MS_Specialization"] != DBNull.Value)
                         {
                             ms_subject.Value = reader["MS_Specialization"].ToString();
                             ms_board.Value = reader["MS_University"].ToString();
                             ms_year.Value = reader["MS_Year"].ToString();
-                            ms_result.Value = reader["MS_CGPA"].ToString();
-                            ms_grade.Value = reader["MS_CGPA"].ToString();
+                            ms_result.Value = reader["MS_Percentage"].ToString();
+                            ms_grade.Value = reader["MS_Percentage"].ToString();
                         }
 
-                        // PhD (if exists)
+                        // PhD (if exists) - Using new column names
                         if (reader["PhD_Specialization"] != DBNull.Value)
                         {
                             phd_subject.Value = reader["PhD_Specialization"].ToString();
                             phd_board.Value = reader["PhD_University"].ToString();
                             phd_year.Value = reader["PhD_Year"].ToString();
-                            phd_result.Value = reader["PhD_CGPA"].ToString();
-                            phd_grade.Value = reader["PhD_CGPA"].ToString();
+                            phd_result.Value = reader["PhD_Percentage"].ToString();
+                            phd_grade.Value = reader["PhD_Percentage"].ToString();
                         }
                     }
                     else
@@ -136,7 +136,7 @@ namespace WebApplication4
         }
 
         // ============================================
-        // FILL WORK EXPERIENCE (from WorkExperience table)
+        // FILL WORK EXPERIENCE (FULLY FIXED)
         // ============================================
         protected void FillWorkExperience(int userID)
         {
@@ -170,11 +170,41 @@ namespace WebApplication4
                             while (reader.Read())
                             {
                                 count++;
+
                                 string org = reader["OrganizationName"].ToString();
                                 string pos = reader["PositionTitle"].ToString();
-                                string start = Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
-                                string end = reader["IsCurrentJob"].ToString() == "True" ? "Present" : Convert.ToDateTime(reader["EndDate"]).ToString("MMM yyyy");
-                                int years = Convert.ToInt32(reader["TotalYears"]);
+
+                                // FIXED: Check for NULL StartDate
+                                string start;
+                                if (reader["StartDate"] == DBNull.Value)
+                                {
+                                    start = "N/A";
+                                }
+                                else
+                                {
+                                    start = Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
+                                }
+
+                                // FIXED: Check for NULL EndDate
+                                string end;
+                                if (reader["IsCurrentJob"].ToString() == "True")
+                                {
+                                    end = "Present";
+                                }
+                                else if (reader["EndDate"] == DBNull.Value)
+                                {
+                                    end = "Present";
+                                }
+                                else
+                                {
+                                    end = Convert.ToDateTime(reader["EndDate"]).ToString("MMM yyyy");
+                                }
+
+                                int years = 0;
+                                if (reader["TotalYears"] != DBNull.Value)
+                                {
+                                    years = Convert.ToInt32(reader["TotalYears"]);
+                                }
                                 totalYears += years;
 
                                 experienceSummary += $"{org} - {pos} ({start} to {end}) - {years} years\n";

@@ -8,18 +8,32 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <style>
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             background: #f0f4f8;
             font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 17px;
+            min-height: 100vh;
         }
 
+        /* ============================================
+           PAGE HEADER
+           ============================================ */
         .page-title h4 {
             color: #1a3a7a;
             font-weight: 700;
+            font-size: clamp(20px, 3vw, 28px);
         }
 
         .page-title h5 {
             color: #6c757d;
+            font-size: clamp(14px, 1.5vw, 18px);
         }
 
         .page-title hr {
@@ -29,6 +43,9 @@
             margin-top: 5px;
         }
 
+        /* ============================================
+           CARDS
+           ============================================ */
         .card-main {
             border-radius: 16px;
             border: none;
@@ -46,7 +63,7 @@
         .card-header-blue h5 {
             margin: 0;
             font-weight: 600;
-            font-size: 20px;
+            font-size: clamp(16px, 1.8vw, 20px);
         }
 
         .card-header-blue i {
@@ -57,22 +74,26 @@
             padding: 25px 30px;
         }
 
+        /* ============================================
+           TABLES - FIXED FOR MOBILE
+           ============================================ */
         .education-table th {
             background: #e8edf5;
             color: #1a3a7a;
             font-weight: 700;
-            font-size: 13px;
+            font-size: clamp(12px, 1vw, 13px);
             text-align: center;
             vertical-align: middle;
             border-bottom: 2px solid #1a3a7a;
             white-space: nowrap;
+            padding: 10px 12px;
         }
 
         .education-table td {
             vertical-align: middle;
             text-align: center;
-            padding: 8px 6px;
-            min-width: 80px;
+            padding: 10px 8px;
+            min-width: 70px;
         }
 
         .education-table td:first-child {
@@ -81,281 +102,190 @@
             background: #f8faff;
             text-align: left;
             padding-left: 15px;
-            min-width: 120px;
+            min-width: 100px;
             white-space: nowrap;
         }
 
         /* ============================================
-           INPUT WIDTHS: SHORT for numbers, LONG for text
+           INPUTS - BIGGER ON MOBILE
            ============================================ */
-        
-        /* Duration - Medium (Desktop) */
-        .education-table input[id$="_duration"] {
-            min-width: 80px;
-            max-width: 120px;
+        .education-table input,
+        .other-table input {
             border-radius: 6px;
             border: 1px solid #d0d7e6;
-            padding: 6px 10px;
-            font-size: 14px;
+            padding: 8px 12px;
+            font-size: clamp(14px, 1vw, 15px);
             transition: all 0.2s;
             width: 100%;
-            text-align: center;
             background: #f8faff;
             color: #1a2332;
             box-sizing: border-box;
+            min-height: 40px;
         }
 
-        /* Specialization - LONG */
-        .education-table input[id$="_specialization"] {
-            min-width: 140px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 6px 10px;
-            font-size: 14px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Year - Slightly bigger to show 4 digits */
-        .education-table input[id$="_year"] {
-            min-width: 75px;
-            max-width: 95px;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 6px 8px;
-            font-size: 14px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-        }
-
-        /* Percentage/CGPA - SHORT */
-        .education-table input[id$="_cgpa"], 
-        .education-table input[id$="per"] {
-            min-width: 70px;
-            max-width: 90px;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 6px 8px;
-            font-size: 14px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-        }
-
-        /* Institute - LONG */
-        .education-table input[id$="_uni"] {
-            min-width: 150px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 6px 10px;
-            font-size: 14px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Country - LONG */
-        .education-table input[id$="_country"] {
-            min-width: 120px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 6px 10px;
-            font-size: 14px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        .education-table input:focus {
-            border-color: #1a3a7a;
-            box-shadow: 0 0 0 0.2rem rgba(26, 58, 122, 0.15);
-            outline: none;
-        }
-
-        .section-divider {
-            border-top: 3px dashed #1a3a7a;
-            margin: 30px 0;
-            opacity: 0.3;
-        }
-
-        /* Other Qualifications */
-        .other-table th {
-            background: #e8edf5;
-            color: #1a3a7a;
-            font-weight: 700;
-            font-size: 13px;
-            text-align: center;
-            vertical-align: middle;
-            border-bottom: 2px solid #1a3a7a;
-            white-space: nowrap;
-        }
-
-        .other-table td {
-            vertical-align: middle;
-            text-align: center;
-            padding: 6px 4px;
-            min-width: 60px;
-        }
-
-        /* Other table - Qualification (LONG) */
-        .other-table input[name^="other_name"] {
-            min-width: 120px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 8px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Other table - Duration (SHORT) */
-        .other-table input[name^="other_duration"] {
-            min-width: 70px;
-            max-width: 100px;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 8px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-        }
-
-        /* Other table - Specialization (LONG) */
-        .other-table input[name^="other_specialization"] {
-            min-width: 100px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 8px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Other table - Year (SHORT) */
-        .other-table input[name^="other_year"] {
-            min-width: 60px;
-            max-width: 80px;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 6px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-        }
-
-        /* Other table - Percentage (SHORT) */
-        .other-table input[name^="other_percentage"] {
-            min-width: 65px;
-            max-width: 85px;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 6px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-        }
-
-        /* Other table - Institute (LONG) */
-        .other-table input[name^="other_institute"] {
-            min-width: 120px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 8px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Other table - Country (LONG) */
-        .other-table input[name^="other_country"] {
-            min-width: 100px;
-            max-width: none;
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 5px 8px;
-            font-size: 13px;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: left;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
+        .education-table input:focus,
+        .education-table select:focus,
         .other-table input:focus {
             border-color: #1a3a7a;
             box-shadow: 0 0 0 0.2rem rgba(26, 58, 122, 0.15);
             outline: none;
         }
 
+        .education-table select {
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 8px 12px;
+            font-size: clamp(14px, 1vw, 15px);
+            transition: all 0.2s;
+            width: 100%;
+            background: #f8faff;
+            color: #1a3a7a;
+            box-sizing: border-box;
+            min-height: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ============================================
+           INPUT WIDTHS - FIXED
+           ============================================ */
+        
+        /* Duration */
+        .education-table input[id$="_duration"] {
+            min-width: 70px;
+            max-width: 120px;
+            text-align: center;
+        }
+
+        /* BS/BSc Dropdown */
+        .education-table select[id$="_type"] {
+            min-width: 120px;
+            max-width: 180px;
+            text-align: center;
+        }
+
+        /* Specialization - LONG */
+        .education-table input[id$="_specialization"] {
+            min-width: 120px;
+            max-width: none;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Year */
+        .education-table input[id$="_year"] {
+            min-width: 70px;
+            max-width: 95px;
+            text-align: center;
+        }
+
+        /* Percentage/CGPA */
+        .education-table input[id$="_cgpa"], 
+        .education-table input[id$="per"] {
+            min-width: 70px;
+            max-width: 95px;
+            text-align: center;
+        }
+
+        /* Institute - LONG */
+        .education-table input[id$="_uni"] {
+            min-width: 140px;
+            max-width: none;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Country */
+        .education-table input[id$="_country"] {
+            min-width: 120px;
+            max-width: none;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* ============================================
+           DEGREE LABEL
+           ============================================ */
+        .degree-label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .degree-label .required-star {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: clamp(14px, 1.2vw, 16px);
+            flex-shrink: 0;
+        }
+
+        .degree-label select {
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            font-size: clamp(14px, 1.2vw, 15px);
+            color: #1a3a7a;
+            padding: 0;
+            width: auto;
+            min-width: 130px;
+            cursor: pointer;
+            font-family: inherit;
+            min-height: auto;
+        }
+
+        .degree-label select:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* ============================================
+           OTHER QUALIFICATIONS
+           ============================================ */
+        .other-table th {
+            background: #e8edf5;
+            color: #1a3a7a;
+            font-weight: 700;
+            font-size: clamp(12px, 1vw, 13px);
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 2px solid #1a3a7a;
+            white-space: nowrap;
+            padding: 10px 12px;
+        }
+
+        .other-table td {
+            vertical-align: middle;
+            text-align: center;
+            padding: 8px 6px;
+            min-width: 60px;
+        }
+
+        .other-table input {
+            min-width: 70px;
+            max-width: none;
+            text-align: left;
+            white-space: normal;
+            word-wrap: break-word;
+            min-height: 36px;
+            font-size: clamp(13px, 0.9vw, 14px);
+            padding: 6px 10px;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
         .btn-add-blue {
             background: #1a3a7a;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 10px 25px;
+            padding: clamp(10px, 1vw, 12px) clamp(20px, 2vw, 25px);
             font-weight: 600;
+            font-size: clamp(14px, 1vw, 16px);
             transition: all 0.2s;
         }
 
@@ -370,7 +300,7 @@
             background: transparent;
             color: #dc3545;
             border: none;
-            font-size: 18px;
+            font-size: clamp(18px, 1.2vw, 20px);
             cursor: pointer;
             padding: 0 5px;
             transition: all 0.2s;
@@ -386,10 +316,11 @@
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 14px 55px;
-            font-size: 18px;
+            padding: clamp(14px, 1.2vw, 16px) clamp(40px, 4vw, 55px);
+            font-size: clamp(17px, 1.2vw, 19px);
             font-weight: 600;
             transition: all 0.2s;
+            width: auto;
         }
 
         .btn-save-blue:hover {
@@ -399,240 +330,431 @@
             box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
-        .text-primary-custom {
-            color: #1a3a7a;
-        }
-
-        /* Required star */
+        /* ============================================
+           REQUIRED STAR
+           ============================================ */
         .required-star {
             color: #dc3545;
             font-weight: 700;
+            font-size: clamp(14px, 1.2vw, 16px);
+            flex-shrink: 0;
         }
 
-        /* Degree years text */
+        /* ============================================
+           DEGREE YEARS TEXT
+           ============================================ */
         .degree-years {
             color: #6c757d;
-            font-size: 12px;
+            font-size: clamp(11px, 0.8vw, 12px);
             font-weight: 400;
             display: block;
             line-height: 1.2;
         }
 
-        @media (max-width: 768px) {
-            /* Duration - SMALLER on mobile */
+        /* ============================================
+           RESPONSIVE: TABLET & MOBILE - BIGGER TEXT
+           ============================================ */
+        @media (max-width: 992px) {
+            .card-body {
+                padding: 20px 24px;
+            }
+
+            .education-table td {
+                padding: 8px 6px;
+                min-width: 60px;
+            }
+
+            .education-table td:first-child {
+                min-width: 90px;
+                padding-left: 12px;
+                white-space: normal;
+                font-size: clamp(12px, 0.9vw, 13px);
+            }
+
+            .education-table input,
+            .education-table select {
+                font-size: clamp(13px, 0.9vw, 14px);
+                padding: 6px 10px;
+                min-height: 36px;
+            }
+
             .education-table input[id$="_duration"] {
-                min-width: 50px;
-                max-width: 70px;
-                font-size: 12px;
-                padding: 4px 6px;
+                min-width: 60px;
+                max-width: 100px;
             }
-            
+
+            .education-table select[id$="_type"] {
+                min-width: 100px;
+                max-width: 140px;
+            }
+
             .education-table input[id$="_specialization"] {
-                min-width: 80px;
-                font-size: 12px;
-                padding: 4px 6px;
+                min-width: 100px;
             }
-            
-            /* Year - Slightly bigger on mobile too */
+
             .education-table input[id$="_year"] {
                 min-width: 60px;
-                max-width: 75px;
-                font-size: 12px;
-                padding: 4px 6px;
+                max-width: 80px;
             }
-            
-            .education-table input[id$="_cgpa"], 
+
+            .education-table input[id$="_cgpa"],
             .education-table input[id$="per"] {
-                min-width: 55px;
-                max-width: 70px;
-                font-size: 12px;
-                padding: 4px 6px;
+                min-width: 60px;
+                max-width: 80px;
             }
-            
+
             .education-table input[id$="_uni"] {
-                min-width: 90px;
-                font-size: 12px;
-                padding: 4px 6px;
+                min-width: 110px;
             }
-            
+
             .education-table input[id$="_country"] {
-                min-width: 80px;
-                font-size: 12px;
-                padding: 4px 6px;
+                min-width: 100px;
             }
-            
-            .education-table td {
-                padding: 4px 4px;
+
+            .other-table td {
+                padding: 6px 4px;
                 min-width: 50px;
             }
+
+            .other-table input {
+                min-width: 60px;
+                font-size: clamp(12px, 0.8vw, 13px);
+                padding: 6px 8px;
+                min-height: 34px;
+            }
+
+            .other-table th {
+                font-size: clamp(11px, 0.8vw, 12px);
+                padding: 8px 6px;
+                white-space: normal;
+            }
+
+            .degree-label select {
+                font-size: clamp(13px, 1vw, 14px);
+                min-width: 110px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .card-body {
+                padding: 16px 14px;
+            }
+
+            .card-header-blue {
+                padding: 14px 18px;
+            }
+
+            .card-header-blue h5 {
+                font-size: 17px;
+            }
+
+            /* BIGGER TABLE ON MOBILE */
+            .education-table td {
+                padding: 8px 5px;
+                min-width: 70px;
+                font-size: 14px;
+            }
+
             .education-table td:first-child {
                 min-width: 80px;
-                white-space: normal;
-                font-size: 12px;
+                font-size: 13px;
                 padding-left: 8px;
             }
+
+            .education-table input,
+            .education-table select {
+                font-size: 14px;
+                padding: 6px 8px;
+                min-height: 36px;
+                border-radius: 5px;
+            }
+
+            .education-table input[id$="_duration"] {
+                min-width: 55px;
+                max-width: 80px;
+            }
+
+            .education-table select[id$="_type"] {
+                min-width: 90px;
+                max-width: 130px;
+                font-size: 13px;
+                padding: 5px 8px;
+            }
+
+            .education-table input[id$="_specialization"] {
+                min-width: 80px;
+            }
+
+            .education-table input[id$="_year"] {
+                min-width: 55px;
+                max-width: 75px;
+            }
+
+            .education-table input[id$="_cgpa"],
+            .education-table input[id$="per"] {
+                min-width: 55px;
+                max-width: 75px;
+            }
+
+            .education-table input[id$="_uni"] {
+                min-width: 90px;
+            }
+
+            .education-table input[id$="_country"] {
+                min-width: 80px;
+            }
+
             .education-table th {
                 font-size: 11px;
-                padding: 6px 4px;
+                padding: 8px 5px;
                 white-space: normal;
             }
-            
-            /* Other table mobile */
-            .other-table input[name^="other_name"] {
-                min-width: 80px;
-                font-size: 12px;
-                padding: 4px 6px;
-            }
-            .other-table input[name^="other_duration"] {
-                min-width: 45px;
-                max-width: 65px;
-                font-size: 12px;
-                padding: 4px 4px;
-            }
-            .other-table input[name^="other_specialization"] {
-                min-width: 70px;
-                font-size: 12px;
-                padding: 4px 6px;
-            }
-            .other-table input[name^="other_year"] {
-                min-width: 50px;
-                max-width: 65px;
-                font-size: 12px;
-                padding: 4px 4px;
-            }
-            .other-table input[name^="other_percentage"] {
-                min-width: 50px;
-                max-width: 65px;
-                font-size: 12px;
-                padding: 4px 4px;
-            }
-            .other-table input[name^="other_institute"] {
-                min-width: 80px;
-                font-size: 12px;
-                padding: 4px 6px;
-            }
-            .other-table input[name^="other_country"] {
-                min-width: 70px;
-                font-size: 12px;
-                padding: 4px 6px;
-            }
+
             .other-table td {
-                padding: 4px 3px;
-                min-width: 40px;
+                padding: 6px 4px;
+                min-width: 50px;
             }
+
+            .other-table input {
+                min-width: 50px;
+                font-size: 13px;
+                padding: 5px 6px;
+                min-height: 32px;
+            }
+
             .other-table th {
                 font-size: 11px;
-                padding: 6px 4px;
+                padding: 8px 5px;
                 white-space: normal;
             }
-            .card-body {
-                padding: 15px;
+
+            .degree-label select {
+                font-size: 14px;
+                min-width: 100px;
+            }
+
+            .degree-label .required-star {
+                font-size: 15px;
+            }
+
+            .btn-save-blue {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 17px;
+                justify-content: center;
+            }
+
+            .btn-add-blue {
+                padding: 10px 18px;
+                font-size: 15px;
+                width: 100%;
+            }
+
+            .section-divider {
+                margin: 20px 0;
             }
         }
 
         @media (max-width: 480px) {
-            /* Duration - EVEN SMALLER on small mobile */
-            .education-table input[id$="_duration"] {
-                min-width: 40px;
-                max-width: 55px;
-                font-size: 11px;
-                padding: 3px 4px;
+            .container {
+                padding-left: 6px;
+                padding-right: 6px;
             }
-            
-            .education-table input[id$="_specialization"] {
+
+            .card-body {
+                padding: 12px 10px;
+            }
+
+            /* EVEN BIGGER ON SMALL MOBILE */
+            .education-table td {
+                padding: 6px 4px;
                 min-width: 60px;
-                font-size: 11px;
-                padding: 3px 4px;
+                font-size: 13px;
             }
-            
+
+            .education-table td:first-child {
+                min-width: 65px;
+                font-size: 12px;
+                padding-left: 6px;
+            }
+
+            .education-table input,
+            .education-table select {
+                font-size: 13px;
+                padding: 5px 6px;
+                min-height: 32px;
+                border-radius: 4px;
+            }
+
+            .education-table input[id$="_duration"] {
+                min-width: 50px;
+                max-width: 70px;
+            }
+
+            .education-table select[id$="_type"] {
+                min-width: 80px;
+                max-width: 110px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+
+            .education-table input[id$="_specialization"] {
+                min-width: 70px;
+            }
+
             .education-table input[id$="_year"] {
                 min-width: 50px;
-                max-width: 60px;
-                font-size: 11px;
-                padding: 3px 4px;
+                max-width: 65px;
             }
-            
-            .education-table input[id$="_cgpa"], 
+
+            .education-table input[id$="_cgpa"],
             .education-table input[id$="per"] {
-                min-width: 45px;
-                max-width: 55px;
-                font-size: 11px;
-                padding: 3px 4px;
+                min-width: 50px;
+                max-width: 65px;
             }
-            
+
             .education-table input[id$="_uni"] {
-                min-width: 60px;
-                font-size: 11px;
-                padding: 3px 4px;
+                min-width: 75px;
             }
-            
+
             .education-table input[id$="_country"] {
-                min-width: 55px;
-                font-size: 11px;
-                padding: 3px 4px;
+                min-width: 70px;
             }
-            
-            .education-table td {
-                padding: 3px 3px;
-                min-width: 35px;
-            }
-            .education-table td:first-child {
-                min-width: 60px;
-                font-size: 11px;
-                padding-left: 5px;
-            }
+
             .education-table th {
                 font-size: 10px;
-                padding: 4px 3px;
+                padding: 6px 4px;
+                white-space: normal;
             }
-            
-            /* Other table small mobile */
-            .other-table input[name^="other_name"] {
-                min-width: 60px;
-                font-size: 11px;
-                padding: 3px 4px;
-            }
-            .other-table input[name^="other_duration"] {
-                min-width: 35px;
-                max-width: 50px;
-                font-size: 11px;
-                padding: 3px 3px;
-            }
-            .other-table input[name^="other_specialization"] {
-                min-width: 50px;
-                font-size: 11px;
-                padding: 3px 4px;
-            }
-            .other-table input[name^="other_year"] {
-                min-width: 40px;
-                max-width: 50px;
-                font-size: 11px;
-                padding: 3px 3px;
-            }
-            .other-table input[name^="other_percentage"] {
-                min-width: 40px;
-                max-width: 50px;
-                font-size: 11px;
-                padding: 3px 3px;
-            }
-            .other-table input[name^="other_institute"] {
-                min-width: 55px;
-                font-size: 11px;
-                padding: 3px 4px;
-            }
-            .other-table input[name^="other_country"] {
-                min-width: 50px;
-                font-size: 11px;
-                padding: 3px 4px;
-            }
+
             .other-table td {
-                padding: 3px 2px;
-                min-width: 30px;
+                padding: 4px 3px;
+                min-width: 40px;
             }
+
+            .other-table input {
+                min-width: 40px;
+                font-size: 12px;
+                padding: 4px 5px;
+                min-height: 28px;
+            }
+
             .other-table th {
                 font-size: 10px;
-                padding: 4px 3px;
+                padding: 6px 4px;
+                white-space: normal;
             }
+
+            .degree-label select {
+                font-size: 13px;
+                min-width: 80px;
+            }
+
+            .degree-label .required-star {
+                font-size: 13px;
+            }
+
+            .card-header-blue {
+                padding: 12px 14px;
+            }
+
+            .card-header-blue h5 {
+                font-size: 15px;
+            }
+
+            .btn-save-blue {
+                font-size: 15px;
+                padding: 12px 18px;
+            }
+
+            .btn-add-blue {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+
+            .page-title h4 {
+                font-size: 18px;
+            }
+
+            .page-title h5 {
+                font-size: 13px;
+            }
+        }
+
+        /* ============================================
+           SCROLLABLE TABLE FOR SMALL SCREENS
+           ============================================ */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 10px;
+            border: 1px solid #eef1f8;
+        }
+
+        .table-responsive::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: #1a3a7a;
+            border-radius: 10px;
+        }
+
+        /* ============================================
+           SECTION DIVIDER
+           ============================================ */
+        .section-divider {
+            border-top: 3px dashed #1a3a7a;
+            margin: 30px 0;
+            opacity: 0.3;
+        }
+
+        .text-primary-custom {
+            color: #1a3a7a;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+        .me-1 {
+            margin-right: 0.25rem;
+        }
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+        .ms-3 {
+            margin-left: 1rem;
+        }
+        .py-4 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -658,13 +780,13 @@
                         <table class="table table-bordered table-hover align-middle education-table">
                             <thead>
                                 <tr>
-                                    <th style="min-width: 120px;">Certificate/Degree</th>
-                                    <th style="min-width: 80px;">Duration</th>
-                                    <th style="min-width: 140px;">Specialization</th>
-                                    <th style="min-width: 75px;">Year</th>
+                                    <th style="min-width: 100px;">Certificate/Degree</th>
+                                    <th style="min-width: 70px;">Duration</th>
+                                    <th style="min-width: 100px;">Specialization</th>
+                                    <th style="min-width: 70px;">Year</th>
                                     <th style="min-width: 70px;">Percentage</th>
-                                    <th style="min-width: 150px;">Institute</th>
-                                    <th style="min-width: 120px;">Country</th>
+                                    <th style="min-width: 120px;">Institute</th>
+                                    <th style="min-width: 100px;">Country</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -688,9 +810,13 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="required-star">*</span> Bachelor
-                                        <br />
-                                        <span class="degree-years" style="padding-left: 11px;">(14-16 Years)</span>
+                                        <div class="degree-label">
+                                            <span class="required-star">*</span>
+                                            <select id="bs_type" runat="server">
+                                                <option value="BS - 16 Years">BS - 16 Years</option>
+                                                <option value="BSc - 14 Years">BSc - 14 Years</option>
+                                            </select>
+                                        </div>
                                     </td>
                                     <td><input type="text" id="bs_duration" runat="server" class="form-control" /></td>
                                     <td><input type="text" id="bs_specialization" runat="server" class="form-control" /></td>
@@ -746,15 +872,15 @@
                         <table class="table table-bordered table-hover align-middle other-table" id="otherTable">
                             <thead>
                                 <tr>
-                                    <th style="width: 50px;">#</th>
-                                    <th style="min-width: 120px;">Qualification</th>
+                                    <th style="width: 45px;">#</th>
+                                    <th style="min-width: 100px;">Qualification</th>
                                     <th style="min-width: 70px;">Duration</th>
-                                    <th style="min-width: 100px;">Specialization</th>
-                                    <th style="min-width: 60px;">Year</th>
+                                    <th style="min-width: 90px;">Specialization</th>
+                                    <th style="min-width: 65px;">Year</th>
                                     <th style="min-width: 65px;">Percentage</th>
-                                    <th style="min-width: 120px;">Institute</th>
-                                    <th style="min-width: 100px;">Country</th>
-                                    <th style="width: 60px;">Action</th>
+                                    <th style="min-width: 100px;">Institute</th>
+                                    <th style="min-width: 90px;">Country</th>
+                                    <th style="width: 50px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="otherBody">
@@ -787,22 +913,18 @@
         // CONTROL SPINNER BEHAVIOR - STOPS AT 0
         // =========================================
         document.addEventListener('DOMContentLoaded', function () {
-            // Get all number inputs
             var numberInputs = document.querySelectorAll('input[type="number"]');
 
             numberInputs.forEach(function (input) {
-                // Handle input event (when user types or uses spinner)
                 input.addEventListener('input', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        // If value is negative, set to 0
                         if (val < 0) {
                             this.value = 0;
                         }
                     }
                 });
 
-                // Handle change event (when spinner arrows are clicked)
                 input.addEventListener('change', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
@@ -812,7 +934,6 @@
                     }
                 });
 
-                // Handle blur - if empty or negative, set to 0
                 input.addEventListener('blur', function () {
                     if (this.value === '' || this.value === '-' || this.value === null) {
                         this.value = '';
@@ -824,22 +945,18 @@
                     }
                 });
 
-                // Prevent negative values from being entered via keyboard
                 input.addEventListener('keydown', function (e) {
-                    // Allow: backspace, delete, tab, escape, enter, home, end, left, right
                     if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 9 ||
                         e.keyCode === 27 || e.keyCode === 13 || e.keyCode === 35 ||
                         e.keyCode === 36 || e.keyCode === 37 || e.keyCode === 39) {
                         return;
                     }
 
-                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
                     if ((e.ctrlKey || e.metaKey) && (e.keyCode === 65 || e.keyCode === 67 ||
                         e.keyCode === 86 || e.keyCode === 88)) {
                         return;
                     }
 
-                    // Prevent the minus sign
                     if (e.key === '-' || e.keyCode === 189) {
                         e.preventDefault();
                         return false;
@@ -884,12 +1001,10 @@
                 row.remove();
                 const rows = document.querySelectorAll('#otherBody tr');
 
-                // Re-number remaining rows starting from 1
                 rows.forEach((row, index) => {
                     row.cells[0].textContent = index + 1;
                 });
 
-                // Reset counter if no rows left
                 if (rows.length === 0) {
                     otherCounter = 0;
                 }

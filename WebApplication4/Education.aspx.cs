@@ -26,85 +26,81 @@ namespace WebApplication4
                 }
 
                 int userID = Convert.ToInt32(Session["UserID"]);
-                // LoadCandidateDegrees(userID);
+                LoadEducationData(userID);
             }
         }
 
-        private void LoadCandidateDegrees(int userID)
+        private void LoadEducationData(int userID)
         {
-            string query = @"SELECT type,
-                            subject,
-                            board,
-                            year,
-                            result,
-                            grade
-                     FROM Degree
-                     WHERE userId = @UserID";
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = @"SELECT * FROM Education WHERE UserID = @UserID";
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
-
                 con.Open();
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        string degreeType = reader["type"].ToString().Trim();
+                        // SSC
+                        ssc_duration.Value = reader["SSC_Duration"].ToString();
+                        ssc_specialization.Value = reader["SSC_Specialization"].ToString();
+                        ssc_year.Value = reader["SSC_Year"].ToString();
+                        sscper.Value = reader["SSC_Percentage"].ToString();
+                        ssc_uni.Value = reader["SSC_University"].ToString();
+                        ssc_country.Value = reader["SSC_Country"].ToString();
 
-                        switch (degreeType.ToUpper())
+                        // HSSC
+                        hssc_duration.Value = reader["HSSC_Duration"].ToString();
+                        hssc_specialization.Value = reader["HSSC_Specialization"].ToString();
+                        hssc_year.Value = reader["HSSC_Year"].ToString();
+                        hsscper.Value = reader["HSSC_Percentage"].ToString();
+                        hssc_uni.Value = reader["HSSC_University"].ToString();
+                        hssc_country.Value = reader["HSSC_Country"].ToString();
+
+                        // BS
+                        bs_type.Value = reader["BS_Type"].ToString();
+                        bs_duration.Value = reader["BS_Duration"].ToString();
+                        bs_specialization.Value = reader["BS_Specialization"].ToString();
+                        bs_year.Value = reader["BS_Year"].ToString();
+                        bs_cgpa.Value = reader["BS_Percentage"].ToString();
+                        bs_uni.Value = reader["BS_University"].ToString();
+                        bs_country.Value = reader["BS_Country"].ToString();
+
+                        // MS (Optional)
+                        if (reader["MS_Duration"] != DBNull.Value)
                         {
-                            case "SSC":
-                            case "MATRIC":
-                                /*  ssc_subject.Value = reader["subject"].ToString();
-                                    ssc_board.Value = reader["board"].ToString();
-                                    ssc_year.Value = reader["year"].ToString();
-                                    ssc_result.Value = reader["result"].ToString();
-                                    ssc_grade.Value = reader["grade"].ToString();*/
-                                break;
+                            ms_duration.Value = reader["MS_Duration"].ToString();
+                            ms_specialization.Value = reader["MS_Specialization"].ToString();
+                            ms_year.Value = reader["MS_Year"].ToString();
+                            ms_cgpa.Value = reader["MS_Percentage"].ToString();
+                            ms_uni.Value = reader["MS_University"].ToString();
+                            ms_country.Value = reader["MS_Country"].ToString();
+                        }
 
-                            case "HSSC":
-                            case "INTERMEDIATE":
-                                /* hssc_subject.Value = reader["subject"].ToString();
-                                   hssc_board.Value = reader["board"].ToString();
-                                   hssc_year.Value = reader["year"].ToString();
-                                   hssc_result.Value = reader["result"].ToString();
-                                   hssc_grade.Value = reader["grade"].ToString();*/
-                                break;
+                        // PhD (Optional)
+                        if (reader["PhD_Duration"] != DBNull.Value)
+                        {
+                            phd_duration.Value = reader["PhD_Duration"].ToString();
+                            phd_specialization.Value = reader["PhD_Specialization"].ToString();
+                            phd_year.Value = reader["PhD_Year"].ToString();
+                            phd_cgpa.Value = reader["PhD_Percentage"].ToString();
+                            phd_uni.Value = reader["PhD_University"].ToString();
+                            phd_country.Value = reader["PhD_Country"].ToString();
+                        }
 
-                            case "BS":
-                            case "BS(HONS)":
-                            case "BS (HONS)":
-                            case "BSC":
-                            case "B.SC":
-                            case "BACHELOR":
-                                /*   bs_subject.Value = reader["subject"].ToString();
-                                     bs_board.Value = reader["board"].ToString();
-                                     bs_year.Value = reader["year"].ToString();
-                                     bs_result.Value = reader["result"].ToString();
-                                     bs_grade.Value = reader["grade"].ToString();*/
-                                break;
-
-                            case "MS":
-                            case "MPHIL":
-                            case "MS/MPHIL":
-                                /*   ms_subject.Value = reader["subject"].ToString();
-                                     ms_board.Value = reader["board"].ToString();
-                                     ms_year.Value = reader["year"].ToString();
-                                     ms_result.Value = reader["result"].ToString();
-                                     ms_grade.Value = reader["grade"].ToString();*/
-                                break;
-
-                            case "PHD":
-                                /*  phd_subject.Value = reader["subject"].ToString();
-                                    phd_board.Value = reader["board"].ToString();
-                                    phd_year.Value = reader["year"].ToString();
-                                    phd_result.Value = reader["result"].ToString();
-                                    phd_grade.Value = reader["grade"].ToString();*/
-                                break;
+                        // PostDoc (Optional)
+                        if (reader["PostDoc_Duration"] != DBNull.Value)
+                        {
+                            postdoc_duration.Value = reader["PostDoc_Duration"].ToString();
+                            postdoc_specialization.Value = reader["PostDoc_Specialization"].ToString();
+                            postdoc_year.Value = reader["PostDoc_Year"].ToString();
+                            postdoc_cgpa.Value = reader["PostDoc_Percentage"].ToString();
+                            postdoc_uni.Value = reader["PostDoc_University"].ToString();
+                            postdoc_country.Value = reader["PostDoc_Country"].ToString();
                         }
                     }
                 }
@@ -113,8 +109,9 @@ namespace WebApplication4
 
         protected void BtnSubmit_Click(object sender, EventArgs e)
         {
-            int userID;
-            userID = Convert.ToInt32(Session["UserID"]);
+            int userID = Convert.ToInt32(Session["UserID"]);
+
+            // SSC
             string sscDuration = ssc_duration.Value;
             string sscSpecialization = ssc_specialization.Value;
             int.TryParse(ssc_year.Value, out int sscYear);
@@ -122,6 +119,7 @@ namespace WebApplication4
             string sscUniversity = ssc_uni.Value;
             string sscCountry = ssc_country.Value;
 
+            // HSSC
             string hsscDuration = hssc_duration.Value;
             string hsscSpecialization = hssc_specialization.Value;
             int.TryParse(hssc_year.Value, out int hsscYear);
@@ -129,6 +127,8 @@ namespace WebApplication4
             string hsscUniversity = hssc_uni.Value;
             string hsscCountry = hssc_country.Value;
 
+            // BS - Get value from dropdown
+            string bsType = bs_type.Value;
             string bsDuration = bs_duration.Value;
             string bsSpecialization = bs_specialization.Value;
             int.TryParse(bs_year.Value, out int bsYear);
@@ -136,6 +136,7 @@ namespace WebApplication4
             string bsUniversity = bs_uni.Value;
             string bsCountry = bs_country.Value;
 
+            // MS
             string msDuration = ms_duration.Value;
             string msSpecialization = ms_specialization.Value;
             int.TryParse(ms_year.Value, out int msYear);
@@ -143,6 +144,7 @@ namespace WebApplication4
             string msUniversity = ms_uni.Value;
             string msCountry = ms_country.Value;
 
+            // PhD
             string phdDuration = phd_duration.Value;
             string phdSpecialization = phd_specialization.Value;
             int.TryParse(phd_year.Value, out int phdYear);
@@ -150,6 +152,7 @@ namespace WebApplication4
             string phdUniversity = phd_uni.Value;
             string phdCountry = phd_country.Value;
 
+            // PostDoc
             string postdocDuration = postdoc_duration.Value;
             string postdocSpecialization = postdoc_specialization.Value;
             int.TryParse(postdoc_year.Value, out int postdocYear);
@@ -157,37 +160,37 @@ namespace WebApplication4
             string postdocUniversity = postdoc_uni.Value;
             string postdocCountry = postdoc_country.Value;
 
-            if (!(SecondDivision(sscPer)) && (!(SecondDivision(hsscPer))))
-            {
-                SaveEducationalInformation(
-                    userID,
-                    sscDuration, sscSpecialization, sscYear, sscPer, sscUniversity, sscCountry,
-                    hsscDuration, hsscSpecialization, hsscYear, hsscPer, hsscUniversity, hsscCountry,
-                    bsDuration, bsSpecialization, bsYear, bsCgpa, bsUniversity, bsCountry,
-                    msDuration, msSpecialization, msYear, msCgpa, msUniversity, msCountry,
-                    phdDuration, phdSpecialization, phdYear, phdCgpa, phdUniversity, phdCountry,
-                    postdocDuration, postdocSpecialization, postdocYear, postdocCgpa, postdocUniversity, postdocCountry
-                );
+            // Validate Second Division
+            if (SecondDivision(sscPer) || SecondDivision(hsscPer))
+                return;
 
-                // Save Other Qualifications
-                var otherQualifications = CollectOtherQualificationData();
-                SaveOtherQualifications(userID, otherQualifications);
+            SaveEducationalInformation(
+                userID,
+                sscDuration, sscSpecialization, sscYear, sscPer, sscUniversity, sscCountry,
+                hsscDuration, hsscSpecialization, hsscYear, hsscPer, hsscUniversity, hsscCountry,
+                bsType, bsDuration, bsSpecialization, bsYear, bsCgpa, bsUniversity, bsCountry,
+                msDuration, msSpecialization, msYear, msCgpa, msUniversity, msCountry,
+                phdDuration, phdSpecialization, phdYear, phdCgpa, phdUniversity, phdCountry,
+                postdocDuration, postdocSpecialization, postdocYear, postdocCgpa, postdocUniversity, postdocCountry
+            );
 
-                // FIXED: Redirect to Application Summary instead of Experience
-                Response.Redirect("ApplicationSummary.aspx");
-            }
+            // Save Other Qualifications
+            var otherQualifications = CollectOtherQualificationData();
+            SaveOtherQualifications(userID, otherQualifications);
+
+            Response.Redirect("ApplicationSummary.aspx");
         }
 
         protected void SaveEducationalInformation(
             int userId,
             string sscDuration, string sscSpecialization, int sscYear, decimal sscCgpa, string sscUniversity, string sscCountry,
             string hsscDuration, string hsscSpecialization, int hsscYear, decimal hsscCgpa, string hsscUniversity, string hsscCountry,
-            string bsDuration, string bsSpecialization, int bsYear, decimal bsCgpa, string bsUniversity, string bsCountry,
+            string bsType, string bsDuration, string bsSpecialization, int bsYear, decimal bsCgpa, string bsUniversity, string bsCountry,
             string msDuration, string msSpecialization, int? msYear, decimal? msCgpa, string msUniversity, string msCountry,
             string phdDuration, string phdSpecialization, int? phdYear, decimal? phdCgpa, string phdUniversity, string phdCountry,
             string postdocDuration, string postdocSpecialization, int? postdocYear, decimal? postdocCgpa, string postdocUniversity, string postdocCountry)
         {
-            string cs = @"Data Source=(localdb)\mssqllocaldb;Initial Catalog=HR;Integrated Security=True";
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
             string query = @"
                 IF EXISTS (SELECT 1 FROM Education WHERE UserID=@UserID)
@@ -197,42 +200,43 @@ namespace WebApplication4
                         SSC_Duration=@SSC_Duration,
                         SSC_Specialization=@SSC_Specialization,
                         SSC_Year=@SSC_Year,
-                        SSC_CGPA=@SSC_CGPA,
+                        SSC_Percentage=@SSC_Percentage,
                         SSC_University=@SSC_University,
                         SSC_Country=@SSC_Country,
 
                         HSSC_Duration=@HSSC_Duration,
                         HSSC_Specialization=@HSSC_Specialization,
                         HSSC_Year=@HSSC_Year,
-                        HSSC_CGPA=@HSSC_CGPA,
+                        HSSC_Percentage=@HSSC_Percentage,
                         HSSC_University=@HSSC_University,
                         HSSC_Country=@HSSC_Country,
 
+                        BS_Type=@BS_Type,
                         BS_Duration=@BS_Duration,
                         BS_Specialization=@BS_Specialization,
                         BS_Year=@BS_Year,
-                        BS_CGPA=@BS_CGPA,
+                        BS_Percentage=@BS_Percentage,
                         BS_University=@BS_University,
                         BS_Country=@BS_Country,
 
                         MS_Duration=@MS_Duration,
                         MS_Specialization=@MS_Specialization,
                         MS_Year=@MS_Year,
-                        MS_CGPA=@MS_CGPA,
+                        MS_Percentage=@MS_Percentage,
                         MS_University=@MS_University,
                         MS_Country=@MS_Country,
 
                         PhD_Duration=@PhD_Duration,
                         PhD_Specialization=@PhD_Specialization,
                         PhD_Year=@PhD_Year,
-                        PhD_CGPA=@PhD_CGPA,
+                        PhD_Percentage=@PhD_Percentage,
                         PhD_University=@PhD_University,
                         PhD_Country=@PhD_Country,
 
                         PostDoc_Duration=@PostDoc_Duration,
                         PostDoc_Specialization=@PostDoc_Specialization,
                         PostDoc_Year=@PostDoc_Year,
-                        PostDoc_CGPA=@PostDoc_CGPA,
+                        PostDoc_Percentage=@PostDoc_Percentage,
                         PostDoc_University=@PostDoc_University,
                         PostDoc_Country=@PostDoc_Country
                     WHERE UserID=@UserID;
@@ -242,22 +246,22 @@ namespace WebApplication4
                     INSERT INTO Education
                     (
                         UserID,
-                        SSC_Duration,SSC_Specialization,SSC_Year,SSC_CGPA,SSC_University,SSC_Country,
-                        HSSC_Duration,HSSC_Specialization,HSSC_Year,HSSC_CGPA,HSSC_University,HSSC_Country,
-                        BS_Duration,BS_Specialization,BS_Year,BS_CGPA,BS_University,BS_Country,
-                        MS_Duration,MS_Specialization,MS_Year,MS_CGPA,MS_University,MS_Country,
-                        PhD_Duration,PhD_Specialization,PhD_Year,PhD_CGPA,PhD_University,PhD_Country,
-                        PostDoc_Duration,PostDoc_Specialization,PostDoc_Year,PostDoc_CGPA,PostDoc_University,PostDoc_Country
+                        SSC_Duration,SSC_Specialization,SSC_Year,SSC_Percentage,SSC_University,SSC_Country,
+                        HSSC_Duration,HSSC_Specialization,HSSC_Year,HSSC_Percentage,HSSC_University,HSSC_Country,
+                        BS_Type,BS_Duration,BS_Specialization,BS_Year,BS_Percentage,BS_University,BS_Country,
+                        MS_Duration,MS_Specialization,MS_Year,MS_Percentage,MS_University,MS_Country,
+                        PhD_Duration,PhD_Specialization,PhD_Year,PhD_Percentage,PhD_University,PhD_Country,
+                        PostDoc_Duration,PostDoc_Specialization,PostDoc_Year,PostDoc_Percentage,PostDoc_University,PostDoc_Country
                     )
                     VALUES
                     (
                         @UserID,
-                        @SSC_Duration,@SSC_Specialization,@SSC_Year,@SSC_CGPA,@SSC_University,@SSC_Country,
-                        @HSSC_Duration,@HSSC_Specialization,@HSSC_Year,@HSSC_CGPA,@HSSC_University,@HSSC_Country,
-                        @BS_Duration,@BS_Specialization,@BS_Year,@BS_CGPA,@BS_University,@BS_Country,
-                        @MS_Duration,@MS_Specialization,@MS_Year,@MS_CGPA,@MS_University,@MS_Country,
-                        @PhD_Duration,@PhD_Specialization,@PhD_Year,@PhD_CGPA,@PhD_University,@PhD_Country,
-                        @PostDoc_Duration,@PostDoc_Specialization,@PostDoc_Year,@PostDoc_CGPA,@PostDoc_University,@PostDoc_Country
+                        @SSC_Duration,@SSC_Specialization,@SSC_Year,@SSC_Percentage,@SSC_University,@SSC_Country,
+                        @HSSC_Duration,@HSSC_Specialization,@HSSC_Year,@HSSC_Percentage,@HSSC_University,@HSSC_Country,
+                        @BS_Type,@BS_Duration,@BS_Specialization,@BS_Year,@BS_Percentage,@BS_University,@BS_Country,
+                        @MS_Duration,@MS_Specialization,@MS_Year,@MS_Percentage,@MS_University,@MS_Country,
+                        @PhD_Duration,@PhD_Specialization,@PhD_Year,@PhD_Percentage,@PhD_University,@PhD_Country,
+                        @PostDoc_Duration,@PostDoc_Specialization,@PostDoc_Year,@PostDoc_Percentage,@PostDoc_University,@PostDoc_Country
                     );
                 END";
 
@@ -266,45 +270,52 @@ namespace WebApplication4
             {
                 cmd.Parameters.AddWithValue("@UserID", userId);
 
+                // SSC
                 cmd.Parameters.AddWithValue("@SSC_Duration", sscDuration);
                 cmd.Parameters.AddWithValue("@SSC_Specialization", sscSpecialization);
                 cmd.Parameters.AddWithValue("@SSC_Year", sscYear);
-                cmd.Parameters.AddWithValue("@SSC_CGPA", sscCgpa);
+                cmd.Parameters.AddWithValue("@SSC_Percentage", sscCgpa);
                 cmd.Parameters.AddWithValue("@SSC_University", sscUniversity);
                 cmd.Parameters.AddWithValue("@SSC_Country", sscCountry);
 
+                // HSSC
                 cmd.Parameters.AddWithValue("@HSSC_Duration", hsscDuration);
                 cmd.Parameters.AddWithValue("@HSSC_Specialization", hsscSpecialization);
                 cmd.Parameters.AddWithValue("@HSSC_Year", hsscYear);
-                cmd.Parameters.AddWithValue("@HSSC_CGPA", hsscCgpa);
+                cmd.Parameters.AddWithValue("@HSSC_Percentage", hsscCgpa);
                 cmd.Parameters.AddWithValue("@HSSC_University", hsscUniversity);
                 cmd.Parameters.AddWithValue("@HSSC_Country", hsscCountry);
 
+                // BS
+                cmd.Parameters.AddWithValue("@BS_Type", bsType);
                 cmd.Parameters.AddWithValue("@BS_Duration", bsDuration);
                 cmd.Parameters.AddWithValue("@BS_Specialization", bsSpecialization);
                 cmd.Parameters.AddWithValue("@BS_Year", bsYear);
-                cmd.Parameters.AddWithValue("@BS_CGPA", bsCgpa);
+                cmd.Parameters.AddWithValue("@BS_Percentage", bsCgpa);
                 cmd.Parameters.AddWithValue("@BS_University", bsUniversity);
                 cmd.Parameters.AddWithValue("@BS_Country", bsCountry);
 
+                // MS (Optional)
                 cmd.Parameters.AddWithValue("@MS_Duration", (object)msDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Specialization", (object)msSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Year", (object)msYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@MS_CGPA", (object)msCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@MS_Percentage", (object)msCgpa ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_University", (object)msUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Country", (object)msCountry ?? DBNull.Value);
 
+                // PhD (Optional)
                 cmd.Parameters.AddWithValue("@PhD_Duration", (object)phdDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Specialization", (object)phdSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Year", (object)phdYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PhD_CGPA", (object)phdCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@PhD_Percentage", (object)phdCgpa ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_University", (object)phdUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Country", (object)phdCountry ?? DBNull.Value);
 
+                // PostDoc (Optional)
                 cmd.Parameters.AddWithValue("@PostDoc_Duration", (object)postdocDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Specialization", (object)postdocSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Year", (object)postdocYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PostDoc_CGPA", (object)postdocCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@PostDoc_Percentage", (object)postdocCgpa ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_University", (object)postdocUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Country", (object)postdocCountry ?? DBNull.Value);
 

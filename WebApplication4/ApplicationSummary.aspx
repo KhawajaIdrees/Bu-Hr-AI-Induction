@@ -876,7 +876,7 @@
             <!-- Declaration - Separate Container -->
             <div class="declaration-container">
                 <div class="declaration-header">
-                    <h3><i class="bi bi-clipboard-check-fill"></i>Declaration</h3>
+                    <h3><i class="bi bi-clipboard-check-fill"></i>Terms & Conditions</h3>
                 </div>
                 <div class="declaration-body">
                     <div class="form-check form-switch">
