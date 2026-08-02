@@ -34,40 +34,33 @@
             margin-top: 5px;
         }
 
-        .form-card {
-            max-width: 1100px;
-            margin: 30px auto 60px;
-            background: white;
-            padding: 0;
+        .card-main {
             border-radius: 16px;
+            border: none;
             box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
             overflow: hidden;
+            margin-bottom: 30px;
         }
 
-        /* Section styling */
-        .form-section {
-            padding: 36px 45px;
-            border-bottom: 1px solid #eef1f8;
+        .card-header-blue {
+            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
+            color: white;
+            padding: 18px 25px;
+            border: none;
         }
 
-        .form-section:last-of-type {
-            border-bottom: none;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #1a3a7a;
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-        }
-
-        .section-title i {
+        .card-header-blue h5 {
+            margin: 0;
+            font-weight: 600;
             font-size: 20px;
+        }
+
+        .card-header-blue i {
+            margin-right: 10px;
+        }
+
+        .card-body {
+            padding: 25px 30px;
         }
 
         .form-label {
@@ -101,6 +94,7 @@
         .form-select:focus {
             border-color: #1a3a7a;
             box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
+            outline: none;
         }
 
         .form-group {
@@ -206,6 +200,7 @@
             letter-spacing: .5px;
             border-bottom: 2px solid #1a3a7a;
             text-align: center;
+            vertical-align: middle;
         }
 
         .table td {
@@ -225,42 +220,19 @@
             padding: 30px 0;
         }
 
-        .card-header-blue {
-            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
-            color: white;
-            padding: 18px 25px;
-            border: none;
-        }
-
-        .card-header-blue h5 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 20px;
-        }
-
-        .card-header-blue i {
-            margin-right: 10px;
-        }
-
-        .card-main {
+        .form-card {
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            background: white;
+            padding: 0;
             border-radius: 16px;
-            border: none;
             box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
             overflow: hidden;
         }
 
-        .card-body {
-            padding: 25px 30px;
-        }
-
-        /* Responsive adjustment */
         @media(max-width:768px) {
             body {
                 font-size: 15px;
-            }
-
-            .form-section {
-                padding: 24px 22px;
             }
 
             .form-label {
@@ -272,24 +244,31 @@
                 font-size: 14px;
                 height: 44px;
             }
+
+            .card-body {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
 
-        <div class="container">
-            <div class="text-left mb-3 mt-4 page-title">
-                <h4 class="fw-bold">Work Experience</h4>
-                <h5 class="text-secondary fw-normal">Bahria University HR Portal</h5>
+        <div class="container py-4">
+
+            <!-- Page Title -->
+            <div class="text-left mb-4 page-title">
+                <h4><i class="bi bi-briefcase-fill text-primary-custom me-2"></i>Work Experience</h4>
+                <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
 
-            <div class="form-card">
-
-                <!-- SECTION: Add New Experience -->
-                <div class="form-section">
-                    <div class="section-title"><i class="bi bi-briefcase-fill"></i>Add New Experience</div>
+            <!-- Add New Experience Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-plus-circle-fill"></i> Add New Experience</h5>
+                </div>
+                <div class="card-body">
 
                     <div class="row">
                         <div class="col-md-6 form-group">
@@ -351,42 +330,46 @@
                         <asp:Label ID="lblMessage" runat="server" CssClass="ms-3" />
                     </div>
                 </div>
+            </div>
 
-                <!-- SECTION: Work History -->
-                <div class="form-section">
-                    <div class="section-title"><i class="bi bi-clock-history"></i>Work History</div>
-
-                    <asp:GridView ID="gvExperiences" runat="server" AutoGenerateColumns="false"
-                        CssClass="table table-hover mb-0" GridLines="None"
-                        DataKeyNames="ExperienceId"
-                        EmptyDataText="No work experience added yet." EmptyDataRowStyle-CssClass="empty-row"
-                        OnRowCommand="gvExperiences_RowCommand">
-                        <Columns>
-                            <asp:BoundField DataField="ExperienceId" HeaderText="ID" Visible="false" />
-                            <asp:BoundField DataField="OrganizationName" HeaderText="Organization" />
-                            <asp:BoundField DataField="PositionTitle" HeaderText="Position" />
-                            <asp:BoundField DataField="StartDate" HeaderText="Start Date" DataFormatString="{0:MMM yyyy}" />
-                            <asp:BoundField DataField="EndDate" HeaderText="End Date" DataFormatString="{0:MMM yyyy}" />
-                            <asp:BoundField DataField="Duration" HeaderText="Duration" />
-                            <asp:TemplateField HeaderText="Action" ItemStyle-Width="80px">
-                                <ItemTemplate>
-                                    <asp:Button ID="btnDelete" runat="server" 
-                                        CommandName="DeleteExperience" 
-                                        CommandArgument='<%# Container.DataItemIndex %>'
-                                        Text="Delete" 
-                                        CssClass="btn-delete"
-                                        OnClientClick="return confirm('Are you sure you want to delete this experience?');" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
+            <!-- Work History Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-clock-history"></i> Work History</h5>
                 </div>
-
-                <!-- SECTION: Next -->
-                <div class="form-section text-end">
-                    <asp:Button ID="btnNext" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnNext_Click" />
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvExperiences" runat="server" AutoGenerateColumns="false"
+                            CssClass="table table-hover mb-0" GridLines="None"
+                            DataKeyNames="ExperienceId"
+                            EmptyDataText="No work experience added yet." EmptyDataRowStyle-CssClass="empty-row"
+                            OnRowCommand="gvExperiences_RowCommand">
+                            <Columns>
+                                <asp:BoundField DataField="ExperienceId" HeaderText="ID" Visible="false" />
+                                <asp:BoundField DataField="OrganizationName" HeaderText="Organization" />
+                                <asp:BoundField DataField="PositionTitle" HeaderText="Position" />
+                                <asp:BoundField DataField="StartDate" HeaderText="Start Date" DataFormatString="{0:MMM yyyy}" />
+                                <asp:BoundField DataField="EndDate" HeaderText="End Date" DataFormatString="{0:MMM yyyy}" />
+                                <asp:BoundField DataField="Duration" HeaderText="Duration" />
+                                <asp:TemplateField HeaderText="Action" ItemStyle-Width="80px">
+                                    <ItemTemplate>
+                                        <asp:Button ID="btnDelete" runat="server"
+                                            CommandName="DeleteExperience"
+                                            CommandArgument='<%# Container.DataItemIndex %>'
+                                            Text="Delete"
+                                            CssClass="btn-delete"
+                                            OnClientClick="return confirm('Are you sure you want to delete this experience?');" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
                 </div>
+            </div>
 
+            <!-- Submit Button -->
+            <div class="text-center">
+                <asp:Button ID="btnNext" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnNext_Click" />
             </div>
 
         </div>

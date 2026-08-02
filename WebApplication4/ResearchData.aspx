@@ -35,39 +35,33 @@
             margin-top: 5px;
         }
 
-        .form-card {
-            max-width: 1100px;
-            margin: 30px auto 60px;
-            background: white;
-            padding: 0;
+        .card-main {
             border-radius: 16px;
+            border: none;
             box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
             overflow: hidden;
+            margin-bottom: 30px;
         }
 
-        .form-section {
-            padding: 36px 45px;
-            border-bottom: 1px solid #eef1f8;
+        .card-header-blue {
+            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
+            color: white;
+            padding: 18px 25px;
+            border: none;
         }
 
-        .form-section:last-of-type {
-            border-bottom: none;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #1a3a7a;
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-        }
-
-        .section-title i {
+        .card-header-blue h5 {
+            margin: 0;
+            font-weight: 600;
             font-size: 20px;
+        }
+
+        .card-header-blue i {
+            margin-right: 10px;
+        }
+
+        .card-body {
+            padding: 25px 30px;
         }
 
         .sub-section-title {
@@ -117,6 +111,7 @@
         .form-select:focus {
             border-color: #1a3a7a;
             box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
+            outline: none;
         }
 
         .form-group {
@@ -172,6 +167,7 @@
             letter-spacing: .5px;
             border-bottom: 2px solid #1a3a7a;
             text-align: center;
+            vertical-align: middle;
         }
 
         .table td {
@@ -195,10 +191,44 @@
             overflow-x: auto;
         }
 
-        /* Fix for alignment */
         .form-group .form-control,
         .form-group .form-select {
             width: 100%;
+        }
+
+        .form-card {
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            background: white;
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 36px 45px;
+            border-bottom: 1px solid #eef1f8;
+        }
+
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a3a7a;
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .section-title i {
+            font-size: 20px;
         }
 
         @media(max-width:768px) {
@@ -219,25 +249,31 @@
                 font-size: 14px;
                 height: 44px;
             }
+
+            .card-body {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
 
-        <div class="container">
+        <div class="container py-4">
 
-            <div class="text-left mb-3 mt-4 page-title">
-                <h4 class="fw-bold">Research Publications</h4>
-                <h5 class="text-secondary fw-normal">Bahria University HR Portal</h5>
+            <!-- Page Title -->
+            <div class="text-left mb-4 page-title">
+                <h4><i class="bi bi-journal-text text-primary-custom me-2"></i>Research Publications</h4>
+                <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
 
-            <div class="form-card">
-
-                <!-- SECTION: Publication -->
-                <div class="form-section">
-                    <div class="section-title"><i class="bi bi-journal-text"></i>Publication</div>
+            <!-- Main Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-journal-bookmark-fill"></i> Publication Details</h5>
+                </div>
+                <div class="card-body">
 
                     <!-- Impact Factor 1 -->
                     <div class="sub-section-title">Impact Factor</div>
@@ -372,7 +408,7 @@
                         </div>
                     </div>
 
-                    <!-- Publication Details -->
+                    <!-- Publication Information -->
                     <div class="sub-section-title">Publication Information</div>
 
                     <div class="row">
@@ -428,15 +464,18 @@
                         <asp:Label ID="lblMessage" runat="server" CssClass="ms-3" />
                     </div>
                 </div>
+            </div>
 
-                <!-- SECTION: Publications List -->
-                <div class="form-section">
-                    <div class="section-title"><i class="bi bi-list-columns-reverse"></i>Publications List</div>
-
+            <!-- Publications List Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-list-columns-reverse"></i> Publications List</h5>
+                </div>
+                <div class="card-body">
                     <div class="table-responsive-wrap">
                         <asp:GridView ID="gvPublications" runat="server" AutoGenerateColumns="false"
                             CssClass="table table-hover mb-0" GridLines="None"
-                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row" 
+                            EmptyDataText="No publications added yet." EmptyDataRowStyle-CssClass="empty-row"
                             OnRowCommand="gvPublications_RowCommand">
                             <Columns>
                                 <asp:BoundField DataField="PublicationID" HeaderText="S.No" />
@@ -451,11 +490,13 @@
                         </asp:GridView>
                     </div>
                 </div>
+            </div>
 
-                <!-- SECTION: Submit -->
-                <div class="form-section text-center">
-                    <asp:Button ID="BtnSaveContinue" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnRegister_Click" />
-                    <asp:Label ID="Label1" runat="server" CssClass="d-block mt-3"></asp:Label>
+            <!-- Submit Button -->
+            <div class="text-center">
+                <asp:Button ID="BtnSaveContinue" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="BtnRegister_Click" />
+                <div class="mt-3">
+                    <asp:Label ID="Label1" runat="server"></asp:Label>
                 </div>
             </div>
 
@@ -466,28 +507,18 @@
     <!-- JavaScript to control spinner behavior - stops at 0 -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Get all number inputs
             var numberInputs = document.querySelectorAll('input[type="number"]');
 
             numberInputs.forEach(function (input) {
-                // Store the current value before any change
-                var previousValue = input.value;
-
-                // Handle the spinner (up/down arrows) and manual input
                 input.addEventListener('input', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        // If value is negative, set to 0
                         if (val < 0) {
                             this.value = 0;
                         }
-                        // If value is empty or just a minus sign, keep it empty
-                    } else if (this.value === '-') {
-                        // Allow the minus sign temporarily, but it will be caught on blur
                     }
                 });
 
-                // Handle when the user clicks the spinner arrows
                 input.addEventListener('change', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
@@ -497,10 +528,8 @@
                     }
                 });
 
-                // Handle blur - if empty or negative, set to 0 or empty based on preference
                 input.addEventListener('blur', function () {
                     if (this.value === '' || this.value === '-' || this.value === null) {
-                        // Keep it empty (blank)
                         this.value = '';
                     } else {
                         var val = parseInt(this.value);
@@ -510,22 +539,18 @@
                     }
                 });
 
-                // Prevent negative values from being entered via keyboard
                 input.addEventListener('keydown', function (e) {
-                    // Allow: backspace, delete, tab, escape, enter, home, end, left, right
                     if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 9 ||
                         e.keyCode === 27 || e.keyCode === 13 || e.keyCode === 35 ||
                         e.keyCode === 36 || e.keyCode === 37 || e.keyCode === 39) {
                         return;
                     }
 
-                    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
                     if ((e.ctrlKey || e.metaKey) && (e.keyCode === 65 || e.keyCode === 67 ||
                         e.keyCode === 86 || e.keyCode === 88)) {
                         return;
                     }
 
-                    // Prevent the minus sign
                     if (e.key === '-' || e.keyCode === 189) {
                         e.preventDefault();
                         return false;

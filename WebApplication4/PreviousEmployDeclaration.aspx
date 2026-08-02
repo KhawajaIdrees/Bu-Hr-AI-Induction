@@ -211,177 +211,211 @@
             font-weight: 600;
             margin-bottom: 15px;
         }
+
+        /* Card Header Blue */
+        .card-header-blue {
+            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
+            color: white;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-header-blue h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .card-header-blue i {
+            margin-right: 10px;
+        }
+
+        .card-main {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 25px 30px;
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
 
-        <div class="container">
+        <div class="container py-4">
 
-            <div class="text-left mb-3 mt-4 page-title">
-                <h4 class="fw-bold">Declaration</h4>
-                <h5 class="text-secondary fw-normal">Bahria University HR Portal</h5>
+            <div class="text-left mb-4 page-title">
+                <h4><i class="bi bi-briefcase-fill text-primary-custom me-2"></i>Declaration</h4>
+                <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
 
-            <div class="form-card">
+            <!-- Main Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-briefcase-fill"></i> Previous Employment at Bahria University</h5>
+                </div>
+                <div class="card-body">
 
-                <div class="section-title"><i class="bi bi-briefcase-fill"></i>Previous Employment at Bahria University</div>
+                    <!-- ============ LEFT / RIGHT TWO COLUMN LAYOUT ============ -->
+                    <div class="row">
 
-                <!-- ============ LEFT / RIGHT TWO COLUMN LAYOUT ============ -->
-                <div class="row">
+                        <!-- LEFT COLUMN -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Have you previously worked at Bahria University?
+                                    <span class="required-asterisk">*</span>
+                                </label>
 
-                    <!-- LEFT COLUMN -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Have you previously worked at Bahria University?
-                                <span class="required-asterisk">*</span>
-                            </label>
+                                <div class="radio-group">
+                                    <asp:RadioButtonList
+                                        ID="rblPreviouslyWorked"
+                                        runat="server"
+                                        RepeatDirection="Horizontal"
+                                        RepeatLayout="Flow"
+                                        AutoPostBack="false">
 
-                            <div class="radio-group">
-                                <asp:RadioButtonList
-                                    ID="rblPreviouslyWorked"
-                                    runat="server"
-                                    RepeatDirection="Horizontal"
-                                    RepeatLayout="Flow"
-                                    AutoPostBack="false">
+                                        <asp:ListItem Text="Yes" Value="Yes"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="No"></asp:ListItem>
 
-                                    <asp:ListItem Text="Yes" Value="Yes"></asp:ListItem>
-                                    <asp:ListItem Text="No" Value="No"></asp:ListItem>
+                                    </asp:RadioButtonList>
+                                </div>
 
-                                </asp:RadioButtonList>
+                                <asp:RequiredFieldValidator ID="rfvPreviouslyWorked" runat="server"
+                                    ControlToValidate="rblPreviouslyWorked"
+                                    ErrorMessage="Please select Yes or No."
+                                    CssClass="text-danger d-block mt-1"
+                                    Display="Static"
+                                    ValidationGroup="DeclarationForm" />
                             </div>
-
-                            <asp:RequiredFieldValidator ID="rfvPreviouslyWorked" runat="server"
-                                ControlToValidate="rblPreviouslyWorked"
-                                ErrorMessage="Please select Yes or No."
-                                CssClass="text-danger d-block mt-1"
-                                Display="Static"
-                                ValidationGroup="DeclarationForm" />
                         </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="col-md-6 col-divider ps-md-4">
+                            <div id="pnlPreviousEmploymentWrapper" runat="server">
+                                <div class="section-subtitle">If Yes, please provide:</div>
+
+                                <asp:Panel ID="pnlPreviousEmploymentDetails" runat="server" CssClass="relative-details">
+
+                                    <div class="mb-3">
+                                        <label for="<%= ddlCampus.ClientID %>" class="form-label">
+                                            Campus
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+                                        <asp:DropDownList
+                                            ID="ddlCampus"
+                                            runat="server"
+                                            CssClass="form-select">
+
+                                            <asp:ListItem Text="-- Select Campus --" Value=""></asp:ListItem>
+                                            <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
+                                            <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
+                                            <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
+
+                                        </asp:DropDownList>
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvCampus"
+                                            runat="server"
+                                            ControlToValidate="ddlCampus"
+                                            InitialValue=""
+                                            ErrorMessage="Please select a campus."
+                                            CssClass="text-danger"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="<%= txtDepartment.ClientID %>" class="form-label">
+                                            Department
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtDepartment"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            placeholder="Enter department" />
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvDepartment"
+                                            runat="server"
+                                            ControlToValidate="txtDepartment"
+                                            ErrorMessage="Please enter the department."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="<%= txtDesignation.ClientID %>" class="form-label">
+                                            Designation
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtDesignation"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            placeholder="Enter designation" />
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvDesignation"
+                                            runat="server"
+                                            ControlToValidate="txtDesignation"
+                                            ErrorMessage="Please enter the designation."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="<%= txtDuration.ClientID %>" class="form-label">
+                                            Duration
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtDuration"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            placeholder="e.g. Jan 2021 - Dec 2023" />
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvDuration"
+                                            runat="server"
+                                            ControlToValidate="txtDuration"
+                                            ErrorMessage="Please enter the duration."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+
+                                </asp:Panel>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- ============ END TWO COLUMN LAYOUT ============ -->
+
+                    <hr class="mt-2 mb-3" />
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
                     </div>
 
-                    <!-- RIGHT COLUMN -->
-                    <div class="col-md-6 col-divider ps-md-4">
-                        <div id="pnlPreviousEmploymentWrapper" runat="server">
-                            <div class="section-subtitle">If Yes, please provide:</div>
-
-                            <asp:Panel ID="pnlPreviousEmploymentDetails" runat="server" CssClass="relative-details">
-
-                                <div class="mb-3">
-                                    <label for="<%= ddlCampus.ClientID %>" class="form-label">
-                                        Campus
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-                                    <asp:DropDownList
-                                        ID="ddlCampus"
-                                        runat="server"
-                                        CssClass="form-select">
-
-                                        <asp:ListItem Text="-- Select Campus --" Value=""></asp:ListItem>
-                                        <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
-                                        <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
-                                        <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
-
-                                    </asp:DropDownList>
-
-                                    <asp:RequiredFieldValidator
-                                        ID="rfvCampus"
-                                        runat="server"
-                                        ControlToValidate="ddlCampus"
-                                        InitialValue=""
-                                        ErrorMessage="Please select a campus."
-                                        CssClass="text-danger"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm">
-                                    </asp:RequiredFieldValidator>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="<%= txtDepartment.ClientID %>" class="form-label">
-                                        Department
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-
-                                    <asp:TextBox
-                                        ID="txtDepartment"
-                                        runat="server"
-                                        CssClass="form-control"
-                                        placeholder="Enter department" />
-
-                                    <asp:RequiredFieldValidator
-                                        ID="rfvDepartment"
-                                        runat="server"
-                                        ControlToValidate="txtDepartment"
-                                        ErrorMessage="Please enter the department."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm">
-                                    </asp:RequiredFieldValidator>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="<%= txtDesignation.ClientID %>" class="form-label">
-                                        Designation
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-
-                                    <asp:TextBox
-                                        ID="txtDesignation"
-                                        runat="server"
-                                        CssClass="form-control"
-                                        placeholder="Enter designation" />
-
-                                    <asp:RequiredFieldValidator
-                                        ID="rfvDesignation"
-                                        runat="server"
-                                        ControlToValidate="txtDesignation"
-                                        ErrorMessage="Please enter the designation."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm">
-                                    </asp:RequiredFieldValidator>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="<%= txtDuration.ClientID %>" class="form-label">
-                                        Duration
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-
-                                    <asp:TextBox
-                                        ID="txtDuration"
-                                        runat="server"
-                                        CssClass="form-control"
-                                        placeholder="e.g. Jan 2021 - Dec 2023" />
-
-                                    <asp:RequiredFieldValidator
-                                        ID="rfvDuration"
-                                        runat="server"
-                                        ControlToValidate="txtDuration"
-                                        ErrorMessage="Please enter the duration."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm">
-                                    </asp:RequiredFieldValidator>
-                                </div>
-
-                            </asp:Panel>
-                        </div>
-                    </div>
+                    <asp:Label ID="lblMessage" runat="server" CssClass="d-block mt-3"></asp:Label>
 
                 </div>
-                <!-- ============ END TWO COLUMN LAYOUT ============ -->
-
-                <hr class="mt-2 mb-3" />
-
-                <div class="d-flex justify-content-end gap-2">
-                    <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
-                </div>
-
-                <asp:Label ID="lblMessage" runat="server" CssClass="d-block mt-3"></asp:Label>
-
             </div>
 
         </div>

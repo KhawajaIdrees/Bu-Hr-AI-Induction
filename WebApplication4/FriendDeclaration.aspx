@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 
-    <title>Employment Relationship Declaration</title>
+    <title>Friend / Close Acquaintance Declaration</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -181,6 +181,36 @@
             margin-bottom: 24px !important;
         }
 
+        /* Card Header Blue */
+        .card-header-blue {
+            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
+            color: white;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-header-blue h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .card-header-blue i {
+            margin-right: 10px;
+        }
+
+        .card-main {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 25px 30px;
+        }
+
         /* Responsive adjustment */
         @media(max-width:768px) {
             body {
@@ -200,6 +230,9 @@
                 font-size: 14px;
                 height: 44px;
             }
+            .card-body {
+                padding: 15px;
+            }
         }
     </style>
 
@@ -208,140 +241,144 @@
 
     <form id="form1" runat="server">
 
-        <div class="container">
+        <div class="container py-4">
 
-            <div class="text-left mb-3 mt-4 page-title">
-                <h4 class="fw-bold">Declaration</h4>
-                <h5 class="text-secondary fw-normal">Bahria University HR Portal</h5>
+            <div class="text-left mb-4 page-title">
+                <h4><i class="bi bi-person-hearts text-primary-custom me-2"></i>Declaration</h4>
+                <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
 
-            <div class="form-card">
+            <!-- Main Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-person-hearts"></i> Friend / Close Acquaintance Declaration</h5>
+                </div>
+                <div class="card-body">
 
-                <div class="section-title"><i class="bi bi-person-hearts"></i>Friend / Close Acquaintance Declaration</div>
+                    <!-- ============ LEFT / RIGHT TWO COLUMN LAYOUT ============ -->
+                    <div class="row">
 
-                <!-- ============ LEFT / RIGHT TWO COLUMN LAYOUT ============ -->
-                <div class="row">
+                        <!-- LEFT COLUMN -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Do you have any friend or close acquaintance currently working at Bahria University?
+                                    <span class="required-asterisk">*</span>
+                                </label>
 
-                    <!-- LEFT COLUMN -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">
-                                Do you have any friend or close acquaintance currently working at Bahria University?
-                                <span class="required-asterisk">*</span>
-                            </label>
+                                <div class="radio-group">
+                                    <asp:RadioButtonList ID="rblHasFriend" runat="server"
+                                        RepeatDirection="Horizontal"
+                                        RepeatLayout="Flow"
+                                        AutoPostBack="false"
+                                        onclick="toggleFriendDetails();">
+                                        <asp:ListItem Text="Yes" Value="Yes" />
+                                        <asp:ListItem Text="No" Value="No" />
+                                    </asp:RadioButtonList>
+                                </div>
 
-                            <div class="radio-group">
-                                <asp:RadioButtonList ID="rblHasFriend" runat="server"
-                                    RepeatDirection="Horizontal"
-                                    RepeatLayout="Flow"
-                                    AutoPostBack="false"
-                                    onclick="toggleFriendDetails();">
-                                    <asp:ListItem Text="Yes" Value="Yes" />
-                                    <asp:ListItem Text="No" Value="No" />
-                                </asp:RadioButtonList>
+                                <asp:RequiredFieldValidator ID="rfvHasFriend" runat="server"
+                                    ControlToValidate="rblHasFriend"
+                                    ErrorMessage="Please select Yes or No."
+                                    CssClass="text-danger d-block mt-1"
+                                    Display="Static"
+                                    ValidationGroup="DeclarationForm" />
                             </div>
-
-                            <asp:RequiredFieldValidator ID="rfvHasFriend" runat="server"
-                                ControlToValidate="rblHasFriend"
-                                ErrorMessage="Please select Yes or No."
-                                CssClass="text-danger d-block mt-1"
-                                Display="Static"
-                                ValidationGroup="DeclarationForm" />
                         </div>
-                    </div>
 
-                    <!-- RIGHT COLUMN -->
-                    <div class="col-md-6 col-divider ps-md-4">
-                        <div id="pnlFriendDetailsWrapper" runat="server" visible="true">
-                            <div class="section-subtitle">If Yes, please provide:</div>
+                        <!-- RIGHT COLUMN -->
+                        <div class="col-md-6 col-divider ps-md-4">
+                            <div id="pnlFriendDetailsWrapper" runat="server" visible="true">
+                                <div class="section-subtitle">If Yes, please provide:</div>
 
-                            <asp:Panel ID="pnlFriendDetails" runat="server" CssClass="relative-details">
+                                <asp:Panel ID="pnlFriendDetails" runat="server" CssClass="relative-details">
 
-                                <!-- Name -->
-                                <div class="mb-3">
-                                    <label for="<%= txtName.ClientID %>" class="form-label">
-                                        Name
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-                                    <asp:TextBox ID="txtName" runat="server" CssClass="form-control" placeholder="Enter full name" />
-                                    <asp:RequiredFieldValidator ID="rfvName" runat="server"
-                                        ControlToValidate="txtName"
-                                        ErrorMessage="Name is required."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm" />
-
-                                    <!-- Nature of Relationship -->
+                                    <!-- Name -->
                                     <div class="mb-3">
-                                        <label for="<%= ddlRelationship.ClientID %>" class="form-label">
-                                            Nature of Relationship
+                                        <label for="<%= txtName.ClientID %>" class="form-label">
+                                            Name
                                             <span class="required-asterisk">*</span>
                                         </label>
-                                        <asp:DropDownList ID="ddlRelationship" runat="server" CssClass="form-select">
-                                            <asp:ListItem Text="--Select--" Value="" />
-                                            <asp:ListItem Text="Friend" Value="Friend" />
-                                            <asp:ListItem Text="Close Acquaintance" Value="Close Acquaintance" />
-                                            <asp:ListItem Text="Former Colleague" Value="Former Colleague" />
-                                            <asp:ListItem Text="Classmate" Value="Classmate" />
-                                            <asp:ListItem Text="Other" Value="Other" />
-                                        </asp:DropDownList>
-                                        <asp:RequiredFieldValidator ID="rfvRelationship" runat="server"
-                                            ControlToValidate="ddlRelationship"
-                                            InitialValue=""
-                                            ErrorMessage="Please select the nature of relationship."
+                                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control" placeholder="Enter full name" />
+                                        <asp:RequiredFieldValidator ID="rfvName" runat="server"
+                                            ControlToValidate="txtName"
+                                            ErrorMessage="Name is required."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm" />
+
+                                        <!-- Nature of Relationship -->
+                                        <div class="mb-3">
+                                            <label for="<%= ddlRelationship.ClientID %>" class="form-label">
+                                                Nature of Relationship
+                                                <span class="required-asterisk">*</span>
+                                            </label>
+                                            <asp:DropDownList ID="ddlRelationship" runat="server" CssClass="form-select">
+                                                <asp:ListItem Text="--Select--" Value="" />
+                                                <asp:ListItem Text="Friend" Value="Friend" />
+                                                <asp:ListItem Text="Close Acquaintance" Value="Close Acquaintance" />
+                                                <asp:ListItem Text="Former Colleague" Value="Former Colleague" />
+                                                <asp:ListItem Text="Classmate" Value="Classmate" />
+                                                <asp:ListItem Text="Other" Value="Other" />
+                                            </asp:DropDownList>
+                                            <asp:RequiredFieldValidator ID="rfvRelationship" runat="server"
+                                                ControlToValidate="ddlRelationship"
+                                                InitialValue=""
+                                                ErrorMessage="Please select the nature of relationship."
+                                                CssClass="text-danger d-block mt-1"
+                                                Display="Static"
+                                                ValidationGroup="DeclarationForm" />
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Department -->
+                                    <div class="mb-3">
+                                        <label for="<%= txtDepartment.ClientID %>" class="form-label">
+                                            Department
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+                                        <asp:TextBox ID="txtDepartment" runat="server" CssClass="form-control" placeholder="Enter department" />
+                                        <asp:RequiredFieldValidator ID="rfvDepartment" runat="server"
+                                            ControlToValidate="txtDepartment"
+                                            ErrorMessage="Department is required."
                                             CssClass="text-danger d-block mt-1"
                                             Display="Static"
                                             ValidationGroup="DeclarationForm" />
                                     </div>
 
-                                </div>
+                                    <!-- Designation -->
+                                    <div class="mb-3">
+                                        <label for="<%= txtDesignation.ClientID %>" class="form-label">
+                                            Designation
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+                                        <asp:TextBox ID="txtDesignation" runat="server" CssClass="form-control" placeholder="Enter designation" />
+                                        <asp:RequiredFieldValidator ID="rfvDesignation" runat="server"
+                                            ControlToValidate="txtDesignation"
+                                            ErrorMessage="Designation is required."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm" />
+                                    </div>
 
-                                <!-- Department -->
-                                <div class="mb-3">
-                                    <label for="<%= txtDepartment.ClientID %>" class="form-label">
-                                        Department
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-                                    <asp:TextBox ID="txtDepartment" runat="server" CssClass="form-control" placeholder="Enter department" />
-                                    <asp:RequiredFieldValidator ID="rfvDepartment" runat="server"
-                                        ControlToValidate="txtDepartment"
-                                        ErrorMessage="Department is required."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm" />
-                                </div>
-
-                                <!-- Designation -->
-                                <div class="mb-3">
-                                    <label for="<%= txtDesignation.ClientID %>" class="form-label">
-                                        Designation
-                                        <span class="required-asterisk">*</span>
-                                    </label>
-                                    <asp:TextBox ID="txtDesignation" runat="server" CssClass="form-control" placeholder="Enter designation" />
-                                    <asp:RequiredFieldValidator ID="rfvDesignation" runat="server"
-                                        ControlToValidate="txtDesignation"
-                                        ErrorMessage="Designation is required."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Static"
-                                        ValidationGroup="DeclarationForm" />
-                                </div>
-
-                            </asp:Panel>
+                                </asp:Panel>
+                            </div>
                         </div>
+
+                    </div>
+                    <!-- ============ END TWO COLUMN LAYOUT ============ -->
+
+                    <hr class="mt-2 mb-3" />
+
+                    <div class="text-end">
+                        <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
                     </div>
 
+                    <asp:Label ID="lblMessage" runat="server" CssClass="d-block mt-3"></asp:Label>
+
                 </div>
-                <!-- ============ END TWO COLUMN LAYOUT ============ -->
-
-                <hr class="mt-2 mb-3" />
-
-                <div class="text-end">
-                    <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
-                </div>
-
-                <asp:Label ID="lblMessage" runat="server" CssClass="d-block mt-3"></asp:Label>
-
             </div>
 
         </div>

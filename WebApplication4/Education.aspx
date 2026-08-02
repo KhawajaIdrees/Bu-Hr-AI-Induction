@@ -65,11 +65,14 @@
             text-align: center;
             vertical-align: middle;
             border-bottom: 2px solid #1a3a7a;
+            white-space: nowrap;
         }
 
         .education-table td {
             vertical-align: middle;
             text-align: center;
+            padding: 8px 6px;
+            min-width: 80px;
         }
 
         .education-table td:first-child {
@@ -78,15 +81,115 @@
             background: #f8faff;
             text-align: left;
             padding-left: 15px;
+            min-width: 120px;
+            white-space: nowrap;
         }
 
-        .education-table input {
-            min-width: 100px;
+        /* ============================================
+           INPUT WIDTHS: SHORT for numbers, LONG for text
+           ============================================ */
+        
+        /* Duration - Medium (Desktop) */
+        .education-table input[id$="_duration"] {
+            min-width: 80px;
+            max-width: 120px;
             border-radius: 6px;
             border: 1px solid #d0d7e6;
             padding: 6px 10px;
             font-size: 14px;
             transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Specialization - LONG */
+        .education-table input[id$="_specialization"] {
+            min-width: 140px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 6px 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Year - Slightly bigger to show 4 digits */
+        .education-table input[id$="_year"] {
+            min-width: 75px;
+            max-width: 95px;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 6px 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Percentage/CGPA - SHORT */
+        .education-table input[id$="_cgpa"], 
+        .education-table input[id$="per"] {
+            min-width: 70px;
+            max-width: 90px;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 6px 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Institute - LONG */
+        .education-table input[id$="_uni"] {
+            min-width: 150px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 6px 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Country - LONG */
+        .education-table input[id$="_country"] {
+            min-width: 120px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 6px 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
         }
 
         .education-table input:focus {
@@ -110,20 +213,134 @@
             text-align: center;
             vertical-align: middle;
             border-bottom: 2px solid #1a3a7a;
+            white-space: nowrap;
         }
 
         .other-table td {
             vertical-align: middle;
             text-align: center;
+            padding: 6px 4px;
+            min-width: 60px;
         }
 
-        .other-table input {
-            min-width: 80px;
+        /* Other table - Qualification (LONG) */
+        .other-table input[name^="other_name"] {
+            min-width: 120px;
+            max-width: none;
             border-radius: 6px;
             border: 1px solid #d0d7e6;
             padding: 5px 8px;
             font-size: 13px;
             transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Other table - Duration (SHORT) */
+        .other-table input[name^="other_duration"] {
+            min-width: 70px;
+            max-width: 100px;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Other table - Specialization (LONG) */
+        .other-table input[name^="other_specialization"] {
+            min-width: 100px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Other table - Year (SHORT) */
+        .other-table input[name^="other_year"] {
+            min-width: 60px;
+            max-width: 80px;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 6px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Other table - Percentage (SHORT) */
+        .other-table input[name^="other_percentage"] {
+            min-width: 65px;
+            max-width: 85px;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 6px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+        }
+
+        /* Other table - Institute (LONG) */
+        .other-table input[name^="other_institute"] {
+            min-width: 120px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Other table - Country (LONG) */
+        .other-table input[name^="other_country"] {
+            min-width: 100px;
+            max-width: none;
+            border-radius: 6px;
+            border: 1px solid #d0d7e6;
+            padding: 5px 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            background: #f8faff;
+            color: #1a2332;
+            box-sizing: border-box;
+            white-space: normal;
+            word-wrap: break-word;
         }
 
         .other-table input:focus {
@@ -202,16 +419,219 @@
         }
 
         @media (max-width: 768px) {
-            .education-table input {
-                min-width: 60px;
-                font-size: 12px;
-            }
-            .other-table input {
+            /* Duration - SMALLER on mobile */
+            .education-table input[id$="_duration"] {
                 min-width: 50px;
+                max-width: 70px;
                 font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            .education-table input[id$="_specialization"] {
+                min-width: 80px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            /* Year - Slightly bigger on mobile too */
+            .education-table input[id$="_year"] {
+                min-width: 60px;
+                max-width: 75px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            .education-table input[id$="_cgpa"], 
+            .education-table input[id$="per"] {
+                min-width: 55px;
+                max-width: 70px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            .education-table input[id$="_uni"] {
+                min-width: 90px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            .education-table input[id$="_country"] {
+                min-width: 80px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            
+            .education-table td {
+                padding: 4px 4px;
+                min-width: 50px;
+            }
+            .education-table td:first-child {
+                min-width: 80px;
+                white-space: normal;
+                font-size: 12px;
+                padding-left: 8px;
+            }
+            .education-table th {
+                font-size: 11px;
+                padding: 6px 4px;
+                white-space: normal;
+            }
+            
+            /* Other table mobile */
+            .other-table input[name^="other_name"] {
+                min-width: 80px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            .other-table input[name^="other_duration"] {
+                min-width: 45px;
+                max-width: 65px;
+                font-size: 12px;
+                padding: 4px 4px;
+            }
+            .other-table input[name^="other_specialization"] {
+                min-width: 70px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            .other-table input[name^="other_year"] {
+                min-width: 50px;
+                max-width: 65px;
+                font-size: 12px;
+                padding: 4px 4px;
+            }
+            .other-table input[name^="other_percentage"] {
+                min-width: 50px;
+                max-width: 65px;
+                font-size: 12px;
+                padding: 4px 4px;
+            }
+            .other-table input[name^="other_institute"] {
+                min-width: 80px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            .other-table input[name^="other_country"] {
+                min-width: 70px;
+                font-size: 12px;
+                padding: 4px 6px;
+            }
+            .other-table td {
+                padding: 4px 3px;
+                min-width: 40px;
+            }
+            .other-table th {
+                font-size: 11px;
+                padding: 6px 4px;
+                white-space: normal;
             }
             .card-body {
                 padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Duration - EVEN SMALLER on small mobile */
+            .education-table input[id$="_duration"] {
+                min-width: 40px;
+                max-width: 55px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table input[id$="_specialization"] {
+                min-width: 60px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table input[id$="_year"] {
+                min-width: 50px;
+                max-width: 60px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table input[id$="_cgpa"], 
+            .education-table input[id$="per"] {
+                min-width: 45px;
+                max-width: 55px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table input[id$="_uni"] {
+                min-width: 60px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table input[id$="_country"] {
+                min-width: 55px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            
+            .education-table td {
+                padding: 3px 3px;
+                min-width: 35px;
+            }
+            .education-table td:first-child {
+                min-width: 60px;
+                font-size: 11px;
+                padding-left: 5px;
+            }
+            .education-table th {
+                font-size: 10px;
+                padding: 4px 3px;
+            }
+            
+            /* Other table small mobile */
+            .other-table input[name^="other_name"] {
+                min-width: 60px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            .other-table input[name^="other_duration"] {
+                min-width: 35px;
+                max-width: 50px;
+                font-size: 11px;
+                padding: 3px 3px;
+            }
+            .other-table input[name^="other_specialization"] {
+                min-width: 50px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            .other-table input[name^="other_year"] {
+                min-width: 40px;
+                max-width: 50px;
+                font-size: 11px;
+                padding: 3px 3px;
+            }
+            .other-table input[name^="other_percentage"] {
+                min-width: 40px;
+                max-width: 50px;
+                font-size: 11px;
+                padding: 3px 3px;
+            }
+            .other-table input[name^="other_institute"] {
+                min-width: 55px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            .other-table input[name^="other_country"] {
+                min-width: 50px;
+                font-size: 11px;
+                padding: 3px 4px;
+            }
+            .other-table td {
+                padding: 3px 2px;
+                min-width: 30px;
+            }
+            .other-table th {
+                font-size: 10px;
+                padding: 4px 3px;
             }
         }
     </style>
@@ -239,12 +659,12 @@
                             <thead>
                                 <tr>
                                     <th style="min-width: 120px;">Certificate/Degree</th>
-                                    <th>Duration</th>
-                                    <th>Specialization</th>
-                                    <th>Year</th>
-                                    <th>Percentage</th>
-                                    <th>Institute</th>
-                                    <th>Country</th>
+                                    <th style="min-width: 80px;">Duration</th>
+                                    <th style="min-width: 140px;">Specialization</th>
+                                    <th style="min-width: 75px;">Year</th>
+                                    <th style="min-width: 70px;">Percentage</th>
+                                    <th style="min-width: 150px;">Institute</th>
+                                    <th style="min-width: 120px;">Country</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -327,13 +747,13 @@
                             <thead>
                                 <tr>
                                     <th style="width: 50px;">#</th>
-                                    <th>Qualification</th>
-                                    <th>Duration</th>
-                                    <th>Specialization</th>
-                                    <th>Year</th>
-                                    <th>Percentage</th>
-                                    <th>Institute</th>
-                                    <th>Country</th>
+                                    <th style="min-width: 120px;">Qualification</th>
+                                    <th style="min-width: 70px;">Duration</th>
+                                    <th style="min-width: 100px;">Specialization</th>
+                                    <th style="min-width: 60px;">Year</th>
+                                    <th style="min-width: 65px;">Percentage</th>
+                                    <th style="min-width: 120px;">Institute</th>
+                                    <th style="min-width: 100px;">Country</th>
                                     <th style="width: 60px;">Action</th>
                                 </tr>
                             </thead>
