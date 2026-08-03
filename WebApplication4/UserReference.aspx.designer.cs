@@ -11,7 +11,7 @@ namespace WebApplication4
 {
 
 
-    public partial class Reference
+    public partial class UserReference
     {
 
         /// <summary>

@@ -113,6 +113,18 @@
            
             margin: 0.75rem 0 0;
         }
+
+        .login-link {
+            color: #2D398D;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .login-link:hover {
+            color: #232c70;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -268,6 +280,14 @@
                 </asp:Label>
             </div>
 
+            <!-- Login Link -->
+            <div class="text-center mt-4 pt-2 border-top">
+                <span class="text-muted">Already have an account?</span>
+                <a href="Login.aspx" class="login-link ms-1">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>Login Here
+                </a>
+            </div>
+
         </div>
 
     </div>
@@ -275,4 +295,6 @@
 </div>
 
 </form>
+
+</body>
 </html>

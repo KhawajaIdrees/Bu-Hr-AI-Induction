@@ -138,7 +138,7 @@
     <Content Include="Login.aspx" />
     <Content Include="Personal.aspx" />
     <Content Include="PreviousEmployDeclaration.aspx" />
-    <Content Include="Reference.aspx" />
+    <Content Include="UserReference.aspx" />
     <Content Include="ResearchData.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -295,12 +295,12 @@
     <Compile Include="Personal.aspx.designer.cs">
       <DependentUpon>Personal.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Reference.aspx.cs">
-      <DependentUpon>Reference.aspx</DependentUpon>
+    <Compile Include="UserReference.aspx.cs">
+      <DependentUpon>UserReference.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Reference.aspx.designer.cs">
-      <DependentUpon>Reference.aspx</DependentUpon>
+    <Compile Include="UserReference.aspx.designer.cs">
+      <DependentUpon>UserReference.aspx</DependentUpon>
     </Compile>
     <Compile Include="ResearchData.aspx.cs">
       <DependentUpon>ResearchData.aspx</DependentUpon>

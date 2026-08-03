@@ -178,7 +178,8 @@ namespace WebApplication4
             var otherQualifications = CollectOtherQualificationData();
             SaveOtherQualifications(userID, otherQualifications);
 
-            Response.Redirect("ApplicationSummary.aspx");
+            // Redirect to Reference page (UPDATED)
+            Response.Redirect("UserReference.aspx");
         }
 
         protected void SaveEducationalInformation(

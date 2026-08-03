@@ -256,6 +256,21 @@ namespace WebApplication4
         }
 
         // ============================================
+        // SUBMIT BUTTON - Option 2: Stay on same page
+        // ============================================
+        protected void BtnSubmit_Click(object sender, EventArgs e)
+        {
+            // Show success message
+            lblMessage.Text = "✅ Application submitted successfully!";
+            lblMessage.CssClass = "text-success";
+
+            // Or redirect back to the same page
+            // Response.Redirect("ApplicationSummary.aspx");
+
+            // Or you can just show a message and stay on the page
+        }
+
+        // ============================================
         // BUTTON CLICK EVENTS
         // ============================================
         protected void BtnPersonalInfo_Click(object sender, EventArgs e)

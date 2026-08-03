@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace WebApplication4
 {
-    public partial class Reference : Page
+    public partial class UserReference : Page
     {
         private int EditIndex
         {
@@ -38,25 +41,78 @@ namespace WebApplication4
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
+                LoadReferencesFromDatabase();
                 BindReferences();
             }
 
-            // Restrict Resume Upload
             fuResume.Attributes["accept"] = ".pdf,.doc,.docx";
-
-            // Phone Number
             txtPhone.Attributes["maxlength"] = "20";
             txtPhone.Attributes["oninput"] = "validatePhone(this)";
 
-            // Years Known
             txtYearsKnown.Attributes["min"] = "0";
             txtYearsKnown.Attributes["step"] = "1";
             txtYearsKnown.Attributes["oninput"] = "checkYear(this)";
             txtYearsKnown.Attributes["onchange"] = "checkYear(this)";
             txtYearsKnown.Attributes["onkeydown"] =
                 "if(event.key=='-' || event.key=='e' || event.key=='+') event.preventDefault();";
+        }
+
+        private void LoadReferencesFromDatabase()
+        {
+            int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"SELECT 
+                                ReferenceID,
+                                ReferenceName,
+                                Relationship,
+                                Organization,
+                                JobTitle,
+                                Email,
+                                Phone,
+                                Address,
+                                YearsKnown
+                            FROM UserReferences
+                            WHERE UserID = @UserID
+                            ORDER BY CreatedDate DESC";
+
+            List<ReferenceModel> list = new List<ReferenceModel>();
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new ReferenceModel
+                        {
+                            ReferenceID = Convert.ToInt32(reader["ReferenceID"]),
+                            ReferenceName = reader["ReferenceName"].ToString(),
+                            Relationship = reader["Relationship"].ToString(),
+                            Organization = reader["Organization"].ToString(),
+                            JobTitle = reader["JobTitle"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Phone = reader["Phone"].ToString(),
+                            Address = reader["Address"].ToString(),
+                            YearsKnown = reader["YearsKnown"].ToString()
+                        });
+                    }
+                }
+            }
+
+            References = list;
         }
 
         protected void btnAddReference_Click(object sender, EventArgs e)
@@ -69,7 +125,6 @@ namespace WebApplication4
 
             List<ReferenceModel> list = References;
 
-            // UPDATE
             if (EditIndex >= 0)
             {
                 list[EditIndex].ReferenceName = txtReferenceName.Text.Trim();
@@ -82,12 +137,10 @@ namespace WebApplication4
                 list[EditIndex].YearsKnown = txtYearsKnown.Text.Trim();
 
                 References = list;
-
                 EditIndex = -1;
-
                 btnAddReference.Text = "+ Add";
+                SaveReferencesToDatabase(list);
             }
-            // ADD
             else
             {
                 if (list.Count >= 2)
@@ -109,22 +162,83 @@ namespace WebApplication4
                 });
 
                 References = list;
+                SaveReferencesToDatabase(list);
             }
 
             ClearForm();
             BindReferences();
+            ShowMessage("Reference saved successfully!", true);
+        }
+
+        private void SaveReferencesToDatabase(List<ReferenceModel> references)
+        {
+            int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+
+                string deleteQuery = "DELETE FROM UserReferences WHERE UserID = @UserID";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, con))
+                {
+                    deleteCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                    deleteCmd.ExecuteNonQuery();
+                }
+
+                string insertQuery = @"
+                    INSERT INTO UserReferences 
+                    (UserID, ReferenceName, Relationship, Organization, JobTitle, Email, Phone, Address, YearsKnown)
+                    VALUES 
+                    (@UserID, @ReferenceName, @Relationship, @Organization, @JobTitle, @Email, @Phone, @Address, @YearsKnown)";
+
+                foreach (var refModel in references)
+                {
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, con))
+                    {
+                        insertCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                        insertCmd.Parameters.Add("@ReferenceName", SqlDbType.NVarChar).Value = refModel.ReferenceName;
+                        insertCmd.Parameters.Add("@Relationship", SqlDbType.NVarChar).Value = refModel.Relationship;
+                        insertCmd.Parameters.Add("@Organization", SqlDbType.NVarChar).Value = refModel.Organization;
+                        insertCmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = refModel.JobTitle;
+                        insertCmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = refModel.Email;
+                        insertCmd.Parameters.Add("@Phone", SqlDbType.NVarChar).Value = refModel.Phone;
+                        insertCmd.Parameters.Add("@Address", SqlDbType.NVarChar).Value = refModel.Address;
+                        insertCmd.Parameters.Add("@YearsKnown", SqlDbType.Int).Value = refModel.YearsKnown;
+
+                        insertCmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private void SaveCVToDatabase(string filePath)
+        {
+            int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"UPDATE Personal 
+                            SET CVPath = @CVPath, UpdatedAt = GETDATE() 
+                            WHERE userId = @UserID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                cmd.Parameters.Add("@CVPath", SqlDbType.NVarChar).Value = filePath;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         protected void rptReferences_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int index = Convert.ToInt32(e.CommandArgument);
-
             List<ReferenceModel> list = References;
 
             if (e.CommandName == "EditReference")
             {
                 ReferenceModel item = list[index];
-
                 txtReferenceName.Text = item.ReferenceName;
                 txtRelationship.Text = item.Relationship;
                 txtOrganization.Text = item.Organization;
@@ -135,55 +249,46 @@ namespace WebApplication4
                 txtYearsKnown.Text = item.YearsKnown;
 
                 EditIndex = index;
-
                 btnAddReference.Text = "Update Reference";
                 btnAddReference.Enabled = true;
-
                 return;
             }
 
             if (e.CommandName == "DeleteReference")
             {
                 list.RemoveAt(index);
-
                 References = list;
-
                 EditIndex = -1;
-
                 btnAddReference.Text = "+ Add";
                 btnAddReference.Enabled = true;
-
                 ClearForm();
-
+                SaveReferencesToDatabase(list);
                 BindReferences();
+
+                if (References.Count == 0)
+                {
+                    btnAddReference.Enabled = true;
+                    btnAddReference.Text = "+ Add";
+                }
             }
         }
 
         protected void btnSaveContinue_Click(object sender, EventArgs e)
         {
-            // Check at least one reference
             if (References.Count == 0)
             {
                 ShowMessage("Please add at least one reference.");
                 return;
             }
 
-            // CV/Resume is mandatory
             if (!fuResume.HasFile)
             {
                 ShowMessage("Please upload your CV/Resume before continuing.");
                 return;
             }
 
-            // Allowed file extensions
             string extension = System.IO.Path.GetExtension(fuResume.FileName).ToLower();
-
-            string[] allowedExtensions =
-{
-    ".pdf",
-    ".doc",
-    ".docx"
-};
+            string[] allowedExtensions = { ".pdf", ".doc", ".docx" };
 
             if (Array.IndexOf(allowedExtensions, extension) == -1)
             {
@@ -191,7 +296,6 @@ namespace WebApplication4
                 return;
             }
 
-            // Maximum file size = 5 MB
             if (fuResume.PostedFile.ContentLength > (5 * 1024 * 1024))
             {
                 ShowMessage("Maximum file size allowed is 5 MB.");
@@ -200,33 +304,24 @@ namespace WebApplication4
 
             try
             {
-                // Uploads folder
-                string uploadFolder = Server.MapPath("~/Uploads/");
-
+                string uploadFolder = Server.MapPath("~/Uploads/Resumes/");
                 if (!System.IO.Directory.Exists(uploadFolder))
                 {
                     System.IO.Directory.CreateDirectory(uploadFolder);
                 }
 
-                // Unique filename
-                string fileName =
-                    Guid.NewGuid().ToString() +
-                    System.IO.Path.GetExtension(fuResume.FileName);
+                string fileName = Guid.NewGuid().ToString() + extension;
+                string filePath = System.IO.Path.Combine(uploadFolder, fileName);
 
-                string filePath =
-                    System.IO.Path.Combine(uploadFolder, fileName);
-
-                // Save file
                 fuResume.SaveAs(filePath);
+                SaveReferencesToDatabase(References);
+                SaveCVToDatabase("~/Uploads/Resumes/" + fileName);
 
-                // TODO:
-                // Save references and fileName into database here
-
-                Response.Redirect("NextPage.aspx");
+                Response.Redirect("ApplicationSummary.aspx");
             }
             catch (Exception ex)
             {
-                ShowMessage("Error uploading file: " + ex.Message);
+                ShowMessage("Error: " + ex.Message);
             }
         }
 
@@ -256,37 +351,31 @@ namespace WebApplication4
                 ShowMessage("Reference Name is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtRelationship.Text))
             {
                 ShowMessage("Relationship is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtOrganization.Text))
             {
                 ShowMessage("Organization is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtJobTitle.Text))
             {
                 ShowMessage("Job Title is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtEmail.Text))
             {
                 ShowMessage("Email Address is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtPhone.Text))
             {
                 ShowMessage("Phone Number is required.");
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtYearsKnown.Text))
             {
                 ShowMessage("Years Known is required.");
@@ -294,13 +383,11 @@ namespace WebApplication4
             }
 
             int years;
-
             if (!int.TryParse(txtYearsKnown.Text, out years))
             {
                 ShowMessage("Years Known must be a valid number.");
                 return false;
             }
-
             if (years < 0)
             {
                 ShowMessage("Years Known cannot be negative.");
@@ -322,10 +409,18 @@ namespace WebApplication4
             txtYearsKnown.Text = "";
         }
 
-        private void ShowMessage(string message)
+        private void ShowMessage(string message, bool isSuccess = false)
         {
             pnlMessage.Visible = true;
             lblMessage.Text = message;
+            if (isSuccess)
+            {
+                pnlMessage.CssClass = "alert alert-success";
+            }
+            else
+            {
+                pnlMessage.CssClass = "alert alert-warning";
+            }
         }
     }
 }
