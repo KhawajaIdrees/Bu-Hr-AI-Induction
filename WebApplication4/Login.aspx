@@ -18,6 +18,7 @@
             background: linear-gradient(135deg, #f4f7fc 0%, #e8edf7 100%);
             font-family: 'Segoe UI', Arial, sans-serif;
             min-height: 100vh;
+
         }
 
         .login-card {
