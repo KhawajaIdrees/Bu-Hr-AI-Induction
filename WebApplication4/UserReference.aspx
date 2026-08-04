@@ -17,7 +17,7 @@
         body {
             background: #f0f4f8;
             font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 16px;
+            font-size: 17px;
         }
 
         .page-title h4 {
