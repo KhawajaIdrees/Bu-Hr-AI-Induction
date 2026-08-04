@@ -21,6 +21,9 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
 <style>
 
 /*====================================================
@@ -34,7 +37,7 @@ body{
 
     background:#f5f7fb;
 
-    font-family:'Segoe UI',sans-serif;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
     overflow-x:hidden;
 
@@ -124,6 +127,8 @@ body{
 
     color:#101827;
 
+    font-family:'Inter', 'Segoe UI', sans-serif;
+
 }
 
 .header-right{
@@ -138,6 +143,7 @@ body{
 
 .dashboard-title{
     font-size:2.3rem;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 }
 
 .create-job-btn{
@@ -202,24 +208,16 @@ body{
 .profile-circle{
 
     width:42px;
-
     height:42px;
-
     border-radius:50%;
-
     background:#3557b7;
-
     color:#fff;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     font-weight:700;
-
     font-size:18px;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
@@ -294,23 +292,14 @@ body{
 .sidebar-toggle{
 
     width:40px;
-
     height:40px;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     border-radius:50%;
-
     cursor:pointer;
-
     color:#fff;
-
     font-size:28px;
-
     transition:.25s;
 
 }
@@ -326,7 +315,6 @@ body{
 .sidebar .nav{
 
     margin-top:18px;
-
     padding:0;
 
 }
@@ -340,31 +328,22 @@ body{
 .sidebar .nav-link{
 
     display:flex;
-
     align-items:center;
-
     height:52px;
-
     margin:0 12px;
-
     padding:0 16px;
-
     border-radius:12px;
-
     color:#d7dce6;
-
     text-decoration:none;
-
     transition:.25s;
-
     white-space:nowrap;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
 .sidebar .nav-link:hover{
 
     background:#233c87;
-
     color:#fff;
 
 }
@@ -372,7 +351,6 @@ body{
 .sidebar .nav-link.active{
 
     background:#3557b7;
-
     color:#fff;
 
 }
@@ -380,11 +358,8 @@ body{
 .sidebar .nav-link i{
 
     width:42px;
-
     min-width:42px;
-
     text-align:center;
-
     font-size:20px;
 
 }
@@ -398,9 +373,7 @@ body{
 .logout{
 
     margin-top:auto;
-
     padding:20px 0;
-
     border-top:1px solid rgba(255,255,255,.08);
 
 }
@@ -410,11 +383,8 @@ body{
 .sidebar.collapsed .nav-link{
 
     justify-content:center;
-
     width:56px;
-
     margin:0 auto 8px;
-
     padding:0;
 
 }
@@ -422,9 +392,7 @@ body{
 .sidebar.collapsed .nav-link i{
 
     width:100%;
-
     margin:0;
-
     font-size:22px;
 
 }
@@ -450,7 +418,6 @@ body{
 .sidebar.collapsed + .top-header{
 
     left:80px;
-
     width:calc(100% - 80px);
 
 }
@@ -462,13 +429,9 @@ body{
 .content{
 
     margin-left:250px;
-
     width:calc(100% - 250px);
-
     min-height:calc(100vh - 70px);
-
     padding:30px;
-
     transition:all .35s ease;
 
 }
@@ -476,7 +439,6 @@ body{
 .content.expanded{
 
     margin-left:80px;
-
     width:calc(100% - 80px);
 
 }
@@ -491,10 +453,9 @@ body{
 
     margin-top: 0px;
     font-weight:700;
-
     color:#101827;
-
     margin-bottom:30px;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
@@ -505,11 +466,8 @@ body{
 .card{
 
     border:none;
-
     border-radius:16px;
-
     box-shadow:0 4px 15px rgba(0,0,0,.08);
-
     transition:all .3s ease;
 
 }
@@ -517,19 +475,16 @@ body{
 .card-header{
 
     border:none;
-
     border-radius:16px 16px 0 0 !important;
-
     font-weight:600;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
 .stats-card{
 
     border:2px solid transparent;
-
     cursor:pointer;
-
     transition:all .3s ease;
 
 }
@@ -537,9 +492,7 @@ body{
 .stats-card:hover{
 
     border-color:#101827;
-
     transform:translateY(-5px);
-
     box-shadow:0 12px 25px rgba(16,24,39,.18);
 
 }
@@ -558,18 +511,21 @@ body{
     color:#101827;
     margin-bottom:8px;
     text-align:center;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 }
 
 .stats-card h6{
     font-weight:600;
     margin-bottom:4px;
     text-align:center;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 }
 
 .stats-card small{
     color:#6c757d;
     text-align:center;
     display:block;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 }
 .stat-icon{
     width:54px;
@@ -616,31 +572,28 @@ body{
 .btn{
 
     border-radius:10px;
-
     font-weight:500;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
 .btn-primary{
 
     background:#101827;
-
     border-color:#101827;
 
 }
 
 .btn-primary:hover{
 
-    background:#243b86;
-
-    border-color:#243b86;
+    background:#2a2a3a;
+    border-color:#2a2a3a;
 
 }
 
 .btn-outline-primary{
 
     color:#101827;
-
     border-color:#101827;
 
 }
@@ -648,15 +601,14 @@ body{
 .btn-outline-primary:hover{
 
     background:#101827;
-
     color:#fff;
+    border-color:#101827;
 
 }
 
 .btn-success{
 
     background:#198754;
-
     border:none;
 
 }
@@ -664,7 +616,40 @@ body{
 .btn-success:hover{
 
     background:#157347;
+    border:none;
 
+}
+
+/*====================================================
+                SEARCH GROUP
+====================================================*/
+
+.search-group {
+    display: flex;
+    gap: 0;
+}
+
+.search-group .form-control {
+    border-radius: 10px 0 0 10px;
+    border-right: none;
+}
+
+.search-group .btn-search {
+    border-radius: 0 10px 10px 0;
+    background: #101827;
+    color: #fff;
+    border: 1px solid #101827;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+}
+
+.search-group .btn-search:hover {
+    background: #2a2a3a;
+    border-color: #2a2a3a;
+    color: #fff;
 }
 
 /*====================================================
@@ -680,9 +665,7 @@ body{
 .table{
 
     margin-bottom:0;
-
     border-radius:12px;
-
     overflow:hidden;
 
 }
@@ -696,16 +679,16 @@ body{
 .table th{
 
     font-weight:600;
-
     color:#101827;
-
     white-space:nowrap;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
 .table td{
 
     vertical-align:middle;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
@@ -723,10 +706,9 @@ body{
 .form-select{
 
     border-radius:10px;
-
     min-height:45px;
-
     box-shadow:none;
+    font-family:'Inter', 'Segoe UI', sans-serif;
 
 }
 
@@ -734,7 +716,6 @@ body{
 .form-select:focus{
 
     border-color:#3557b7;
-
     box-shadow:0 0 0 .2rem rgba(53,87,183,.15);
 
 }
@@ -750,6 +731,22 @@ body{
     display:none;
 
 }
+
+/*====================================================
+                ACTIVE TAB INDICATOR
+====================================================*/
+
+.tab-active {
+    background: #101827 !important;
+    color: #fff !important;
+    border-color: #101827 !important;
+}
+
+.tab-active:hover {
+    background: #2a2a3a !important;
+    color: #fff !important;
+}
+
 /*====================================================
                 RESPONSIVE
 ====================================================*/
@@ -1432,7 +1429,7 @@ body{
                 <asp:LinkButton
                     ID="btnTab"
                     runat="server"
-                    CssClass="btn btn-outline-primary"
+                    CssClass='<%# GetTabClass(Eval("Id").ToString()) %>'
                     CommandName="select"
                     CommandArgument='<%# Eval("Id") %>'>
 
@@ -1452,6 +1449,9 @@ body{
 <!-- Search & Sort -->
 <!-- ========================= -->
 
+<asp:UpdatePanel ID="upnlMain" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+    <ContentTemplate>
+
 <asp:Panel
     ID="pnlSort"
     runat="server">
@@ -1460,14 +1460,25 @@ body{
 
         <div class="col-12 col-lg-8">
 
-            <asp:TextBox
-                ID="txtSearch"
-                runat="server"
-                CssClass="form-control"
-                placeholder="Search applicant..."
-                AutoPostBack="true"
-                OnTextChanged="txtSearch_TextChanged">
-            </asp:TextBox>
+            <div class="search-group">
+
+                <asp:TextBox
+                    ID="txtSearch"
+                    runat="server"
+                    CssClass="form-control"
+                    placeholder="Search applicant..."
+                    AutoPostBack="true"
+                    OnTextChanged="txtSearch_TextChanged">
+                </asp:TextBox>
+
+                <asp:Button
+                    ID="btnSearch"
+                    runat="server"
+                    Text="Search"
+                    CssClass="btn-search"
+                    OnClick="btnSearch_Click" />
+
+            </div>
 
         </div>
 
@@ -1495,7 +1506,8 @@ body{
     </div>
 
 </asp:Panel>
-            <!-- ========================= -->
+
+<!-- ========================= -->
 <!-- Applications Section -->
 <!-- ========================= -->
 
@@ -1599,11 +1611,17 @@ body{
 
 </asp:Panel>
 
+    </ContentTemplate>
+</asp:UpdatePanel>
+
 <br />
 
 <!-- ========================= -->
 <!-- Incomplete Applicants -->
 <!-- ========================= -->
+
+<asp:UpdatePanel ID="upnlIncomplete" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+    <ContentTemplate>
 
 <asp:Panel
     ID="pnlIncomplete"
@@ -1617,14 +1635,25 @@ body{
 
             <div class="col-md-6">
 
-                <asp:TextBox
-                    ID="txtIncompleteSearch"
-                    runat="server"
-                    CssClass="form-control"
-                    placeholder="Search applicant..."
-                    AutoPostBack="true"
-                    OnTextChanged="txtIncompleteSearch_TextChanged">
-                </asp:TextBox>
+                <div class="search-group">
+
+                    <asp:TextBox
+                        ID="txtIncompleteSearch"
+                        runat="server"
+                        CssClass="form-control"
+                        placeholder="Search applicant..."
+                        AutoPostBack="true"
+                        OnTextChanged="txtIncompleteSearch_TextChanged">
+                    </asp:TextBox>
+
+                    <asp:Button
+                        ID="btnIncompleteSearch"
+                        runat="server"
+                        Text="Search"
+                        CssClass="btn-search"
+                        OnClick="btnIncompleteSearch_Click" />
+
+                </div>
 
             </div>
 
@@ -1722,6 +1751,10 @@ body{
     </div>
 
 </asp:Panel>
+
+    </ContentTemplate>
+</asp:UpdatePanel>
+
                     </div>   <!-- container-fluid -->
 
     </div>   <!-- content -->
@@ -1734,45 +1767,46 @@ body{
 
 <script>
 
-//
-// Mobile Sidebar
-//
-function toggleSidebar() {
+    //
+    // Mobile Sidebar
+    //
+    function toggleSidebar() {
 
-    const sidebar = document.getElementById("sidebar");
+        const sidebar = document.getElementById("sidebar");
 
-    if (!sidebar) {
-        return;
+        if (!sidebar) {
+            return;
+        }
+
+        sidebar.classList.toggle("show");
     }
 
-    sidebar.classList.toggle("show");
-}
+    //
+    // Desktop Sidebar
+    //
+    function toggleSidebarDesktop() {
 
-//
-// Desktop Sidebar
-//
-function toggleSidebarDesktop() {
+        const sidebar = document.getElementById("sidebar");
+        const content = document.getElementById("content");
+        const icon = document.getElementById("sidebarToggle");
 
-    const sidebar = document.getElementById("sidebar");
-    const content = document.getElementById("content");
-    const icon = document.getElementById("sidebarToggle");
+        if (!sidebar || !content || !icon) return;
 
-    if (!sidebar || !content || !icon) return;
+        sidebar.classList.toggle("collapsed");
+        content.classList.toggle("expanded");
 
-    sidebar.classList.toggle("collapsed");
-    content.classList.toggle("expanded");
+        if (sidebar.classList.contains("collapsed")) {
 
-    if (sidebar.classList.contains("collapsed")) {
+            icon.innerHTML = "&#10095;"; // >
 
-        icon.innerHTML = "&#10095;"; // >
+        } else {
 
-    } else {
+            icon.innerHTML = "&#10094;"; // <
 
-        icon.innerHTML = "&#10094;"; // <
+        }
 
     }
 
-}
 </script>
 
 </body>

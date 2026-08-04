@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
@@ -74,11 +73,14 @@ namespace WebApplication4
             {
                 ddlSort.SelectedValue = CurrentSort;
                 txtSearch.Text = CurrentSearch;
+                txtIncompleteSearch.Text = CurrentSearch;
             }
 
 
             BindAll();
         }
+
+
         protected string GetStatIcon(string key)
         {
             switch (key.ToLower())
@@ -106,6 +108,16 @@ namespace WebApplication4
                     return "bi bi-bar-chart-fill";
             }
         }
+
+
+        // ============================================================
+        //  GET TAB CLASS - FOR ACTIVE TAB HIGHLIGHTING
+        // ============================================================
+        protected string GetTabClass(string tabId)
+        {
+            return CurrentTab == tabId ? "btn btn-primary tab-active" : "btn btn-outline-primary";
+        }
+
 
         private void LoadSampleData()
         {
@@ -142,14 +154,13 @@ namespace WebApplication4
                     SubmittedAt = DateTime.Now.AddDays(-2)
                 },
 
-
                 new ApplicationRow
                 {
                     Id = 3,
                     User = new User
                     {
-                        FullName = "Usman Tariq",
-                        Email = "usman@gmail.com"
+                        FullName = "Bilal Ahmed",
+                        Email = "bilal@gmail.com"
                     },
                     AppliedPosition = "Assistant Professor",
                     HiringType = "Full Time",
@@ -158,20 +169,49 @@ namespace WebApplication4
                     SubmittedAt = DateTime.Now.AddDays(-4)
                 },
 
-
                 new ApplicationRow
                 {
                     Id = 4,
                     User = new User
                     {
-                        FullName = "Bilal Ahmed",
-                        Email = "bilal@gmail.com"
+                        FullName = "Bushra Malik",
+                        Email = "bushra@gmail.com"
                     },
                     AppliedPosition = "Lab Engineer",
                     HiringType = "Permanent",
                     TotalScore = 98,
                     Status = "Hired",
                     SubmittedAt = DateTime.Now.AddDays(-1)
+                },
+
+                new ApplicationRow
+                {
+                    Id = 5,
+                    User = new User
+                    {
+                        FullName = "Usman Tariq",
+                        Email = "usman@gmail.com"
+                    },
+                    AppliedPosition = "Lecturer",
+                    HiringType = "Full Time",
+                    TotalScore = 82,
+                    Status = "Pending",
+                    SubmittedAt = DateTime.Now.AddDays(-5)
+                },
+
+                new ApplicationRow
+                {
+                    Id = 6,
+                    User = new User
+                    {
+                        FullName = "Zara Ali",
+                        Email = "zara@gmail.com"
+                    },
+                    AppliedPosition = "Professor",
+                    HiringType = "Contract",
+                    TotalScore = 91,
+                    Status = "Shortlisted",
+                    SubmittedAt = DateTime.Now.AddDays(-3)
                 }
             };
 
@@ -315,34 +355,28 @@ namespace WebApplication4
 
         private void BindApplications()
         {
-            string search = CurrentSearch.ToLower();
+            string search = CurrentSearch?.ToLower()?.Trim() ?? "";
 
+            IEnumerable<ApplicationRow> list = applications;
 
+            // Apply search filter (case-insensitive)
+            if (!string.IsNullOrEmpty(search))
+            {
+                list = list.Where(x =>
+                    (x.User?.FullName?.ToLower()?.Contains(search) ?? false) ||
+                    (x.User?.Email?.ToLower()?.Contains(search) ?? false) ||
+                    (x.AppliedPosition?.ToLower()?.Contains(search) ?? false)
+                );
+            }
 
-            IEnumerable<ApplicationRow> list = applications.Where(x =>
-                string.IsNullOrEmpty(search) ||
-
-                x.User.FullName.ToLower().Contains(search) ||
-
-                x.User.Email.ToLower().Contains(search) ||
-
-                x.AppliedPosition.ToLower().Contains(search)
-            );
-
-
-
+            // Apply tab filter
             if (CurrentTab != "all")
             {
-                string status =
-                    CurrentTab.Substring(0, 1).ToUpper() +
-                    CurrentTab.Substring(1);
-
-
+                string status = CurrentTab.Substring(0, 1).ToUpper() + CurrentTab.Substring(1);
                 list = list.Where(x => x.Status == status);
             }
 
-
-
+            // Apply sorting
             if (CurrentSort == "score")
             {
                 list = list.OrderByDescending(x => x.TotalScore);
@@ -352,11 +386,7 @@ namespace WebApplication4
                 list = list.OrderByDescending(x => x.SubmittedAt);
             }
 
-
-
             var result = list.ToList();
-
-
 
             pnlApplicationsEmpty.Visible = result.Count == 0;
             gvApplications.DataSource = result;
@@ -404,8 +434,44 @@ namespace WebApplication4
         {
             CurrentSearch = txtSearch.Text.Trim();
 
+            if (CurrentTab == "incomplete")
+            {
+                CurrentTab = "all";
+            }
+
             BindAll();
         }
+
+
+        // ============================================================
+        //  SEARCH BUTTON HANDLERS
+        // ============================================================
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            CurrentSearch = txtSearch.Text.Trim();
+
+            if (CurrentTab == "incomplete")
+            {
+                CurrentTab = "all";
+            }
+
+            BindAll();
+        }
+
+
+        protected void btnIncompleteSearch_Click(object sender, EventArgs e)
+        {
+            CurrentTab = "incomplete";
+            CurrentSearch = txtIncompleteSearch.Text.Trim();
+
+            BindAll();
+        }
+
+
+        // ============================================================
+        //  INCOMPLETE METHODS
+        // ============================================================
 
         private void BindIncomplete()
         {
@@ -435,6 +501,7 @@ namespace WebApplication4
 
         protected void txtIncompleteSearch_TextChanged(object sender, EventArgs e)
         {
+            CurrentSearch = txtIncompleteSearch.Text.Trim();
             BindIncomplete();
         }
 
@@ -555,5 +622,4 @@ namespace WebApplication4
 
         public bool Publish { get; set; }
     }
-
 }

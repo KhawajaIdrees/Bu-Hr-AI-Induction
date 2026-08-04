@@ -60,6 +60,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Repeater rptTabs;
 
         /// <summary>
+        /// upnlMain control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upnlMain;
+
+        /// <summary>
         /// pnlSort control.
         /// </summary>
         /// <remarks>
@@ -76,6 +85,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSearch;
+
+        /// <summary>
+        /// btnSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
         /// ddlSort control.
@@ -114,6 +132,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.GridView gvApplications;
 
         /// <summary>
+        /// upnlIncomplete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upnlIncomplete;
+
+        /// <summary>
         /// pnlIncomplete control.
         /// </summary>
         /// <remarks>
@@ -139,6 +166,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtIncompleteSearch;
+
+        /// <summary>
+        /// btnIncompleteSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnIncompleteSearch;
 
         /// <summary>
         /// ddlIncompleteSort control.
