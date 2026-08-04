@@ -107,8 +107,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="AdminDashboard.aspx" />
     <Content Include="Apply.aspx" />
     <Content Include="CalculateScore.aspx" />
+    <Content Include="CreateJob.aspx" />
     <Content Include="Education.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -204,6 +206,13 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminDashboard.aspx.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminDashboard.aspx.designer.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -221,12 +230,20 @@
     <Compile Include="Apply.aspx.designer.cs">
       <DependentUpon>Apply.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App_Start\User.cs" />
     <Compile Include="CalculateScore.aspx.cs">
       <DependentUpon>CalculateScore.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="CalculateScore.aspx.designer.cs">
       <DependentUpon>CalculateScore.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CreateJob.aspx.cs">
+      <DependentUpon>CreateJob.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CreateJob.aspx.designer.cs">
+      <DependentUpon>CreateJob.aspx</DependentUpon>
     </Compile>
     <Compile Include="Education.aspx.cs">
       <DependentUpon>Education.aspx</DependentUpon>
