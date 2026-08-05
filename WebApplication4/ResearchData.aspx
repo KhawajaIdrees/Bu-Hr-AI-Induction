@@ -271,119 +271,29 @@
             <!-- Main Card -->
             <div class="card card-main">
                 <div class="card-header-blue">
-                    <h5><i class="bi bi-journal-bookmark-fill"></i> Publication Details</h5>
+                    <h5><i class="bi bi-journal-bookmark-fill"></i> Research Summary</h5>
                 </div>
                 <div class="card-body">
 
-                    <!-- Impact Factor 1 -->
-                    <div class="sub-section-title">Impact Factor</div>
-
+                    <!-- Total Research Publications -->
                     <div class="row">
-                        <div class="col-md-12 form-group">
-                            <label for="<%= ddlImpactFactor.ClientID %>" class="form-label">
-                                Last 05 Year (HEC/ISI Impact Factor)
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtTotalPublications.ClientID %>" class="form-label">
+                                Total Research Publications <span class="required-asterisk">*</span>
                             </label>
-                            <asp:DropDownList ID="ddlImpactFactor" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="">Select</asp:ListItem>
-                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
-                                <asp:ListItem Value="No">No</asp:ListItem>
-                            </asp:DropDownList>
+                            <asp:TextBox ID="txtTotalPublications" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
                         <div class="col-md-6 form-group">
                             <label for="<%= txtHECPublications.ClientID %>" class="form-label">
-                                HEC Recognized Publications
+                                HEC Recognized Publications <span class="required-asterisk">*</span>
                             </label>
-                            <asp:TextBox ID="txtHECPublications" runat="server" CssClass="form-control" placeholder="Count" />
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label for="<%= ddlConferencePaper.ClientID %>" class="form-label">
-                                Conference Paper
-                            </label>
-                            <asp:DropDownList ID="ddlConferencePaper" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="">Select</asp:ListItem>
-                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
-                                <asp:ListItem Value="No">No</asp:ListItem>
-                            </asp:DropDownList>
+                            <asp:TextBox ID="txtHECPublications" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
                     </div>
 
-                    <!-- Impact Factor 2 -->
-                    <div class="sub-section-title">Impact Factor</div>
-
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="<%= ddlImpactFactor2.ClientID %>" class="form-label">
-                                Last 05 Year (HEC/ISI Impact Factor)
-                            </label>
-                            <asp:DropDownList ID="ddlImpactFactor2" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="">Select</asp:ListItem>
-                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
-                                <asp:ListItem Value="No">No</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label for="<%= ddlConferencePaper2.ClientID %>" class="form-label">
-                                Conference Paper
-                            </label>
-                            <asp:DropDownList ID="ddlConferencePaper2" runat="server" CssClass="form-select">
-                                <asp:ListItem Value="">Select</asp:ListItem>
-                                <asp:ListItem Value="Yes">Yes</asp:ListItem>
-                                <asp:ListItem Value="No">No</asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                    </div>
-
-                    <!-- Category of Publication -->
-                    <div class="sub-section-title">Category of Publication</div>
-
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtWCount.ClientID %>" class="form-label">W</label>
-                            <asp:TextBox ID="txtWCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtXCount.ClientID %>" class="form-label">X</label>
-                            <asp:TextBox ID="txtXCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtYCount.ClientID %>" class="form-label">Y</label>
-                            <asp:TextBox ID="txtYCount" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-                    </div>
-
-                    <!-- Funded / Foreign Projects -->
-                    <div class="sub-section-title">Funded / Foreign Projects</div>
-
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtTotalFundedProjects.ClientID %>" class="form-label">
-                                Number of Funded Projects
-                            </label>
-                            <asp:TextBox ID="txtTotalFundedProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtPIProjects.ClientID %>" class="form-label">
-                                Number of Projects as Principal Investigator (PI)
-                            </label>
-                            <asp:TextBox ID="txtPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtCoPIProjects.ClientID %>" class="form-label">
-                                Number of Projects as Co-Principal Investigator (Co-PI)
-                            </label>
-                            <asp:TextBox ID="txtCoPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-                    </div>
-
-                    <!-- Supervision Produced -->
-                    <div class="sub-section-title">Number of MS/M.Phil/PhD Produced</div>
+                    <!-- Number of MS/M.Phil/PhD Produced -->
+                    <div class="sub-section-title">Number of MS/M.Phil/PhD Produced (for PhD Candidates)</div>
 
                     <div class="row">
                         <div class="col-md-4 form-group">
@@ -408,8 +318,95 @@
                         </div>
                     </div>
 
-                    <!-- Publication Information -->
-                    <div class="sub-section-title">Publication Information</div>
+                    <!-- Funded Projects -->
+                    <div class="sub-section-title">Number of National/International Funded Projects</div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtPIProjects.ClientID %>" class="form-label">
+                                As Principal Investigator (PI)
+                            </label>
+                            <asp:TextBox ID="txtPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtCoPIProjects.ClientID %>" class="form-label">
+                                As Co-Principal Investigator (Co-PI)
+                            </label>
+                            <asp:TextBox ID="txtCoPIProjects" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
+                        </div>
+                    </div>
+
+                    <!-- Consultancy Amount -->
+                    <div class="sub-section-title">Consultancy Details</div>
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="<%= txtConsultancyAmount.ClientID %>" class="form-label">
+                                Consultancy Amount (If any)
+                            </label>
+                            <asp:TextBox ID="txtConsultancyAmount" runat="server" CssClass="form-control" placeholder="Enter amount in PKR (e.g., 500,000)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Publication Details Card -->
+            <div class="card card-main">
+                <div class="card-header-blue">
+                    <h5><i class="bi bi-journal-bookmark-fill"></i> Publication Details</h5>
+                </div>
+                <div class="card-body">
+
+                    <!-- Publication Type -->
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="<%= ddlPublicationType.ClientID %>" class="form-label">
+                                Publication Type <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:DropDownList ID="ddlPublicationType" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Select Publication Type --</asp:ListItem>
+                                <asp:ListItem Value="Journal Article">Journal Article</asp:ListItem>
+                                <asp:ListItem Value="Conference Paper">Conference Paper</asp:ListItem>
+                                <asp:ListItem Value="Book Chapter">Book Chapter</asp:ListItem>
+                                <asp:ListItem Value="Case Study">Case Study</asp:ListItem>
+                                <asp:ListItem Value="Technical Note">Technical Note</asp:ListItem>
+                                <asp:ListItem Value="Patent">Patent</asp:ListItem>
+                                <asp:ListItem Value="Other">Other</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+
+                        <!-- Category of Publication -->
+                        <div class="col-md-4 form-group">
+                            <label for="<%= ddlCategory.ClientID %>" class="form-label">
+                                Categories of Publication <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Select Category --</asp:ListItem>
+                                <asp:ListItem Value="W">W</asp:ListItem>
+                                <asp:ListItem Value="X">X</asp:ListItem>
+                                <asp:ListItem Value="Y">Y</asp:ListItem>
+                                <asp:ListItem Value="Other">Other</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+
+                        <!-- Publication Status -->
+                        <div class="col-md-4 form-group">
+                            <label for="<%= ddlPublicationStatus.ClientID %>" class="form-label">
+                                Publication Status <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:DropDownList ID="ddlPublicationStatus" runat="server" CssClass="form-select">
+                                <asp:ListItem Value="">-- Select Status --</asp:ListItem>
+                                <asp:ListItem Value="Published">Published</asp:ListItem>
+                                <asp:ListItem Value="Accepted">Accepted</asp:ListItem>
+                                <asp:ListItem Value="Submitted">Submitted</asp:ListItem>
+                                <asp:ListItem Value="Under Review">Under Review</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+
+                    <!-- Article Details -->
+                    <div class="sub-section-title">Article Details</div>
 
                     <div class="row">
                         <div class="col-md-6 form-group">
@@ -430,9 +427,9 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label for="<%= txtJournalName.ClientID %>" class="form-label">
-                                Journal Name <span class="required-asterisk">*</span>
+                                Journal/Conference Name <span class="required-asterisk">*</span>
                             </label>
-                            <asp:TextBox ID="txtJournalName" runat="server" CssClass="form-control" placeholder="Enter journal name" />
+                            <asp:TextBox ID="txtJournalName" runat="server" CssClass="form-control" placeholder="Enter journal or conference name" />
                         </div>
 
                         <div class="col-md-3 form-group">
@@ -460,7 +457,7 @@
                     </div>
 
                     <div class="form-group mb-0">
-                        <asp:Button ID="btnAdd" runat="server" Text="Add" CssClass="btn btn-add" OnClick="BtnAdd_Click" />
+                        <asp:Button ID="btnAdd" runat="server" Text="Add Publication" CssClass="btn btn-add" OnClick="BtnAdd_Click" />
                         <asp:Label ID="lblMessage" runat="server" CssClass="ms-3" />
                     </div>
                 </div>
@@ -479,11 +476,13 @@
                             OnRowCommand="gvPublications_RowCommand">
                             <Columns>
                                 <asp:BoundField DataField="PublicationID" HeaderText="S.No" />
+                                <asp:BoundField DataField="PublicationType" HeaderText="Type" />
+                                <asp:BoundField DataField="Category" HeaderText="Category" />
+                                <asp:BoundField DataField="Status" HeaderText="Status" />
                                 <asp:BoundField DataField="ArticleTitle" HeaderText="Article Title" />
                                 <asp:BoundField DataField="Authors" HeaderText="Authors" />
-                                <asp:BoundField DataField="JournalName" HeaderText="Journal Name" />
-                                <asp:BoundField DataField="PublicationDate" HeaderText="Pub. Date" DataFormatString="{0:d}" />
-                                <asp:BoundField DataField="PublicationYear" HeaderText="Pub. Year" />
+                                <asp:BoundField DataField="JournalName" HeaderText="Journal/Conference" />
+                                <asp:BoundField DataField="PublicationYear" HeaderText="Year" />
                                 <asp:BoundField DataField="DOI" HeaderText="DOI" />
                                 <asp:ButtonField Text="Delete" CommandName="DeletePublication" ButtonType="Button" ControlStyle-CssClass="btn btn-danger btn-sm" />
                             </Columns>

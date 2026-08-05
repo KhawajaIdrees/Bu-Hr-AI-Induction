@@ -33,6 +33,32 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
+            // Check if ResearchProfile table exists
+            bool tableExists = false;
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ResearchProfile'";
+                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
+                    {
+                        int count = (int)cmd.ExecuteScalar();
+                        tableExists = count > 0;
+                    }
+                }
+            }
+            catch
+            {
+                tableExists = false;
+            }
+
+            if (!tableExists)
+            {
+                ClearResearchFields();
+                return;
+            }
+
             string query = @"SELECT * FROM ResearchProfile WHERE user_id = @userID";
 
             using (SqlConnection con = new SqlConnection(cs))
@@ -45,24 +71,24 @@ namespace WebApplication4
                 {
                     if (dr.Read())
                     {
-                        ddlImpactFactor.SelectedValue = dr["ImpactFactor"].ToString();
-                        txtHECPublications.Text = dr["HECPublications"].ToString();
-                        ddlConferencePaper.SelectedValue = dr["ConferencePaper"].ToString();
-                        ddlImpactFactor2.SelectedValue = dr["ImpactFactor2"].ToString();
-                        ddlConferencePaper2.SelectedValue = dr["ConferencePaper2"].ToString();
-                        txtWCount.Text = dr["WCount"].ToString();
-                        txtXCount.Text = dr["XCount"].ToString();
-                        txtYCount.Text = dr["YCount"].ToString();
-                        txtTotalFundedProjects.Text = dr["TotalFundedProjects"].ToString();
-                        txtPIProjects.Text = dr["PIProjects"].ToString();
-                        txtCoPIProjects.Text = dr["CoPIProjects"].ToString();
-                        txtMSStudents.Text = dr["MSStudents"].ToString();
-                        txtMPhilStudents.Text = dr["MPhilStudents"].ToString();
-                        txtPhDStudents.Text = dr["PhDStudents"].ToString();
+                        // Research Summary
+                        try { txtTotalPublications.Text = dr["TotalPublications"].ToString(); } catch { txtTotalPublications.Text = "0"; }
+                        try { txtHECPublications.Text = dr["HECPublications"].ToString(); } catch { txtHECPublications.Text = "0"; }
+
+                        // MS/M.Phil/PhD Produced
+                        try { txtMSStudents.Text = dr["MSStudents"].ToString(); } catch { txtMSStudents.Text = "0"; }
+                        try { txtMPhilStudents.Text = dr["MPhilStudents"].ToString(); } catch { txtMPhilStudents.Text = "0"; }
+                        try { txtPhDStudents.Text = dr["PhDStudents"].ToString(); } catch { txtPhDStudents.Text = "0"; }
+
+                        // Funded Projects
+                        try { txtPIProjects.Text = dr["PIProjects"].ToString(); } catch { txtPIProjects.Text = "0"; }
+                        try { txtCoPIProjects.Text = dr["CoPIProjects"].ToString(); } catch { txtCoPIProjects.Text = "0"; }
+
+                        // Consultancy
+                        try { txtConsultancyAmount.Text = dr["ConsultancyAmount"].ToString(); } catch { txtConsultancyAmount.Text = ""; }
                     }
                     else
                     {
-                        // No profile exists yet, leave fields empty
                         ClearResearchFields();
                     }
                 }
@@ -78,8 +104,38 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
+            // Check if Publications table exists
+            bool tableExists = false;
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Publications'";
+                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
+                    {
+                        int count = (int)cmd.ExecuteScalar();
+                        tableExists = count > 0;
+                    }
+                }
+            }
+            catch
+            {
+                tableExists = false;
+            }
+
+            if (!tableExists)
+            {
+                gvPublications.Visible = false;
+                lblMessage.Text = "Publications table not found.";
+                return;
+            }
+
             string query = @"SELECT 
                                 id as PublicationID,
+                                PublicationType,
+                                Category,
+                                Status,
                                 ArticleTitle,
                                 Authors,
                                 JournalName,
@@ -125,11 +181,15 @@ namespace WebApplication4
                 return;
 
             int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
             string query = @"
 INSERT INTO Publications
 (
     user_id,
+    PublicationType,
+    Category,
+    Status,
     ArticleTitle,
     Authors,
     JournalName,
@@ -140,6 +200,9 @@ INSERT INTO Publications
 VALUES
 (
     @userId,
+    @PublicationType,
+    @Category,
+    @Status,
     @ArticleTitle,
     @Authors,
     @JournalName,
@@ -148,12 +211,13 @@ VALUES
     @DOI
 )";
 
-            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Parameters.Add("@userId", SqlDbType.Int).Value = userID;
+                cmd.Parameters.Add("@PublicationType", SqlDbType.NVarChar).Value = ddlPublicationType.SelectedValue;
+                cmd.Parameters.Add("@Category", SqlDbType.NVarChar).Value = ddlCategory.SelectedValue;
+                cmd.Parameters.Add("@Status", SqlDbType.NVarChar).Value = ddlPublicationStatus.SelectedValue;
                 cmd.Parameters.Add("@ArticleTitle", SqlDbType.NVarChar).Value = txtArticleTitle.Text.Trim();
                 cmd.Parameters.Add("@Authors", SqlDbType.NVarChar).Value = txtAuthors.Text.Trim();
                 cmd.Parameters.Add("@JournalName", SqlDbType.NVarChar).Value = txtJournalName.Text.Trim();
@@ -178,103 +242,121 @@ VALUES
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            // Check if profile exists
-            string checkQuery = "SELECT COUNT(*) FROM ResearchProfile WHERE user_id = @userID";
-
-            using (SqlConnection con = new SqlConnection(cs))
+            try
             {
-                con.Open();
-                using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
+                // Check if ResearchProfile table exists
+                bool tableExists = false;
+                using (SqlConnection con = new SqlConnection(cs))
                 {
-                    checkCmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
-                    int exists = (int)checkCmd.ExecuteScalar();
-
-                    string query;
-                    if (exists > 0)
+                    con.Open();
+                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ResearchProfile'";
+                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
                     {
-                        // Update existing profile
-                        query = @"
+                        int count = (int)cmd.ExecuteScalar();
+                        tableExists = count > 0;
+                    }
+                }
+
+                if (!tableExists)
+                {
+                    // Create the table
+                    using (SqlConnection con = new SqlConnection(cs))
+                    {
+                        con.Open();
+                        string createTableQuery = @"
+CREATE TABLE ResearchProfile (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT NOT NULL,
+    TotalPublications INT DEFAULT 0,
+    HECPublications INT DEFAULT 0,
+    MSStudents INT DEFAULT 0,
+    MPhilStudents INT DEFAULT 0,
+    PhDStudents INT DEFAULT 0,
+    PIProjects INT DEFAULT 0,
+    CoPIProjects INT DEFAULT 0,
+    ConsultancyAmount NVARCHAR(100) NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    UpdatedAt DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+)";
+                        using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                // Check if profile exists
+                string checkQuery = "SELECT COUNT(*) FROM ResearchProfile WHERE user_id = @userID";
+                int exists = 0;
+
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
+                    {
+                        checkCmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                        exists = (int)checkCmd.ExecuteScalar();
+                    }
+                }
+
+                string query;
+                if (exists > 0)
+                {
+                    query = @"
 UPDATE ResearchProfile SET
-    ImpactFactor = @ImpactFactor,
+    TotalPublications = @TotalPublications,
     HECPublications = @HECPublications,
-    ConferencePaper = @ConferencePaper,
-    ImpactFactor2 = @ImpactFactor2,
-    ConferencePaper2 = @ConferencePaper2,
-    WCount = @WCount,
-    XCount = @XCount,
-    YCount = @YCount,
-    TotalFundedProjects = @TotalFundedProjects,
-    PIProjects = @PIProjects,
-    CoPIProjects = @CoPIProjects,
     MSStudents = @MSStudents,
     MPhilStudents = @MPhilStudents,
     PhDStudents = @PhDStudents,
+    PIProjects = @PIProjects,
+    CoPIProjects = @CoPIProjects,
+    ConsultancyAmount = @ConsultancyAmount,
     UpdatedAt = GETDATE()
 WHERE user_id = @userID";
-                    }
-                    else
-                    {
-                        // Insert new profile
-                        query = @"
+                }
+                else
+                {
+                    query = @"
 INSERT INTO ResearchProfile
 (
     user_id,
-    ImpactFactor,
+    TotalPublications,
     HECPublications,
-    ConferencePaper,
-    ImpactFactor2,
-    ConferencePaper2,
-    WCount,
-    XCount,
-    YCount,
-    TotalFundedProjects,
-    PIProjects,
-    CoPIProjects,
     MSStudents,
     MPhilStudents,
-    PhDStudents
+    PhDStudents,
+    PIProjects,
+    CoPIProjects,
+    ConsultancyAmount
 )
 VALUES
 (
     @userID,
-    @ImpactFactor,
+    @TotalPublications,
     @HECPublications,
-    @ConferencePaper,
-    @ImpactFactor2,
-    @ConferencePaper2,
-    @WCount,
-    @XCount,
-    @YCount,
-    @TotalFundedProjects,
-    @PIProjects,
-    @CoPIProjects,
     @MSStudents,
     @MPhilStudents,
-    @PhDStudents
+    @PhDStudents,
+    @PIProjects,
+    @CoPIProjects,
+    @ConsultancyAmount
 )";
-                    }
+                }
 
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
-                        cmd.Parameters.Add("@ImpactFactor", SqlDbType.VarChar).Value = ddlImpactFactor.SelectedValue;
+
+                        cmd.Parameters.Add("@TotalPublications", SqlDbType.Int).Value =
+                            string.IsNullOrWhiteSpace(txtTotalPublications.Text) ? 0 : Convert.ToInt32(txtTotalPublications.Text.Trim());
                         cmd.Parameters.Add("@HECPublications", SqlDbType.Int).Value =
                             string.IsNullOrWhiteSpace(txtHECPublications.Text) ? 0 : Convert.ToInt32(txtHECPublications.Text.Trim());
-                        cmd.Parameters.Add("@ConferencePaper", SqlDbType.VarChar).Value = ddlConferencePaper.SelectedValue;
-                        cmd.Parameters.Add("@ImpactFactor2", SqlDbType.VarChar).Value = ddlImpactFactor2.SelectedValue;
-                        cmd.Parameters.Add("@ConferencePaper2", SqlDbType.VarChar).Value = ddlConferencePaper2.SelectedValue;
-                        cmd.Parameters.Add("@WCount", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtWCount.Text) ? 0 : Convert.ToInt32(txtWCount.Text.Trim());
-                        cmd.Parameters.Add("@XCount", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtXCount.Text) ? 0 : Convert.ToInt32(txtXCount.Text.Trim());
-                        cmd.Parameters.Add("@YCount", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtYCount.Text) ? 0 : Convert.ToInt32(txtYCount.Text.Trim());
-                        cmd.Parameters.Add("@TotalFundedProjects", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtTotalFundedProjects.Text) ? 0 : Convert.ToInt32(txtTotalFundedProjects.Text.Trim());
-                        cmd.Parameters.Add("@PIProjects", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtPIProjects.Text) ? 0 : Convert.ToInt32(txtPIProjects.Text.Trim());
-                        cmd.Parameters.Add("@CoPIProjects", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtCoPIProjects.Text) ? 0 : Convert.ToInt32(txtCoPIProjects.Text.Trim());
+
                         cmd.Parameters.Add("@MSStudents", SqlDbType.Int).Value =
                             string.IsNullOrWhiteSpace(txtMSStudents.Text) ? 0 : Convert.ToInt32(txtMSStudents.Text.Trim());
                         cmd.Parameters.Add("@MPhilStudents", SqlDbType.Int).Value =
@@ -282,9 +364,22 @@ VALUES
                         cmd.Parameters.Add("@PhDStudents", SqlDbType.Int).Value =
                             string.IsNullOrWhiteSpace(txtPhDStudents.Text) ? 0 : Convert.ToInt32(txtPhDStudents.Text.Trim());
 
+                        cmd.Parameters.Add("@PIProjects", SqlDbType.Int).Value =
+                            string.IsNullOrWhiteSpace(txtPIProjects.Text) ? 0 : Convert.ToInt32(txtPIProjects.Text.Trim());
+                        cmd.Parameters.Add("@CoPIProjects", SqlDbType.Int).Value =
+                            string.IsNullOrWhiteSpace(txtCoPIProjects.Text) ? 0 : Convert.ToInt32(txtCoPIProjects.Text.Trim());
+
+                        cmd.Parameters.Add("@ConsultancyAmount", SqlDbType.NVarChar).Value =
+                            string.IsNullOrWhiteSpace(txtConsultancyAmount.Text) ? (object)DBNull.Value : txtConsultancyAmount.Text.Trim();
+
                         cmd.ExecuteNonQuery();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't stop the user
+                System.Diagnostics.Debug.WriteLine("SaveResearchProfile error: " + ex.Message);
             }
         }
 
@@ -297,6 +392,27 @@ VALUES
             }
 
             // Validate required fields
+            if (string.IsNullOrEmpty(ddlPublicationType.SelectedValue))
+            {
+                lblMessage.Text = "Please select Publication Type.";
+                lblMessage.CssClass = "ms-3 text-danger";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ddlCategory.SelectedValue))
+            {
+                lblMessage.Text = "Please select Category of Publication.";
+                lblMessage.CssClass = "ms-3 text-danger";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ddlPublicationStatus.SelectedValue))
+            {
+                lblMessage.Text = "Please select Publication Status.";
+                lblMessage.CssClass = "ms-3 text-danger";
+                return;
+            }
+
             if (string.IsNullOrEmpty(txtArticleTitle.Text.Trim()))
             {
                 lblMessage.Text = "Article Title is required.";
@@ -313,7 +429,7 @@ VALUES
 
             if (string.IsNullOrEmpty(txtJournalName.Text.Trim()))
             {
-                lblMessage.Text = "Journal Name is required.";
+                lblMessage.Text = "Journal/Conference Name is required.";
                 lblMessage.CssClass = "ms-3 text-danger";
                 return;
             }
@@ -327,10 +443,7 @@ VALUES
 
             try
             {
-                // First save the research profile (One-to-One)
                 SaveResearchProfile();
-
-                // Then add the publication (One-to-Many)
                 AddPublication();
 
                 lblMessage.Text = "Publication added successfully!";
@@ -352,24 +465,21 @@ VALUES
 
         protected void ClearResearchFields()
         {
-            ddlImpactFactor.SelectedIndex = 0;
+            txtTotalPublications.Text = string.Empty;
             txtHECPublications.Text = string.Empty;
-            ddlConferencePaper.SelectedIndex = 0;
-            ddlImpactFactor2.SelectedIndex = 0;
-            ddlConferencePaper2.SelectedIndex = 0;
-            txtWCount.Text = string.Empty;
-            txtXCount.Text = string.Empty;
-            txtYCount.Text = string.Empty;
-            txtTotalFundedProjects.Text = string.Empty;
-            txtPIProjects.Text = string.Empty;
-            txtCoPIProjects.Text = string.Empty;
             txtMSStudents.Text = string.Empty;
             txtMPhilStudents.Text = string.Empty;
             txtPhDStudents.Text = string.Empty;
+            txtPIProjects.Text = string.Empty;
+            txtCoPIProjects.Text = string.Empty;
+            txtConsultancyAmount.Text = string.Empty;
         }
 
         protected void ClearPublicationFields()
         {
+            ddlPublicationType.SelectedIndex = 0;
+            ddlCategory.SelectedIndex = 0;
+            ddlPublicationStatus.SelectedIndex = 0;
             txtArticleTitle.Text = string.Empty;
             txtAuthors.Text = string.Empty;
             txtJournalName.Text = string.Empty;
@@ -421,7 +531,6 @@ VALUES
 
         protected void BtnRegister_Click(object sender, EventArgs e)
         {
-            // Save research profile before moving to next page
             try
             {
                 SaveResearchProfile();
