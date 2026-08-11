@@ -292,25 +292,18 @@
                         </div>
                     </div>
 
-                    <!-- Number of MS/M.Phil/PhD Produced -->
+                    <!-- Number of MS/M.Phil/PhD Produced (for PhD Candidates) -->
                     <div class="sub-section-title">Number of MS/M.Phil/PhD Produced (for PhD Candidates)</div>
 
                     <div class="row">
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtMSStudents.ClientID %>" class="form-label">
-                                Number of MS Produced
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtMSMPhilStudents.ClientID %>" class="form-label">
+                                Number of MS/M.Phil Produced
                             </label>
-                            <asp:TextBox ID="txtMSStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
+                            <asp:TextBox ID="txtMSMPhilStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
                         </div>
 
-                        <div class="col-md-4 form-group">
-                            <label for="<%= txtMPhilStudents.ClientID %>" class="form-label">
-                                Number of M.Phil Produced
-                            </label>
-                            <asp:TextBox ID="txtMPhilStudents" runat="server" TextMode="Number" CssClass="form-control" placeholder="0" />
-                        </div>
-
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-6 form-group">
                             <label for="<%= txtPhDStudents.ClientID %>" class="form-label">
                                 Number of PhD Produced
                             </label>

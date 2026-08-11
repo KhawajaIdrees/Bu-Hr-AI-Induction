@@ -33,32 +33,6 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            // Check if ResearchProfile table exists
-            bool tableExists = false;
-            try
-            {
-                using (SqlConnection con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ResearchProfile'";
-                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
-                    {
-                        int count = (int)cmd.ExecuteScalar();
-                        tableExists = count > 0;
-                    }
-                }
-            }
-            catch
-            {
-                tableExists = false;
-            }
-
-            if (!tableExists)
-            {
-                ClearResearchFields();
-                return;
-            }
-
             string query = @"SELECT * FROM ResearchProfile WHERE user_id = @userID";
 
             using (SqlConnection con = new SqlConnection(cs))
@@ -75,9 +49,8 @@ namespace WebApplication4
                         try { txtTotalPublications.Text = dr["TotalPublications"].ToString(); } catch { txtTotalPublications.Text = "0"; }
                         try { txtHECPublications.Text = dr["HECPublications"].ToString(); } catch { txtHECPublications.Text = "0"; }
 
-                        // MS/M.Phil/PhD Produced
-                        try { txtMSStudents.Text = dr["MSStudents"].ToString(); } catch { txtMSStudents.Text = "0"; }
-                        try { txtMPhilStudents.Text = dr["MPhilStudents"].ToString(); } catch { txtMPhilStudents.Text = "0"; }
+                        // MS/M.Phil Produced - Using combined column
+                        try { txtMSMPhilStudents.Text = dr["MSMPhilStudents"].ToString(); } catch { txtMSMPhilStudents.Text = "0"; }
                         try { txtPhDStudents.Text = dr["PhDStudents"].ToString(); } catch { txtPhDStudents.Text = "0"; }
 
                         // Funded Projects
@@ -103,33 +76,6 @@ namespace WebApplication4
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-
-            // Check if Publications table exists
-            bool tableExists = false;
-            try
-            {
-                using (SqlConnection con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Publications'";
-                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
-                    {
-                        int count = (int)cmd.ExecuteScalar();
-                        tableExists = count > 0;
-                    }
-                }
-            }
-            catch
-            {
-                tableExists = false;
-            }
-
-            if (!tableExists)
-            {
-                gvPublications.Visible = false;
-                lblMessage.Text = "Publications table not found.";
-                return;
-            }
 
             string query = @"SELECT 
                                 id as PublicationID,
@@ -244,48 +190,6 @@ VALUES
 
             try
             {
-                // Check if ResearchProfile table exists
-                bool tableExists = false;
-                using (SqlConnection con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    string checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ResearchProfile'";
-                    using (SqlCommand cmd = new SqlCommand(checkTableQuery, con))
-                    {
-                        int count = (int)cmd.ExecuteScalar();
-                        tableExists = count > 0;
-                    }
-                }
-
-                if (!tableExists)
-                {
-                    // Create the table
-                    using (SqlConnection con = new SqlConnection(cs))
-                    {
-                        con.Open();
-                        string createTableQuery = @"
-CREATE TABLE ResearchProfile (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT NOT NULL,
-    TotalPublications INT DEFAULT 0,
-    HECPublications INT DEFAULT 0,
-    MSStudents INT DEFAULT 0,
-    MPhilStudents INT DEFAULT 0,
-    PhDStudents INT DEFAULT 0,
-    PIProjects INT DEFAULT 0,
-    CoPIProjects INT DEFAULT 0,
-    ConsultancyAmount NVARCHAR(100) NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (user_id) REFERENCES Users(id)
-)";
-                        using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
-                        {
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                }
-
                 // Check if profile exists
                 string checkQuery = "SELECT COUNT(*) FROM ResearchProfile WHERE user_id = @userID";
                 int exists = 0;
@@ -307,8 +211,7 @@ CREATE TABLE ResearchProfile (
 UPDATE ResearchProfile SET
     TotalPublications = @TotalPublications,
     HECPublications = @HECPublications,
-    MSStudents = @MSStudents,
-    MPhilStudents = @MPhilStudents,
+    MSMPhilStudents = @MSMPhilStudents,
     PhDStudents = @PhDStudents,
     PIProjects = @PIProjects,
     CoPIProjects = @CoPIProjects,
@@ -324,8 +227,7 @@ INSERT INTO ResearchProfile
     user_id,
     TotalPublications,
     HECPublications,
-    MSStudents,
-    MPhilStudents,
+    MSMPhilStudents,
     PhDStudents,
     PIProjects,
     CoPIProjects,
@@ -336,8 +238,7 @@ VALUES
     @userID,
     @TotalPublications,
     @HECPublications,
-    @MSStudents,
-    @MPhilStudents,
+    @MSMPhilStudents,
     @PhDStudents,
     @PIProjects,
     @CoPIProjects,
@@ -357,10 +258,8 @@ VALUES
                         cmd.Parameters.Add("@HECPublications", SqlDbType.Int).Value =
                             string.IsNullOrWhiteSpace(txtHECPublications.Text) ? 0 : Convert.ToInt32(txtHECPublications.Text.Trim());
 
-                        cmd.Parameters.Add("@MSStudents", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtMSStudents.Text) ? 0 : Convert.ToInt32(txtMSStudents.Text.Trim());
-                        cmd.Parameters.Add("@MPhilStudents", SqlDbType.Int).Value =
-                            string.IsNullOrWhiteSpace(txtMPhilStudents.Text) ? 0 : Convert.ToInt32(txtMPhilStudents.Text.Trim());
+                        cmd.Parameters.Add("@MSMPhilStudents", SqlDbType.Int).Value =
+                            string.IsNullOrWhiteSpace(txtMSMPhilStudents.Text) ? 0 : Convert.ToInt32(txtMSMPhilStudents.Text.Trim());
                         cmd.Parameters.Add("@PhDStudents", SqlDbType.Int).Value =
                             string.IsNullOrWhiteSpace(txtPhDStudents.Text) ? 0 : Convert.ToInt32(txtPhDStudents.Text.Trim());
 
@@ -378,7 +277,6 @@ VALUES
             }
             catch (Exception ex)
             {
-                // Log error but don't stop the user
                 System.Diagnostics.Debug.WriteLine("SaveResearchProfile error: " + ex.Message);
             }
         }
@@ -467,8 +365,7 @@ VALUES
         {
             txtTotalPublications.Text = string.Empty;
             txtHECPublications.Text = string.Empty;
-            txtMSStudents.Text = string.Empty;
-            txtMPhilStudents.Text = string.Empty;
+            txtMSMPhilStudents.Text = string.Empty;
             txtPhDStudents.Text = string.Empty;
             txtPIProjects.Text = string.Empty;
             txtCoPIProjects.Text = string.Empty;

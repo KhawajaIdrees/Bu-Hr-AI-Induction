@@ -262,7 +262,8 @@ namespace WebApplication4
                         if (reader.Read())
                         {
                             txtHIndex.Text = reader["WCount"].ToString();
-                            txtMSStudents.Text = reader["MSStudents"].ToString();
+                            // UPDATED: Changed from MSStudents to MSMPhilStudents
+                            txtMSStudents.Text = reader["MSMPhilStudents"].ToString();
                             txtPhDStudents.Text = reader["PhDStudents"].ToString();
                             txtExperienceAfterPhD.Text = reader["TotalFundedProjects"].ToString();
                         }
