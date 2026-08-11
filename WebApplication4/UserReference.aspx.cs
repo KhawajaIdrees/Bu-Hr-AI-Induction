@@ -296,9 +296,10 @@ namespace WebApplication4
                 return;
             }
 
-            if (fuResume.PostedFile.ContentLength > (5 * 1024 * 1024))
+            // UPDATED: Maximum file size changed to 15 MB
+            if (fuResume.PostedFile.ContentLength > (15 * 1024 * 1024))
             {
-                ShowMessage("Maximum file size allowed is 5 MB.");
+                ShowMessage("Maximum file size allowed is 15 MB.");
                 return;
             }
 

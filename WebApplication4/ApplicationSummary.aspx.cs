@@ -25,6 +25,34 @@ namespace WebApplication4
                 FillEducation(userID);
                 FillWorkExperience(userID);
                 FillResearchProfile(userID);
+                FillProfileImage(userID);
+            }
+        }
+
+        // ============================================
+        // FILL PROFILE IMAGE (from Personal table)
+        // ============================================
+        protected void FillProfileImage(int userID)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = "SELECT PhotoPath FROM Personal WHERE userId = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@userID", userID);
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+
+                if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                {
+                    imgProfile.ImageUrl = result.ToString();
+                }
+                else
+                {
+                    imgProfile.ImageUrl = "~/Images/default-avatar.png";
+                }
             }
         }
 
@@ -52,7 +80,6 @@ namespace WebApplication4
                     txtIdentity.Text = reader["cnic"].ToString();
                     txtCell.Text = reader["cellNumber"].ToString();
 
-                    // Set gender radio button
                     string gender = reader["gender"].ToString();
                     if (gender.ToLower() == "male")
                         rbMale.Checked = true;
@@ -86,28 +113,24 @@ namespace WebApplication4
                 {
                     if (reader.Read())
                     {
-                        // SSC - Using new column names
                         ssc_subject.Value = reader["SSC_Specialization"].ToString();
                         ssc_board.Value = reader["SSC_University"].ToString();
                         ssc_year.Value = reader["SSC_Year"].ToString();
                         ssc_result.Value = reader["SSC_Percentage"].ToString();
                         ssc_grade.Value = reader["SSC_Percentage"].ToString();
 
-                        // HSSC - Using new column names
                         hssc_subject.Value = reader["HSSC_Specialization"].ToString();
                         hssc_board.Value = reader["HSSC_University"].ToString();
                         hssc_year.Value = reader["HSSC_Year"].ToString();
                         hssc_result.Value = reader["HSSC_Percentage"].ToString();
                         hssc_grade.Value = reader["HSSC_Percentage"].ToString();
 
-                        // BS - Using new column names
                         bs_subject.Value = reader["BS_Specialization"].ToString();
                         bs_board.Value = reader["BS_University"].ToString();
                         bs_year.Value = reader["BS_Year"].ToString();
                         bs_result.Value = reader["BS_Percentage"].ToString();
                         bs_grade.Value = reader["BS_Percentage"].ToString();
 
-                        // MS (if exists) - Using new column names
                         if (reader["MS_Specialization"] != DBNull.Value)
                         {
                             ms_subject.Value = reader["MS_Specialization"].ToString();
@@ -117,7 +140,6 @@ namespace WebApplication4
                             ms_grade.Value = reader["MS_Percentage"].ToString();
                         }
 
-                        // PhD (if exists) - Using new column names
                         if (reader["PhD_Specialization"] != DBNull.Value)
                         {
                             phd_subject.Value = reader["PhD_Specialization"].ToString();
@@ -136,7 +158,7 @@ namespace WebApplication4
         }
 
         // ============================================
-        // FILL WORK EXPERIENCE (FULLY FIXED)
+        // FILL WORK EXPERIENCE
         // ============================================
         protected void FillWorkExperience(int userID)
         {
@@ -174,7 +196,6 @@ namespace WebApplication4
                                 string org = reader["OrganizationName"].ToString();
                                 string pos = reader["PositionTitle"].ToString();
 
-                                // FIXED: Check for NULL StartDate
                                 string start;
                                 if (reader["StartDate"] == DBNull.Value)
                                 {
@@ -185,7 +206,6 @@ namespace WebApplication4
                                     start = Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
                                 }
 
-                                // FIXED: Check for NULL EndDate
                                 string end;
                                 if (reader["IsCurrentJob"].ToString() == "True")
                                 {
@@ -256,18 +276,12 @@ namespace WebApplication4
         }
 
         // ============================================
-        // SUBMIT BUTTON - Option 2: Stay on same page
+        // SUBMIT BUTTON
         // ============================================
         protected void BtnSubmit_Click(object sender, EventArgs e)
         {
-            // Show success message
             lblMessage.Text = "✅ Application submitted successfully!";
             lblMessage.CssClass = "text-success";
-
-            // Or redirect back to the same page
-            // Response.Redirect("ApplicationSummary.aspx");
-
-            // Or you can just show a message and stay on the page
         }
 
         // ============================================
@@ -276,11 +290,6 @@ namespace WebApplication4
         protected void BtnPersonalInfo_Click(object sender, EventArgs e)
         {
             Response.Redirect("Personal.aspx");
-        }
-
-        protected void BtnApplicationInfo_Click(object sender, EventArgs e)
-        {
-            // You can add logic here if needed
         }
 
         protected void BtnEducationalInfo_Click(object sender, EventArgs e)

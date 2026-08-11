@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -144,20 +145,39 @@ namespace WebApplication4
                 }
             }
 
-            // STEP 2: Upload picture
+            // STEP 2: Upload picture with validation
             string photoPath = null;
 
             if (fuPicture.HasFile)
             {
-                string extension = System.IO.Path.GetExtension(fuPicture.FileName).ToLower();
+                // VALIDATE: Check if file is an image
+                string fileExtension = Path.GetExtension(fuPicture.FileName).ToLower();
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".ico" };
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    lblMessage.Text = "❌ Error: Please upload only image files (JPG, PNG, GIF, etc.)";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                // Check file size (10MB max)
+                if (fuPicture.PostedFile.ContentLength > 10 * 1024 * 1024)
+                {
+                    lblMessage.Text = "❌ Error: File size must be less than 10MB";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                string extension = Path.GetExtension(fuPicture.FileName).ToLower();
                 string fileName = Guid.NewGuid().ToString() + extension;
 
                 string folder = Server.MapPath("~/Uploads/ProfilePictures/");
 
-                if (!System.IO.Directory.Exists(folder))
-                    System.IO.Directory.CreateDirectory(folder);
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
 
-                string fullPath = System.IO.Path.Combine(folder, fileName);
+                string fullPath = Path.Combine(folder, fileName);
                 fuPicture.SaveAs(fullPath);
                 photoPath = "~/Uploads/ProfilePictures/" + fileName;
             }
@@ -272,7 +292,7 @@ END";
                 cmd.ExecuteNonQuery();
             }
 
-            lblMessage.Text = "Personal information saved successfully!";
+            lblMessage.Text = "✅ Personal information saved successfully!";
             lblMessage.CssClass = "text-success";
         }
 

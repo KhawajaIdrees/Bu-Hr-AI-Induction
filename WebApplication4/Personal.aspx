@@ -235,6 +235,7 @@
                     <div class="form-group mb-0">
                         <label class="form-label">
                             Upload Picture <span class="required-asterisk">*</span>
+                            <small class="text-muted d-block" style="font-size:12px; font-weight:400;">Supported: JPG, PNG, GIF, BMP, WEBP, TIFF (Max 10MB)</small>
                         </label>
                         <div class="picture-upload-box flex-wrap">
                             <img id="imgPicturePreview"
@@ -248,7 +249,9 @@
                                 class="picture-placeholder">
                                 <i class="bi bi-camera-fill"></i>
                             </div>
-                            <asp:FileUpload ID="fuPicture" runat="server" CssClass="form-control" style="max-width:350px;" onchange="previewPicture(this);" />
+                            <asp:FileUpload ID="fuPicture" runat="server" CssClass="form-control" style="max-width:350px;" 
+                                onchange="previewPicture(this);" 
+                                accept="image/*" />
                             <asp:Label ID="picMsg" runat="server" Text=""></asp:Label>
                         </div>
                     </div>
@@ -546,6 +549,28 @@
             var placeholder = document.getElementById('picturePlaceholder');
 
             if (input.files && input.files[0]) {
+                var file = input.files[0];
+
+                // Check if file is an image
+                if (!file.type.startsWith('image/')) {
+                    alert('❌ Please select only image files (JPEG, PNG, GIF, etc.)');
+                    input.value = ''; // Clear the file input
+                    preview.src = '#';
+                    preview.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                    return;
+                }
+
+                // Check file size (limit to 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('❌ File size must be less than 10MB');
+                    input.value = '';
+                    preview.src = '#';
+                    preview.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                    return;
+                }
+
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     preview.src = e.target.result;

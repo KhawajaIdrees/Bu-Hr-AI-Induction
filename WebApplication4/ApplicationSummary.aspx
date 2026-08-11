@@ -106,6 +106,40 @@
         }
 
         /* ============================================
+           PROFILE IMAGE STYLES
+           ============================================ */
+        .profile-img-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-img-wrapper img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #1a3a7a;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: #f8faff;
+            padding: 4px;
+        }
+
+        .profile-img-wrapper .no-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #e8edf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #1a3a7a;
+            color: #1a3a7a;
+            font-size: 48px;
+        }
+
+        /* ============================================
            EDUCATION TABLE
            ============================================ */
         .education-table th {
@@ -437,6 +471,11 @@
                 padding: 6px 12px;
             }
 
+            .profile-img-wrapper img {
+                width: 80px;
+                height: 80px;
+            }
+
             .info-buttons {
                 flex-direction: column;
                 gap: 8px;
@@ -589,6 +628,11 @@
                 padding: 12px;
             }
 
+            .profile-img-wrapper img {
+                width: 70px;
+                height: 70px;
+            }
+
             .education-table th {
                 font-size: 9px;
                 padding: 4px 3px;
@@ -720,6 +764,15 @@
                     </div>
 
                     <div class="card-body">
+                        <!-- PROFILE IMAGE -->
+                        <div class="profile-img-wrapper">
+                            <asp:Image ID="imgProfile" runat="server" 
+                                ImageUrl="~/Images/default-avatar.png" 
+                                AlternateText="Profile Image"
+                                CssClass="img-fluid rounded-circle"
+                                style="width:120px; height:120px; object-fit:cover; border:4px solid #1a3a7a; border-radius:50%; background:#f8faff;" />
+                        </div>
+
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <label class="form-label">Full Name</label>
@@ -887,9 +940,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button id="submitBtn" class="submit-btn" disabled="disabled">
-                            <i class="bi bi-check-circle me-2"></i>Submit
-                        </button>
+                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="submit-btn" OnClick="BtnSubmit_Click" />
                     </div>
                 </div>
             </div>
@@ -904,18 +955,16 @@
 
     <script>
         const checkbox = document.getElementById('agreeDeclaration');
-        const submitBtn = document.getElementById('submitBtn');
+        const submitBtn = document.getElementById('btnSubmit');
 
-        checkbox.addEventListener('change', function () {
-            submitBtn.disabled = !this.checked;
-        });
+        if (checkbox && submitBtn) {
+            checkbox.addEventListener('change', function () {
+                submitBtn.disabled = !this.checked;
+            });
 
-        submitBtn.addEventListener('click', function () {
-            if (checkbox.checked) {
-                alert("Declaration accepted. Form submitted.");
-                // document.getElementById("yourForm").submit();
-            }
-        });
+            // Initial state
+            submitBtn.disabled = true;
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

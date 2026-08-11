@@ -550,7 +550,7 @@
                         <div class="text-muted mt-2" style="font-size: 14px;">
                             <i class="bi bi-info-circle me-1"></i>
                             Supported formats: <strong>PDF, DOC, DOCX</strong>
-                            &nbsp;|&nbsp; Maximum Size: <strong>5 MB</strong>
+                            &nbsp;|&nbsp; Maximum Size: <strong>15 MB</strong>
                         </div>
                     </div>
                 </div>
