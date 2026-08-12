@@ -184,6 +184,25 @@
             }
         }
 
+        /* Mobile: center the profile image above inputs */
+        @media(max-width:768px) {
+            .picture-upload-box {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center;
+            }
+
+            .picture-upload-box .picture-preview,
+            .picture-upload-box .picture-placeholder {
+                margin-bottom: 10px;
+            }
+
+            .picture-upload-box .form-control {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+        }
+
         .radio-group {
             display: flex;
             align-items: center;
