@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bahria University HR Portal - Sign Up</title>
 
     <!-- Bootstrap 5 -->
@@ -124,6 +125,19 @@
         .login-link:hover {
             color: #232c70;
             text-decoration: underline;
+        }
+        @media(max-width:768px) {
+            .signup-card {
+                margin: 20px 12px;
+                padding: 16px;
+            }
+            .card-body {
+                padding: 16px;
+            }
+            .form-control {
+                height: 44px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>

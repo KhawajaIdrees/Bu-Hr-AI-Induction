@@ -4,6 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>HR Portal Login</title>
 
@@ -103,6 +104,20 @@
         .forgot-link:hover {
             color: #2D398D;
         }
+
+    @media(max-width:768px) {
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            padding: 1rem !important;
+        }
+        .container.vh-100 {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            align-items: flex-start;
+        }
+    }
 
     </style>
 

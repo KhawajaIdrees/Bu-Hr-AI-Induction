@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Employment Relationship Declaration</title>
 
     <!-- Bootstrap 5 -->
@@ -239,6 +240,23 @@
 
         .card-body {
             padding: 25px 30px;
+        }
+
+        @media(max-width:768px) {
+            .form-card {
+                padding: 18px 16px;
+                margin: 20px 12px 30px;
+            }
+            .form-label {
+                font-size: 14px;
+            }
+            .form-control {
+                height: 44px;
+                font-size: 14px;
+            }
+            .card-body {
+                padding: 15px;
+            }
         }
 
         .btn-bu-blue {
