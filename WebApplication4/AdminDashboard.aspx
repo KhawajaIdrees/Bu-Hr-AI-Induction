@@ -1626,7 +1626,7 @@ body{
 
                             <strong>
 
-                                <%# Eval("User.FullName") %>
+                                <%# Eval("Applicant.FullName") %>
 
                             </strong>
 
@@ -1634,7 +1634,7 @@ body{
 
                             <small class="text-muted">
 
-                                <%# Eval("User.Email") %>
+                                <%# Eval("Applicant.Email") %>
 
                             </small>
 

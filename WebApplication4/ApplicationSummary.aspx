@@ -416,6 +416,17 @@
             cursor: not-allowed;
         }
 
+        .submit-btn.submitted {
+            background: #6c757d;
+            cursor: default;
+        }
+
+        .submit-btn.submitted:hover {
+            background: #6c757d;
+            transform: none;
+            box-shadow: none;
+        }
+
         .radio-group {
             display: flex;
             align-items: center;
@@ -442,6 +453,11 @@
 
         .text-danger {
             font-size: 13px;
+        }
+
+        .text-success {
+            font-size: 16px;
+            font-weight: 600;
         }
 
         /* ============================================
@@ -941,7 +957,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <asp:Button ID="btnSubmit" runat="server" Text="Submit" CssClass="submit-btn" OnClick="BtnSubmit_Click" />
+                        <asp:Button ID="btnSubmit" runat="server" Text="Submit Application" CssClass="submit-btn" OnClick="BtnSubmit_Click" />
                     </div>
                 </div>
             </div>

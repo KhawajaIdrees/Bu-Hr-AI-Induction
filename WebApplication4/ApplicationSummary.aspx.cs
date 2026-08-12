@@ -26,6 +26,67 @@ namespace WebApplication4
                 FillWorkExperience(userID);
                 FillResearchProfile(userID);
                 FillProfileImage(userID);
+                CheckIfAlreadySubmitted(userID);
+            }
+        }
+
+        // ============================================
+        // CHECK IF ALREADY SUBMITTED
+        // ============================================
+        protected void CheckIfAlreadySubmitted(int userID)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = "SELECT IsSubmitted FROM Personal WHERE userId = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@userID", userID);
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && Convert.ToBoolean(result) == true)
+                {
+                    // Already submitted - disable the button
+                    btnSubmit.Enabled = false;
+                    btnSubmit.Text = "✅ Already Submitted";
+                    btnSubmit.CssClass = "submit-btn submitted";
+
+                    // Disable the checkbox
+                    ScriptManager.RegisterStartupScript(this, GetType(), "disableCheckbox",
+                        "document.getElementById('agreeDeclaration').disabled = true;", true);
+
+                    lblMessage.Text = "You have already submitted your application on " + GetSubmittedDate(userID);
+                    lblMessage.CssClass = "text-success";
+                }
+                else
+                {
+                    // Enable submit button (checkbox will control it)
+                    btnSubmit.Enabled = false;
+                }
+            }
+        }
+
+        // ============================================
+        // GET SUBMITTED DATE
+        // ============================================
+        private string GetSubmittedDate(int userID)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string query = "SELECT SubmittedDate FROM Personal WHERE userId = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@userID", userID);
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    return Convert.ToDateTime(result).ToString("MM/dd/yyyy hh:mm tt");
+                }
+                return "unknown date";
             }
         }
 
@@ -262,7 +323,6 @@ namespace WebApplication4
                         if (reader.Read())
                         {
                             txtHIndex.Text = reader["WCount"].ToString();
-                            // UPDATED: Changed from MSMPhilStudents to MS_MPhil_Students
                             txtMSStudents.Text = reader["MS_MPhil_Students"].ToString();
                             txtPhDStudents.Text = reader["PhDStudents"].ToString();
                             txtExperienceAfterPhD.Text = reader["TotalFundedProjects"].ToString();
@@ -277,12 +337,70 @@ namespace WebApplication4
         }
 
         // ============================================
-        // SUBMIT BUTTON
+        // SUBMIT BUTTON - Saves to Database
         // ============================================
         protected void BtnSubmit_Click(object sender, EventArgs e)
         {
-            lblMessage.Text = "✅ Application submitted successfully!";
-            lblMessage.CssClass = "text-success";
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            int userID = Convert.ToInt32(Session["UserID"]);
+
+            // Check if already submitted
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string checkQuery = "SELECT IsSubmitted FROM Personal WHERE userId = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
+            {
+                checkCmd.Parameters.AddWithValue("@userID", userID);
+                con.Open();
+
+                object result = checkCmd.ExecuteScalar();
+                if (result != null && Convert.ToBoolean(result) == true)
+                {
+                    lblMessage.Text = "You have already submitted this application.";
+                    lblMessage.CssClass = "text-warning";
+                    return;
+                }
+            }
+
+            try
+            {
+                // Update Personal table - Mark as submitted
+                string query = @"UPDATE Personal 
+                                SET IsSubmitted = 1, 
+                                    SubmittedDate = GETDATE() 
+                                WHERE userId = @userID";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@userID", userID);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                lblMessage.Text = "✅ Application submitted successfully!";
+                lblMessage.CssClass = "text-success";
+
+                // Disable submit button
+                btnSubmit.Enabled = false;
+                btnSubmit.Text = "✅ Already Submitted";
+                btnSubmit.CssClass = "submit-btn submitted";
+
+                // Disable checkbox
+                ScriptManager.RegisterStartupScript(this, GetType(), "disableCheckbox",
+                    "document.getElementById('agreeDeclaration').disabled = true;", true);
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "❌ Error submitting application: " + ex.Message;
+                lblMessage.CssClass = "text-danger";
+            }
         }
 
         // ============================================

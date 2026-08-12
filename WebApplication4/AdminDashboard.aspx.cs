@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -19,252 +22,221 @@ namespace WebApplication4
                 {"incomplete", "Not submitted yet"}
             };
 
-
         public string CurrentTab
         {
-            get
-            {
-                return ViewState["CurrentTab"]?.ToString() ?? "all";
-            }
-            set
-            {
-                ViewState["CurrentTab"] = value;
-            }
+            get { return ViewState["CurrentTab"]?.ToString() ?? "all"; }
+            set { ViewState["CurrentTab"] = value; }
         }
-
 
         private string CurrentSort
         {
-            get
-            {
-                return ViewState["CurrentSort"]?.ToString() ?? "submitted";
-            }
-            set
-            {
-                ViewState["CurrentSort"] = value;
-            }
+            get { return ViewState["CurrentSort"]?.ToString() ?? "submitted"; }
+            set { ViewState["CurrentSort"] = value; }
         }
-
 
         private string CurrentSearch
         {
-            get
-            {
-                return ViewState["CurrentSearch"]?.ToString() ?? "";
-            }
-            set
-            {
-                ViewState["CurrentSearch"] = value;
-            }
+            get { return ViewState["CurrentSearch"]?.ToString() ?? ""; }
+            set { ViewState["CurrentSearch"] = value; }
         }
 
+        // ============================================
+        // DATA MODELS
+        // ============================================
+        private List<ApplicationRow> applications = new List<ApplicationRow>();
+        private List<IncompleteApplicant> incomplete = new List<IncompleteApplicant>();
+        private AdminStats stats = new AdminStats();
 
-        private List<ApplicationRow> applications;
-        private List<IncompleteApplicant> incomplete;
-        private AdminStats stats;
+        public class AdminStats
+        {
+            public int TotalSubmitted { get; set; }
+            public int Pending { get; set; }
+            public int Shortlisted { get; set; }
+            public int Rejected { get; set; }
+            public int Hired { get; set; }
+            public int IncompleteProfiles { get; set; }
+        }
 
+        public class ApplicantInfo
+        {
+            public string FullName { get; set; }
+            public string Email { get; set; }
+        }
+
+        public class ApplicationRow
+        {
+            public int Id { get; set; }
+            public ApplicantInfo Applicant { get; set; }
+            public string AppliedPosition { get; set; }
+            public string HiringType { get; set; }
+            public double TotalScore { get; set; }
+            public string Status { get; set; }
+            public DateTime SubmittedAt { get; set; }
+        }
+
+        public class IncompleteApplicant
+        {
+            public int Id { get; set; }
+            public string FullName { get; set; }
+            public string Email { get; set; }
+            public string Phone { get; set; }
+            public DateTime RegisteredAt { get; set; }
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadSampleData();
-
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
 
             if (!IsPostBack)
             {
                 ddlSort.SelectedValue = CurrentSort;
                 txtSearch.Text = CurrentSearch;
                 txtIncompleteSearch.Text = CurrentSearch;
-            }
 
+                // Load data from database FIRST
+                LoadDataFromDatabase();
 
-            BindAll();
-        }
-
-
-        protected string GetStatIcon(string key)
-        {
-            switch (key.ToLower())
-            {
-                case "submitted":
-                    return "bi bi-people-fill icon-submitted";
-
-                case "pending":
-                    return "bi bi-clock-history icon-pending";
-
-                case "shortlisted":
-                    return "bi bi-person-check-fill icon-shortlisted";
-
-                case "rejected":
-                    return "bi bi-x-circle-fill icon-rejected";
-
-                case "hired":
-                    return "bi bi-briefcase-fill icon-hired";
-
-                case "notsubmitted":
-                case "incomplete":
-                    return "bi bi-file-earmark-text-fill icon-incomplete";
-
-                default:
-                    return "bi bi-bar-chart-fill";
+                // Then bind everything
+                BindAll();
             }
         }
 
-
-        // ============================================================
-        //  GET TAB CLASS - FOR ACTIVE TAB HIGHLIGHTING
-        // ============================================================
-        protected string GetTabClass(string tabId)
+        // ============================================
+        // LOAD DATA FROM DATABASE
+        // ============================================
+        private void LoadDataFromDatabase()
         {
-            return CurrentTab == tabId ? "btn btn-primary tab-active" : "btn btn-outline-primary";
-        }
+            applications = new List<ApplicationRow>();
+            incomplete = new List<IncompleteApplicant>();
 
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-        private void LoadSampleData()
-        {
-            applications = new List<ApplicationRow>()
+            // ============================================
+            // 1. LOAD SUBMITTED APPLICATIONS
+            // ============================================
+            string appQuery = @"
+                SELECT 
+                    u.id AS UserID,
+                    p.fname + ' ' + p.lname AS FullName,
+                    u.email,
+                    p.cellNumber AS Phone,
+                    p.gender,
+                    p.nationality,
+                    p.SubmittedDate,
+                    p.IsSubmitted,
+                    ISNULL(rp.TotalPublications, 0) AS TotalPublications,
+                    ISNULL(rp.HECPublications, 0) AS HECPublications,
+                    ISNULL(rp.MS_MPhil_Students, 0) AS MS_MPhil_Students,
+                    ISNULL(rp.PhDStudents, 0) AS PhDStudents
+                FROM Personal p
+                INNER JOIN Users u ON p.userId = u.id
+                LEFT JOIN ResearchProfile rp ON u.id = rp.user_id
+                WHERE p.IsSubmitted = 1
+                ORDER BY p.SubmittedDate DESC";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(appQuery, con))
             {
-                new ApplicationRow
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Id = 1,
-                    User = new User
+                    int id = 1;
+                    while (reader.Read())
                     {
-                        FullName = "Ali Khan",
-                        Email = "ali@gmail.com"
-                    },
-                    AppliedPosition = "Lecturer",
-                    HiringType = "Full Time",
-                    TotalScore = 88,
-                    Status = "Pending",
-                    SubmittedAt = DateTime.Now.AddDays(-3)
-                },
+                        int totalPubs = reader["TotalPublications"] != DBNull.Value ? Convert.ToInt32(reader["TotalPublications"]) : 0;
+                        int hecPubs = reader["HECPublications"] != DBNull.Value ? Convert.ToInt32(reader["HECPublications"]) : 0;
+                        int msMphil = reader["MS_MPhil_Students"] != DBNull.Value ? Convert.ToInt32(reader["MS_MPhil_Students"]) : 0;
+                        int phdStudents = reader["PhDStudents"] != DBNull.Value ? Convert.ToInt32(reader["PhDStudents"]) : 0;
 
+                        double score = (totalPubs * 5) + (hecPubs * 10) + (msMphil * 3) + (phdStudents * 8);
 
-                new ApplicationRow
-                {
-                    Id = 2,
-                    User = new User
-                    {
-                        FullName = "Ahmed Raza",
-                        Email = "ahmed@gmail.com"
-                    },
-                    AppliedPosition = "Professor",
-                    HiringType = "Contract",
-                    TotalScore = 95,
-                    Status = "Shortlisted",
-                    SubmittedAt = DateTime.Now.AddDays(-2)
-                },
-
-                new ApplicationRow
-                {
-                    Id = 3,
-                    User = new User
-                    {
-                        FullName = "Bilal Ahmed",
-                        Email = "bilal@gmail.com"
-                    },
-                    AppliedPosition = "Assistant Professor",
-                    HiringType = "Full Time",
-                    TotalScore = 70,
-                    Status = "Rejected",
-                    SubmittedAt = DateTime.Now.AddDays(-4)
-                },
-
-                new ApplicationRow
-                {
-                    Id = 4,
-                    User = new User
-                    {
-                        FullName = "Bushra Malik",
-                        Email = "bushra@gmail.com"
-                    },
-                    AppliedPosition = "Lab Engineer",
-                    HiringType = "Permanent",
-                    TotalScore = 98,
-                    Status = "Hired",
-                    SubmittedAt = DateTime.Now.AddDays(-1)
-                },
-
-                new ApplicationRow
-                {
-                    Id = 5,
-                    User = new User
-                    {
-                        FullName = "Usman Tariq",
-                        Email = "usman@gmail.com"
-                    },
-                    AppliedPosition = "Lecturer",
-                    HiringType = "Full Time",
-                    TotalScore = 82,
-                    Status = "Pending",
-                    SubmittedAt = DateTime.Now.AddDays(-5)
-                },
-
-                new ApplicationRow
-                {
-                    Id = 6,
-                    User = new User
-                    {
-                        FullName = "Zara Ali",
-                        Email = "zara@gmail.com"
-                    },
-                    AppliedPosition = "Professor",
-                    HiringType = "Contract",
-                    TotalScore = 91,
-                    Status = "Shortlisted",
-                    SubmittedAt = DateTime.Now.AddDays(-3)
+                        var app = new ApplicationRow
+                        {
+                            Id = id++,
+                            Applicant = new ApplicantInfo
+                            {
+                                FullName = reader["FullName"].ToString(),
+                                Email = reader["Email"].ToString()
+                            },
+                            AppliedPosition = "Faculty Position",
+                            HiringType = "Full Time",
+                            TotalScore = score,
+                            Status = "Pending",
+                            SubmittedAt = reader["SubmittedDate"] != DBNull.Value ? Convert.ToDateTime(reader["SubmittedDate"]) : DateTime.Now
+                        };
+                        applications.Add(app);
+                    }
                 }
-            };
+            }
 
+            // ============================================
+            // 2. LOAD INCOMPLETE APPLICANTS (Not Submitted)
+            // ============================================
+            string incompleteQuery = @"
+                SELECT 
+                    u.id AS UserID,
+                    p.fname + ' ' + p.lname AS FullName,
+                    u.email,
+                    p.cellNumber AS Phone,
+                    p.CreatedAt AS RegisteredAt
+                FROM Personal p
+                INNER JOIN Users u ON p.userId = u.id
+                WHERE p.IsSubmitted = 0 OR p.IsSubmitted IS NULL
+                ORDER BY p.CreatedAt DESC";
 
-            incomplete = new List<IncompleteApplicant>()
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(incompleteQuery, con))
             {
-                new IncompleteApplicant
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Id = 1,
-                    FullName = "Ayesha Malik",
-                    Email = "ayesha@gmail.com",
-                    Phone = "03001234567",
-                    RegisteredAt = DateTime.Now.AddHours(-10)
-                },
-
-
-                new IncompleteApplicant
-                {
-                    Id = 2,
-                    FullName = "Sara Khan",
-                    Email = "sara@gmail.com",
-                    Phone = "03112223333",
-                    RegisteredAt = DateTime.Now.AddDays(-1)
+                    int id = 1;
+                    while (reader.Read())
+                    {
+                        var inc = new IncompleteApplicant
+                        {
+                            Id = id++,
+                            FullName = reader["FullName"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Phone = reader["Phone"] != DBNull.Value ? reader["Phone"].ToString() : "N/A",
+                            RegisteredAt = reader["RegisteredAt"] != DBNull.Value ? Convert.ToDateTime(reader["RegisteredAt"]) : DateTime.Now
+                        };
+                        incomplete.Add(inc);
+                    }
                 }
-            };
+            }
 
-
+            // ============================================
+            // 3. CALCULATE STATISTICS
+            // ============================================
             stats = new AdminStats
             {
                 TotalSubmitted = applications.Count,
-                Pending = applications.Count(x => x.Status == "Pending"),
-                Shortlisted = applications.Count(x => x.Status == "Shortlisted"),
-                Rejected = applications.Count(x => x.Status == "Rejected"),
-                Hired = applications.Count(x => x.Status == "Hired"),
+                Pending = applications.Count,
+                Shortlisted = 0,
+                Rejected = 0,
+                Hired = 0,
                 IncompleteProfiles = incomplete.Count
             };
         }
 
-
-
+        // ============================================
+        // BIND ALL DATA
+        // ============================================
         private void BindAll()
         {
             BindStats();
             BindTabs();
 
-
             bool showIncomplete = CurrentTab == "incomplete";
-
 
             pnlIncomplete.Visible = showIncomplete;
             pnlApplications.Visible = !showIncomplete;
             pnlSort.Visible = !showIncomplete;
-
 
             if (showIncomplete)
             {
@@ -276,107 +248,69 @@ namespace WebApplication4
             }
         }
 
-
-
+        // ============================================
+        // BIND STATISTICS CARDS
+        // ============================================
         private void BindStats()
         {
+            // Make sure stats is not null
+            if (stats == null)
+            {
+                stats = new AdminStats();
+            }
+
             var cards = new[]
             {
-                new
-                {
-                    Key = "all",
-                    Label = "Submitted",
-                    Value = stats.TotalSubmitted,
-                    Hint = "All statuses"
-                },
-
-                new
-                {
-                    Key = "pending",
-                    Label = "Pending",
-                    Value = stats.Pending,
-                    Hint = "Awaiting review"
-                },
-
-                new
-                {
-                    Key = "shortlisted",
-                    Label = "Shortlisted",
-                    Value = stats.Shortlisted,
-                    Hint = ""
-                },
-
-                new
-                {
-                    Key = "rejected",
-                    Label = "Rejected",
-                    Value = stats.Rejected,
-                    Hint = ""
-                },
-
-                new
-                {
-                    Key = "hired",
-                    Label = "Hired",
-                    Value = stats.Hired,
-                    Hint = ""
-                },
-
-                new
-                {
-                    Key = "incomplete",
-                    Label = "Not submitted",
-                    Value = stats.IncompleteProfiles,
-                    Hint = "No final submit"
-                }
+                new { Key = "all", Label = "Submitted", Value = stats.TotalSubmitted, Hint = "All statuses" },
+                new { Key = "pending", Label = "Pending", Value = stats.Pending, Hint = "Awaiting review" },
+                new { Key = "shortlisted", Label = "Shortlisted", Value = stats.Shortlisted, Hint = "" },
+                new { Key = "rejected", Label = "Rejected", Value = stats.Rejected, Hint = "" },
+                new { Key = "hired", Label = "Hired", Value = stats.Hired, Hint = "" },
+                new { Key = "incomplete", Label = "Not submitted", Value = stats.IncompleteProfiles, Hint = "No final submit" }
             };
-
 
             rptStats.DataSource = cards;
             rptStats.DataBind();
         }
 
-
-
+        // ============================================
+        // BIND TABS
+        // ============================================
         private void BindTabs()
         {
-            rptTabs.DataSource = Tabs.Select(x => new
-            {
-                Id = x.Key,
-                Label = x.Value
-            }).ToList();
-
-
+            rptTabs.DataSource = Tabs.Select(x => new { Id = x.Key, Label = x.Value }).ToList();
             rptTabs.DataBind();
         }
 
-
-
-
+        // ============================================
+        // BIND APPLICATIONS
+        // ============================================
         private void BindApplications()
         {
+            if (applications == null)
+            {
+                applications = new List<ApplicationRow>();
+            }
+
             string search = CurrentSearch?.ToLower()?.Trim() ?? "";
 
             IEnumerable<ApplicationRow> list = applications;
 
-            // Apply search filter (case-insensitive)
             if (!string.IsNullOrEmpty(search))
             {
                 list = list.Where(x =>
-                    (x.User?.FullName?.ToLower()?.Contains(search) ?? false) ||
-                    (x.User?.Email?.ToLower()?.Contains(search) ?? false) ||
+                    (x.Applicant?.FullName?.ToLower()?.Contains(search) ?? false) ||
+                    (x.Applicant?.Email?.ToLower()?.Contains(search) ?? false) ||
                     (x.AppliedPosition?.ToLower()?.Contains(search) ?? false)
                 );
             }
 
-            // Apply tab filter
-            if (CurrentTab != "all")
+            if (CurrentTab != "all" && CurrentTab != "incomplete")
             {
                 string status = CurrentTab.Substring(0, 1).ToUpper() + CurrentTab.Substring(1);
                 list = list.Where(x => x.Status == status);
             }
 
-            // Apply sorting
             if (CurrentSort == "score")
             {
                 list = list.OrderByDescending(x => x.TotalScore);
@@ -393,88 +327,16 @@ namespace WebApplication4
             gvApplications.DataBind();
         }
 
-
-
-        protected void rptStats_ItemCommand(
-            object source,
-            RepeaterCommandEventArgs e)
-        {
-            CurrentTab = e.CommandArgument.ToString();
-
-            BindAll();
-        }
-
-
-
-        protected void rptTabs_ItemCommand(
-            object source,
-            RepeaterCommandEventArgs e)
-        {
-            CurrentTab = e.CommandArgument.ToString();
-
-            BindAll();
-        }
-
-
-
-        protected void ddlSort_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
-        {
-            CurrentSort = ddlSort.SelectedValue;
-
-            BindAll();
-        }
-
-
-
-        protected void txtSearch_TextChanged(
-            object sender,
-            EventArgs e)
-        {
-            CurrentSearch = txtSearch.Text.Trim();
-
-            if (CurrentTab == "incomplete")
-            {
-                CurrentTab = "all";
-            }
-
-            BindAll();
-        }
-
-
-        // ============================================================
-        //  SEARCH BUTTON HANDLERS
-        // ============================================================
-
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            CurrentSearch = txtSearch.Text.Trim();
-
-            if (CurrentTab == "incomplete")
-            {
-                CurrentTab = "all";
-            }
-
-            BindAll();
-        }
-
-
-        protected void btnIncompleteSearch_Click(object sender, EventArgs e)
-        {
-            CurrentTab = "incomplete";
-            CurrentSearch = txtIncompleteSearch.Text.Trim();
-
-            BindAll();
-        }
-
-
-        // ============================================================
-        //  INCOMPLETE METHODS
-        // ============================================================
-
+        // ============================================
+        // BIND INCOMPLETE APPLICANTS
+        // ============================================
         private void BindIncomplete()
         {
+            if (incomplete == null)
+            {
+                incomplete = new List<IncompleteApplicant>();
+            }
+
             string search = txtIncompleteSearch.Text.Trim().ToLower();
 
             IEnumerable<IncompleteApplicant> list = incomplete.Where(x =>
@@ -494,9 +356,50 @@ namespace WebApplication4
             var result = list.ToList();
 
             pnlIncompleteEmpty.Visible = result.Count == 0;
-
             gvIncomplete.DataSource = result;
             gvIncomplete.DataBind();
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        protected void rptStats_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            CurrentTab = e.CommandArgument.ToString();
+            BindAll();
+        }
+
+        protected void rptTabs_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            CurrentTab = e.CommandArgument.ToString();
+            BindAll();
+        }
+
+        protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CurrentSort = ddlSort.SelectedValue;
+            BindAll();
+        }
+
+        protected void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            CurrentSearch = txtSearch.Text.Trim();
+            if (CurrentTab == "incomplete") CurrentTab = "all";
+            BindAll();
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            CurrentSearch = txtSearch.Text.Trim();
+            if (CurrentTab == "incomplete") CurrentTab = "all";
+            BindAll();
+        }
+
+        protected void btnIncompleteSearch_Click(object sender, EventArgs e)
+        {
+            CurrentTab = "incomplete";
+            CurrentSearch = txtIncompleteSearch.Text.Trim();
+            BindAll();
         }
 
         protected void txtIncompleteSearch_TextChanged(object sender, EventArgs e)
@@ -510,116 +413,45 @@ namespace WebApplication4
             BindIncomplete();
         }
 
-
         protected string FormatDate(object value)
         {
-            if (value == null || value == DBNull.Value)
-            {
-                return "";
-            }
-
-
-            DateTime date;
-
-
-            if (DateTime.TryParse(value.ToString(), out date))
-            {
+            if (value == null || value == DBNull.Value) return "";
+            if (DateTime.TryParse(value.ToString(), out DateTime date))
                 return date.ToString("dd MMM yyyy");
-            }
-
-
             return "";
         }
 
-
-
         protected string StatusBadgeClass(string status)
         {
-            if (string.IsNullOrEmpty(status))
-            {
-                return "bg-secondary";
-            }
-
-
+            if (string.IsNullOrEmpty(status)) return "bg-secondary";
             switch (status.ToLower())
             {
-                case "pending":
-                    return "bg-warning text-dark";
-
-
-                case "shortlisted":
-                    return "bg-primary";
-
-
-                case "rejected":
-                    return "bg-danger";
-
-
-                case "hired":
-                    return "bg-success";
-
-
-                default:
-                    return "bg-secondary";
+                case "pending": return "bg-warning text-dark";
+                case "shortlisted": return "bg-primary";
+                case "rejected": return "bg-danger";
+                case "hired": return "bg-success";
+                default: return "bg-secondary";
             }
         }
 
-    }
+        protected string GetStatIcon(string key)
+        {
+            switch (key.ToLower())
+            {
+                case "submitted": return "bi bi-people-fill icon-submitted";
+                case "pending": return "bi bi-clock-history icon-pending";
+                case "shortlisted": return "bi bi-person-check-fill icon-shortlisted";
+                case "rejected": return "bi bi-x-circle-fill icon-rejected";
+                case "hired": return "bi bi-briefcase-fill icon-hired";
+                case "notsubmitted":
+                case "incomplete": return "bi bi-file-earmark-text-fill icon-incomplete";
+                default: return "bi bi-bar-chart-fill";
+            }
+        }
 
-
-
-    public class AdminStats
-    {
-        public int TotalSubmitted { get; set; }
-        public int Pending { get; set; }
-        public int Shortlisted { get; set; }
-        public int Rejected { get; set; }
-        public int Hired { get; set; }
-        public int IncompleteProfiles { get; set; }
-    }
-
-
-
-    public class ApplicationRow
-    {
-        public int Id { get; set; }
-
-        public User User { get; set; }
-
-        public string AppliedPosition { get; set; }
-
-        public string HiringType { get; set; }
-
-        public double TotalScore { get; set; }
-
-        public string Status { get; set; }
-
-        public DateTime SubmittedAt { get; set; }
-    }
-
-
-
-    public class IncompleteApplicant
-    {
-        public int Id { get; set; }
-
-        public string FullName { get; set; }
-
-        public string Email { get; set; }
-
-        public string Phone { get; set; }
-
-        public DateTime RegisteredAt { get; set; }
-    }
-
-
-
-    public class CreatePostRequest
-    {
-        public string Title { get; set; }
-
-        public string Content { get; set; }
-
-        public bool Publish { get; set; }
+        protected string GetTabClass(string tabId)
+        {
+            return CurrentTab == tabId ? "btn btn-primary tab-active" : "btn btn-outline-primary";
+        }
     }
 }
