@@ -135,6 +135,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\bu_logo.png" />
     <Content Include="Login.aspx" />
+    <Content Include="NonCreateJob.aspx" />
     <Content Include="Personal.aspx" />
     <Content Include="PreviousEmployDeclaration.aspx" />
     <Content Include="UserReference.aspx" />
@@ -272,6 +273,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NonCreateJob.aspx.cs">
+      <DependentUpon>NonCreateJob.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NonCreateJob.aspx.designer.cs">
+      <DependentUpon>NonCreateJob.aspx</DependentUpon>
     </Compile>
     <Compile Include="PreviousEmployDeclaration.aspx.cs">
       <DependentUpon>PreviousEmployDeclaration.aspx</DependentUpon>

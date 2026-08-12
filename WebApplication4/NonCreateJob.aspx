@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true"
-    CodeBehind="CreateJob.aspx.cs"
-    Inherits="WebApplication4.CreateJob" %>
+    CodeBehind="NonCreateJob.aspx.cs"
+    Inherits="WebApplication4.NonCreateJob" %>
 
 <!DOCTYPE html>
 
@@ -8,7 +8,7 @@
 
 <head runat="server">
 
-    <title>Create Teaching Job</title>
+    <title>Create Non-Teaching Job</title>
 
     <meta charset="utf-8" />
 
@@ -88,7 +88,7 @@
             font-weight: 600;
             margin-left: 10px;
             vertical-align: middle;
-            background: #1a3a7a;
+            background: #e67e22;
             color: white;
         }
 
@@ -217,8 +217,8 @@
     <!-- Page Title -->
     <h2 class="page-title">
         <i class="bi bi-briefcase-fill"></i>
-        CREATE TEACHING JOB
-        <span class="job-type-badge">Teaching</span>
+        CREATE NON-TEACHING JOB
+        <span class="job-type-badge">Non-Teaching</span>
     </h2>
 
     <!-- Message Panel -->
@@ -227,7 +227,7 @@
     </asp:Panel>
 
     <!-- ============================================================ -->
-    <!-- ALL FIELDS -->
+    <!-- ALL FIELDS (NO Job Type) -->
     <!-- ============================================================ -->
 
     <div class="row g-4">
@@ -274,11 +274,10 @@
             <label class="form-label">Education Required <span class="required">*</span></label>
             <asp:DropDownList ID="ddlEducation" runat="server" CssClass="form-select">
                 <asp:ListItem Value="">-- Select Education --</asp:ListItem>
-                <asp:ListItem Value="PhD">PhD</asp:ListItem>
-                <asp:ListItem Value="MS/MPhil">MS/MPhil</asp:ListItem>
-                <asp:ListItem Value="MS/MPhil (PhD in Progress)">MS/MPhil (PhD in Progress)</asp:ListItem>
                 <asp:ListItem Value="Master's Degree">Master's Degree</asp:ListItem>
                 <asp:ListItem Value="Bachelor's Degree">Bachelor's Degree</asp:ListItem>
+                <asp:ListItem Value="Intermediate">Intermediate</asp:ListItem>
+                <asp:ListItem Value="Matriculation">Matriculation</asp:ListItem>
             </asp:DropDownList>
         </div>
 
@@ -294,15 +293,7 @@
             </asp:DropDownList>
         </div>
 
-        <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-            <label class="form-label">Job Type <span class="required">*</span></label>
-            <asp:DropDownList ID="ddlJobType" runat="server" CssClass="form-select">
-                <asp:ListItem Value="">-- Select Job Type --</asp:ListItem>
-                <asp:ListItem Value="Permanent Faculty">Permanent Faculty</asp:ListItem>
-                <asp:ListItem Value="Visiting Faculty">Visiting Faculty</asp:ListItem>
-                <asp:ListItem Value="POP">POP</asp:ListItem>
-            </asp:DropDownList>
-        </div>
+        <!-- NO JOB TYPE DROPDOWN FOR NON-TEACHING -->
 
     </div>
 
@@ -325,7 +316,7 @@
 
     <!-- Submit Button -->
     <div class="text-center mt-5">
-        <asp:Button ID="btnSubmit" runat="server" Text="Create Teaching Job" CssClass="submit-btn" OnClick="btnSubmit_Click" />
+        <asp:Button ID="btnSubmit" runat="server" Text="Create Non-Teaching Job" CssClass="submit-btn" OnClick="btnSubmit_Click" />
     </div>
 
 </div>

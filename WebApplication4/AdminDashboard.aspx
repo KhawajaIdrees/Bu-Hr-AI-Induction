@@ -85,6 +85,8 @@ body{
     justify-content:space-between;
     align-items:center;
     margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
 .dashboard-header .btn{
@@ -152,6 +154,53 @@ body{
     white-space:nowrap;
 }
 
+/* ===========================
+        JOB BUTTONS CONTAINER
+=========================== */
+.job-buttons-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.job-buttons-container .btn {
+    min-width: 180px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.job-buttons-container .btn-teaching {
+    background: #1a3a7a;
+    color: #fff;
+    border: 2px solid #1a3a7a;
+}
+
+.job-buttons-container .btn-teaching:hover {
+    background: #2a5aaa;
+    border-color: #2a5aaa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 58, 122, 0.3);
+}
+
+.job-buttons-container .btn-non-teaching {
+    background: #e67e22;
+    color: #fff;
+    border: 2px solid #e67e22;
+}
+
+.job-buttons-container .btn-non-teaching:hover {
+    background: #f39c12;
+    border-color: #f39c12;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+
+.job-buttons-container .btn i {
+    margin-right: 8px;
+}
 
 .header-icon{
 
@@ -1008,6 +1057,11 @@ body{
         margin-right:3px !important;
     }
 
+    .job-buttons-container .btn {
+        min-width: 140px !important;
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+    }
 
     .admin-box .text-end{
 
@@ -1335,24 +1389,39 @@ body{
 
         <div class="container-fluid pt-2 pb-4 p-0">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
 
-    <h2 class="fw-bold mb-0 dashboard-title">
-        Admin Dashboard
-    </h2>
+                <h2 class="fw-bold mb-0 dashboard-title">
+                    Admin Dashboard
+                </h2>
 
-    <asp:HyperLink
-        ID="lnkCreatePost"
-        runat="server"
-        NavigateUrl="~/CreateJob.aspx"
-        CssClass="btn btn-success create-job-btn">
+                <div class="job-buttons-container">
+                    <!-- Teaching Job Post Button -->
+                    <asp:HyperLink
+                        ID="lnkCreateTeachingJob"
+                        runat="server"
+                        NavigateUrl="~/CreateJob.aspx?type=Teaching"
+                        CssClass="btn btn-teaching">
 
-        <i class="bi bi-plus-circle me-1"></i>
-        Create Job Post
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Create Teaching Job
 
-    </asp:HyperLink>
+                    </asp:HyperLink>
 
-</div>
+                    <!-- Non-Teaching Job Post Button -->
+                    <asp:HyperLink
+                        ID="lnkCreateNonTeachingJob"
+                        runat="server"
+                        NavigateUrl="~/NonCreateJob.aspx"
+                        CssClass="btn btn-non-teaching">
+
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Create Non-Teaching Job
+
+                    </asp:HyperLink>
+                </div>
+
+            </div>
             <!-- ========================= -->
 <!-- Statistics Cards -->
 <!-- ========================= -->

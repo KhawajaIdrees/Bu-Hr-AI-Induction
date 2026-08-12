@@ -8,7 +8,7 @@ using System.Web.UI.WebControls;
 
 namespace WebApplication4
 {
-    public partial class CreateJob : Page
+    public partial class NonCreateJob : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -20,7 +20,7 @@ namespace WebApplication4
             pnlMessage.Visible = true;
             pnlMessage.Style["display"] = "block";
 
-            // Check required fields (ALL fields)
+            // Check required fields (ALL fields except Job Type)
             if (string.IsNullOrWhiteSpace(txtJobTitle.Text) ||
                 string.IsNullOrWhiteSpace(txtJobID.Text) ||
                 string.IsNullOrWhiteSpace(txtReferenceNo.Text) ||
@@ -29,7 +29,6 @@ namespace WebApplication4
                 string.IsNullOrWhiteSpace(txtSpecialization.Text) ||
                 string.IsNullOrWhiteSpace(ddlEducation.SelectedValue) ||
                 string.IsNullOrWhiteSpace(ddlExperience.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlJobType.SelectedValue) ||
                 string.IsNullOrWhiteSpace(txtPublishedDate.Text) ||
                 string.IsNullOrWhiteSpace(txtDeadlineDate.Text))
             {
@@ -65,7 +64,7 @@ namespace WebApplication4
                 // Save to database
                 SaveJobToDatabase();
 
-                ShowSuccess("Teaching Job Created Successfully!");
+                ShowSuccess("Non-Teaching Job Created Successfully!");
 
                 // Clear form
                 ClearForm();
@@ -102,7 +101,7 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@Specialization", txtSpecialization.Text.Trim());
                 cmd.Parameters.AddWithValue("@EducationRequired", ddlEducation.SelectedValue);
                 cmd.Parameters.AddWithValue("@ExperienceRequired", ddlExperience.SelectedValue);
-                cmd.Parameters.AddWithValue("@JobType", ddlJobType.SelectedValue);
+                cmd.Parameters.AddWithValue("@JobType", "NonTeaching");
                 cmd.Parameters.AddWithValue("@PublishedDate", Convert.ToDateTime(txtPublishedDate.Text));
                 cmd.Parameters.AddWithValue("@DeadlineDate", Convert.ToDateTime(txtDeadlineDate.Text));
 
@@ -121,7 +120,6 @@ namespace WebApplication4
             txtSpecialization.Text = "";
             ddlEducation.SelectedIndex = 0;
             ddlExperience.SelectedIndex = 0;
-            ddlJobType.SelectedIndex = 0;
             txtPublishedDate.Text = "";
             txtDeadlineDate.Text = "";
         }
