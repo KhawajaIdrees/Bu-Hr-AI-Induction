@@ -207,10 +207,11 @@ namespace WebApplication4
                         int researchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
 
                         // ============================================
-                        // ELIGIBILITY LOGIC (COMPLETE)
+                        // ELIGIBILITY LOGIC (COMPLETE - FIXED)
                         // ============================================
                         bool isEligible = true;
 
+                        // 1. Check Second Division (percentage < 60%)
                         decimal sscPer = reader["SSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["SSC_Percentage"]) : 0;
                         decimal hsscPer = reader["HSSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["HSSC_Percentage"]) : 0;
                         decimal bsPer = reader["BS_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["BS_Percentage"]) : 0;
@@ -223,18 +224,15 @@ namespace WebApplication4
                         if (msPer > 0 && msPer < 60) isEligible = false;
                         if (phdPer > 0 && phdPer < 60) isEligible = false;
 
-                        decimal bsGpa = reader["BS_GPAScore"] != DBNull.Value ? Convert.ToDecimal(reader["BS_GPAScore"]) : 0;
-                        decimal msGpa = reader["MS_GPAScore"] != DBNull.Value ? Convert.ToDecimal(reader["MS_GPAScore"]) : 0;
-
-                        if (bsGpa > 0 && bsGpa < 2) isEligible = false;
-                        if (msGpa > 0 && msGpa < 2) isEligible = false;
-
+                        // 2. Check Experience Score (MUST be > 0 for faculty positions)
                         int expScore = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0;
                         if (expScore == 0) isEligible = false;
 
+                        // 3. Check Research Score (MUST be > 0 for faculty positions)
                         int resScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
                         if (resScore == 0) isEligible = false;
 
+                        // 4. Check Minimum Overall Score (at least 40%)
                         decimal grandTotal = totalAcademicScore + totalExperienceScore + researchScore;
                         if (grandTotal < 40) isEligible = false;
 
@@ -336,20 +334,19 @@ namespace WebApplication4
             return "text-danger";
         }
 
+        // ============================================
+        // ROW DATA BOUND - FIXED (DO NOT OVERWRITE COLOR)
+        // ============================================
         protected void gvApplications_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 ApplicationRow row = (ApplicationRow)e.Row.DataItem;
-                if (row.EligibilityStatus.Contains("Eligible"))
-                {
-                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Green;
-                }
-                else
-                {
-                    e.Row.Cells[1].ForeColor = System.Drawing.Color.Red;
-                }
 
+                // DO NOT set ForeColor here - let ASPX handle it via inline style
+                // This prevents the color from being overwritten
+
+                // Highlight top 3 rows
                 if (row.Rank <= 3)
                 {
                     e.Row.BackColor = System.Drawing.Color.FromArgb(255, 255, 240);

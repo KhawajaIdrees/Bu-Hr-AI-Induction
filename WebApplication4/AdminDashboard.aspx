@@ -1624,7 +1624,8 @@ body{
 
                     <asp:TemplateField HeaderText="Applicant">
                         <ItemTemplate>
-                            <strong>
+                            <!-- Applicant Name - BLACK -->
+                            <strong style="color: #000000;">
                                 <%# Eval("Applicant.FullName") %>
                             </strong>
                             <br />
@@ -1633,9 +1634,11 @@ body{
                             </small>
                             <br />
                             <small>
-                                <span class='<%# Eval("EligibilityStatus").ToString().Contains("Eligible") ? "text-success" : "text-danger" %>'>
-                                    <%# Eval("EligibilityStatus") %>
-                                </span>
+                                <!-- Eligibility Status - Using Label with ForeColor -->
+                                <asp:Label ID="lblEligibility" runat="server" 
+                                    Text='<%# Eval("EligibilityStatus") %>' 
+                                    Font-Bold="true"
+                                    ForeColor='<%# Eval("EligibilityStatus").ToString().Contains("Not Eligible") ? System.Drawing.Color.Red : System.Drawing.Color.Green %>' />
                             </small>
                         </ItemTemplate>
                     </asp:TemplateField>
