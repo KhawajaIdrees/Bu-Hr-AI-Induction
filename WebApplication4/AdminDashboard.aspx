@@ -322,6 +322,17 @@ body{
 
 }
 
+.sidebar.collapsed .nav-link span {
+    display: none;
+}
+.sidebar.collapsed .nav-link i {
+    width: 100%;
+    min-width: unset;
+}
+.sidebar.collapsed .sidebar-header .header-text {
+    display: none;
+}
+
 .sidebar-header{
 
     height:70px;
@@ -335,30 +346,28 @@ body{
     border-bottom:1px solid rgba(255,255,255,.08);
 
     transition:.3s;
+    padding: 0 16px;
 
 }
 
-.sidebar-toggle{
-
-    width:40px;
-    height:40px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:50%;
-    cursor:pointer;
-    color:#fff;
-    font-size:28px;
-    transition:.25s;
-
+.sidebar-header .toggle-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: .25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-.sidebar-toggle:hover{
-
-    background:rgba(255,255,255,.08);
-
-    color:#7aa8ff;
-
+.sidebar-header .toggle-btn:hover {
+    background: rgba(255,255,255,.08);
+}
+.sidebar-header .toggle-btn i {
+    font-size: 24px;
 }
 
 .sidebar .nav{
@@ -1309,19 +1318,12 @@ body{
 <div class="wrapper">
 
     <!-- Sidebar -->
-
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-
-    <span id="sidebarToggle"
-          class="sidebar-toggle"
-          onclick="toggleSidebarDesktop()">
-
-        &#10094;
-
-    </span>
-
-</div>
+            <button type="button" id="sidebarToggleBtn" class="toggle-btn">
+                <i class="bi bi-arrow-left-circle"></i>
+            </button>
+        </div>
 
         <ul class="nav flex-column">
 
@@ -1339,11 +1341,11 @@ body{
             </li>
 
             <li class="nav-item">
-    <a href="AdminCandidatesView.aspx" class="nav-link">
-        <i class="bi bi-people-fill"></i>
-        <span>Candidates</span>
-    </a>
-</li>
+                <a href="AdminCandidatesView.aspx" class="nav-link">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Candidates</span>
+                </a>
+            </li>
 
             <li class="nav-item">
 
@@ -1850,30 +1852,27 @@ body{
     }
 
     //
-    // Desktop Sidebar
+    // Desktop Sidebar Toggle (Arrow Button)
     //
-    function toggleSidebarDesktop() {
+    document.addEventListener('DOMContentLoaded', function () {
+        var toggleBtn = document.getElementById('sidebarToggleBtn');
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        var icon = toggleBtn.querySelector('i');
 
-        const sidebar = document.getElementById("sidebar");
-        const content = document.getElementById("content");
-        const icon = document.getElementById("sidebarToggle");
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
 
-        if (!sidebar || !content || !icon) return;
-
-        sidebar.classList.toggle("collapsed");
-        content.classList.toggle("expanded");
-
-        if (sidebar.classList.contains("collapsed")) {
-
-            icon.innerHTML = "&#10095;"; // >
-
-        } else {
-
-            icon.innerHTML = "&#10094;"; // <
-
+                if (sidebar.classList.contains('collapsed')) {
+                    icon.className = 'bi bi-arrow-right-circle';
+                } else {
+                    icon.className = 'bi bi-arrow-left-circle';
+                }
+            });
         }
-
-    }
+    });
 
 </script>
 

@@ -39,17 +39,43 @@
             transition: all .35s ease;
             z-index: 1000;
         }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .nav-link span {
+            display: none;
+        }
+        .sidebar.collapsed .nav-link i {
+            width: 100%;
+            min-width: unset;
+        }
         .sidebar-header {
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-bottom: 1px solid rgba(255,255,255,.08);
-            font-size: 18px;
-            font-weight: 700;
+            transition: all .35s ease;
+            padding: 0 16px;
         }
-        .sidebar-header i {
-            margin-right: 10px;
+        .sidebar-header .toggle-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: .25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar-header .toggle-btn:hover {
+            background: rgba(255,255,255,.08);
+        }
+        .sidebar-header .toggle-btn i {
+            font-size: 24px;
         }
         .sidebar .nav {
             margin-top: 18px;
@@ -99,6 +125,13 @@
             height: 100vh;
             overflow: hidden;
             background: #f5f7fb;
+            transition: all .35s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .content.expanded {
+            margin-left: 80px;
+            width: calc(100% - 80px);
         }
 
         /* ============================================
@@ -106,7 +139,7 @@
         ============================================ */
         .pipeline-container {
             display: flex;
-            height: 100vh;
+            flex: 1;
             gap: 0;
             overflow: hidden;
         }
@@ -309,7 +342,7 @@
         }
 
         /* ============================================
-           SECTION HEADERS - FONT WEIGHT 800 WITH ICONS
+           SECTION HEADERS
         ============================================ */
         .section-header {
             font-size: 13px;
@@ -327,7 +360,7 @@
         }
 
         /* ============================================
-           SCORE BOXES - HEADINGS COLORED FONT WEIGHT 800, SCORES BLACK BOLD
+           SCORE BOXES
         ============================================ */
         .score-box {
             background: #f8fafc;
@@ -352,21 +385,9 @@
             color: #94a3b8;
             font-weight: 600;
         }
-
-        /* Academic - INDIGO */
-        .score-academic .score-label {
-            color: #4F46E5;
-        }
-
-        /* Experience - GREEN */
-        .score-experience .score-label {
-            color: #059669;
-        }
-
-        /* Publications - ROSE/RED */
-        .score-publications .score-label {
-            color: #E11D48;
-        }
+        .score-academic .score-label { color: #4F46E5; }
+        .score-experience .score-label { color: #059669; }
+        .score-publications .score-label { color: #E11D48; }
 
         /* ============================================
            EDUCATION / EXPERIENCE / RESEARCH ITEMS
@@ -435,9 +456,6 @@
             border-radius: 10px;
         }
 
-        /* ============================================
-           STATUS DROPDOWN
-        ============================================ */
         .status-dropdown {
             border-radius: 8px;
             padding: 6px 14px;
@@ -453,9 +471,6 @@
             box-shadow: 0 0 0 3px rgba(26, 58, 122, 0.08);
         }
 
-        /* ============================================
-           SELECT PLACEHOLDER
-        ============================================ */
         .select-placeholder {
             display: flex;
             align-items: center;
@@ -475,35 +490,17 @@
             font-size: 14px;
         }
 
-        /* ============================================
-           EMPTY MESSAGE
-        ============================================ */
         .empty-message {
             color: #94a3b8;
             font-size: 13px;
             padding: 8px 0;
         }
 
-        /* ============================================
-           SCROLLBAR
-        ============================================ */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f4f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f4f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* ============================================
-           RESPONSIVE
-        ============================================ */
         @media (max-width: 768px) {
             .sidebar {
                 width: 60px;
@@ -515,15 +512,18 @@
                 width: 100%;
                 min-width: unset;
             }
-            .sidebar .sidebar-header {
-                font-size: 0;
-            }
-            .sidebar .sidebar-header i {
-                font-size: 20px;
+            .sidebar.collapsed {
+                width: 0;
+                padding: 0;
+                overflow: hidden;
             }
             .content {
                 margin-left: 60px;
                 width: calc(100% - 60px);
+            }
+            .content.expanded {
+                margin-left: 0;
+                width: 100%;
             }
             .left-panel {
                 width: 100%;
@@ -542,15 +542,6 @@
             .detail-card {
                 padding: 16px;
             }
-            .candidate-header .name {
-                font-size: 1.25rem;
-            }
-            .score-box .score-value {
-                font-size: 1.75rem;
-            }
-            .candidate-header .total-score {
-                font-size: 22px;
-            }
         }
     </style>
 </head>
@@ -558,11 +549,13 @@
     <form id="form1" runat="server">
 
         <!-- ==========================================
-        SIDEBAR (ASIDE)
+        SIDEBAR - Only Arrow Button (No Text)
         ========================================== -->
-        <div class="sidebar">
+        <div id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <i class="bi bi-building"></i> <span>Faculty ATS</span>
+                <button type="button" id="toggleSidebarBtn" class="toggle-btn">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
             </div>
 
             <ul class="nav flex-column">
@@ -597,7 +590,7 @@
         <!-- ==========================================
         CONTENT
         ========================================== -->
-        <div class="content">
+        <div id="content" class="content">
             <div class="pipeline-container">
 
                 <!-- ==========================================
@@ -667,29 +660,21 @@
                     <asp:Panel ID="pnlDetails" runat="server" Visible="false">
                         <div class="detail-card">
 
-                            <!-- ==========================================
-                            CANDIDATE HEADER
-                            ========================================== -->
                             <div class="candidate-header">
                                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                                     <div>
                                         <div class="name"><asp:Label ID="lblFullName" runat="server" /></div>
-
                                         <div class="position">
                                             <asp:Label ID="lblPosition" runat="server" Text="Lecturer" />
                                             <span class="permanent">PERMANENT</span>
                                         </div>
-
                                         <div class="info-label">EMAIL ADDRESS</div>
                                         <div class="info-value"><asp:Label ID="lblEmail" runat="server" /></div>
-
                                         <div class="info-label">PHONE</div>
                                         <div class="info-value"><asp:Label ID="lblPhone" runat="server" Text="Not provided" /></div>
-
                                         <div class="info-label">APPLIED ON</div>
                                         <div class="info-value"><asp:Label ID="lblSubmittedDate" runat="server" /></div>
                                     </div>
-
                                     <div class="text-end">
                                         <div class="total-score-label">Score Evaluation</div>
                                         <div class="total-score"><asp:Label ID="lblTotal" runat="server" /> <span style="font-size:16px; font-weight:600; color:#94a3b8;">/ 100 PTS</span></div>
@@ -708,9 +693,6 @@
 
                             <hr class="my-4" />
 
-                            <!-- ==========================================
-                            SCORE EVALUATION
-                            ========================================== -->
                             <div class="row g-3 mb-4">
                                 <div class="col-md-4">
                                     <div class="score-box score-academic">
@@ -735,9 +717,7 @@
                                 </div>
                             </div>
 
-                            <!-- ==========================================
-                            EDUCATION HISTORY - SSC & HSSC ONLY
-                            ========================================== -->
+                            <!-- Education -->
                             <h6 class="section-header"><i class="bi bi-mortarboard"></i> Education History</h6>
                             <asp:Repeater ID="rptEducation" runat="server">
                                 <ItemTemplate>
@@ -747,9 +727,7 @@
                                             <span class="edu-percentage"><%# Eval("Percentage", "{0:F1}") %>%</span>
                                         </div>
                                         <div class="edu-institute"><%# Eval("Institute") %></div>
-                                        <div class="edu-year">
-                                            <%# Eval("StatusText") %>
-                                        </div>
+                                        <div class="edu-year"><%# Eval("StatusText") %> <%# Eval("Year") %></div>
                                     </div>
                                 </ItemTemplate>
                             </asp:Repeater>
@@ -757,9 +735,7 @@
                                 <p class="empty-message">No education records found.</p>
                             </asp:Panel>
 
-                            <!-- ==========================================
-                            EXPERIENCE DETAILS
-                            ========================================== -->
+                            <!-- Experience -->
                             <h6 class="section-header mt-4"><i class="bi bi-briefcase"></i> Experience Details</h6>
                             <asp:Repeater ID="rptExperience" runat="server">
                                 <ItemTemplate>
@@ -774,9 +750,7 @@
                                 <p class="empty-message">No experience records found.</p>
                             </asp:Panel>
 
-                            <!-- ==========================================
-                            RESEARCH PAPERS
-                            ========================================== -->
+                            <!-- Publications -->
                             <h6 class="section-header mt-4"><i class="bi bi-file-text"></i> Research Papers</h6>
                             <asp:Repeater ID="rptPublications" runat="server">
                                 <ItemTemplate>
@@ -797,7 +771,7 @@
                         </div>
                     </asp:Panel>
 
-                    <!-- Select Candidate Placeholder -->
+                    <!-- Select Placeholder -->
                     <asp:Panel ID="pnlSelect" runat="server" Visible="true">
                         <div class="select-placeholder">
                             <i class="bi bi-search"></i>
@@ -812,5 +786,27 @@
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ============================================
+        // SIDEBAR TOGGLE (Collapse/Expand) - FIXED
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleBtn = document.getElementById('toggleSidebarBtn');
+            var sidebar = document.getElementById('sidebar');
+            var content = document.getElementById('content');
+            var icon = toggleBtn.querySelector('i');
+
+            toggleBtn.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+
+                if (sidebar.classList.contains('collapsed')) {
+                    icon.className = 'bi bi-arrow-right-circle';
+                } else {
+                    icon.className = 'bi bi-arrow-left-circle';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
