@@ -1612,60 +1612,65 @@ body{
                 ID="gvApplications"
                 runat="server"
                 CssClass="table table-bordered table-hover table-striped"
-                AutoGenerateColumns="False">
+                AutoGenerateColumns="False"
+                OnRowDataBound="gvApplications_RowDataBound"
+                DataKeyNames="Id">
 
                 <Columns>
 
                     <asp:BoundField
-                        HeaderText="ID"
-                        DataField="Id" />
+                        HeaderText="#"
+                        DataField="Rank" />
 
                     <asp:TemplateField HeaderText="Applicant">
-
                         <ItemTemplate>
-
                             <strong>
-
                                 <%# Eval("Applicant.FullName") %>
-
                             </strong>
-
                             <br />
-
                             <small class="text-muted">
-
                                 <%# Eval("Applicant.Email") %>
-
                             </small>
-
+                            <br />
+                            <small>
+                                <span class='<%# Eval("EligibilityStatus").ToString().Contains("Eligible") ? "text-success" : "text-danger" %>'>
+                                    <%# Eval("EligibilityStatus") %>
+                                </span>
+                            </small>
                         </ItemTemplate>
-
                     </asp:TemplateField>
 
                     <asp:BoundField
-                        HeaderText="Position"
-                        DataField="AppliedPosition" />
+                        HeaderText="Academic<br/>(Max 50)"
+                        DataField="TotalAcademicScore"
+                        HtmlEncode="false" />
 
                     <asp:BoundField
-                        HeaderText="Hiring Type"
-                        DataField="HiringType" />
+                        HeaderText="Experience<br/>(Max 25)"
+                        DataField="TotalExperienceScore"
+                        HtmlEncode="false" />
 
                     <asp:BoundField
-                        HeaderText="Score"
-                        DataField="TotalScore" />
+                        HeaderText="Research<br/>(Max 25)"
+                        DataField="ResearchScore"
+                        HtmlEncode="false" />
+
+                    <asp:TemplateField HeaderText="Total<br/>(Max 100)">
+                        <ItemTemplate>
+                            <strong class='<%# Eval("ScoreColor") %>'>
+                                <%# Eval("GrandTotalScore") %>
+                            </strong>
+                        </ItemTemplate>
+                    </asp:TemplateField>
 
                     <asp:BoundField
                         HeaderText="Status"
                         DataField="Status" />
 
                     <asp:TemplateField HeaderText="Submitted">
-
                         <ItemTemplate>
-
                             <%# FormatDate(Eval("SubmittedAt")) %>
-
                         </ItemTemplate>
-
                     </asp:TemplateField>
 
                 </Columns>
@@ -1780,7 +1785,8 @@ body{
                 ID="gvIncomplete"
                 runat="server"
                 CssClass="table table-bordered table-hover table-striped"
-                AutoGenerateColumns="False">
+                AutoGenerateColumns="False"
+                DataKeyNames="Id">
 
                 <Columns>
 
@@ -1801,13 +1807,9 @@ body{
                         HeaderText="Phone" />
 
                     <asp:TemplateField HeaderText="Registered">
-
                         <ItemTemplate>
-
                             <%# FormatDate(Eval("RegisteredAt")) %>
-
                         </ItemTemplate>
-
                     </asp:TemplateField>
 
                 </Columns>

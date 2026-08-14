@@ -21,6 +21,7 @@ namespace WebApplication4
             {
                 LoadResearchProfile();
                 LoadPublications();
+                LoadResearchScore();
             }
         }
 
@@ -49,8 +50,8 @@ namespace WebApplication4
                         try { txtTotalPublications.Text = dr["TotalPublications"].ToString(); } catch { txtTotalPublications.Text = "0"; }
                         try { txtHECPublications.Text = dr["HECPublications"].ToString(); } catch { txtHECPublications.Text = "0"; }
 
-                        // MS/M.Phil Produced - Using combined column
-                        try { txtMSMPhilStudents.Text = dr["MSMPhilStudents"].ToString(); } catch { txtMSMPhilStudents.Text = "0"; }
+                        // MS/M.Phil Produced - Use correct column name MS_MPhil_Students
+                        try { txtMSMPhilStudents.Text = dr["MS_MPhil_Students"].ToString(); } catch { txtMSMPhilStudents.Text = "0"; }
                         try { txtPhDStudents.Text = dr["PhDStudents"].ToString(); } catch { txtPhDStudents.Text = "0"; }
 
                         // Funded Projects
@@ -120,6 +121,228 @@ namespace WebApplication4
             }
         }
 
+        // =========================================
+        // LOAD RESEARCH SCORE
+        // =========================================
+        private void LoadResearchScore()
+        {
+            int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"SELECT ResearchScore FROM ResearchProfile WHERE user_id = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                {
+                    ViewState["ResearchScore"] = Convert.ToInt32(result);
+                }
+                else
+                {
+                    ViewState["ResearchScore"] = 0;
+                }
+            }
+        }
+
+        // =========================================
+        // CALCULATE RESEARCH SCORE
+        // =========================================
+        private int CalculateResearchScore()
+        {
+            int wCount = 0;
+            int xCount = 0;
+            int yCount = 0;
+            int fundedProjects = 0;
+
+            // Get counts from ResearchProfile
+            int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"SELECT 
+                                ISNULL(WCount, 0) AS WCount, 
+                                ISNULL(XCount, 0) AS XCount, 
+                                ISNULL(YCount, 0) AS YCount,
+                                ISNULL(TotalFundedProjects, 0) AS TotalFundedProjects
+                            FROM ResearchProfile 
+                            WHERE user_id = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        wCount = Convert.ToInt32(reader["WCount"]);
+                        xCount = Convert.ToInt32(reader["XCount"]);
+                        yCount = Convert.ToInt32(reader["YCount"]);
+                        fundedProjects = Convert.ToInt32(reader["TotalFundedProjects"]);
+                    }
+                }
+            }
+
+            // Calculate score: (W × 5) + (X × 3) + (Y × 1) + (Funded Projects × 5)
+            int researchScore = (wCount * 5) + (xCount * 3) + (yCount * 1) + (fundedProjects * 5);
+
+            // Cap at 25 marks
+            if (researchScore > 25)
+                researchScore = 25;
+
+            return researchScore;
+        }
+
+        // =========================================
+        // SAVE RESEARCH SCORE TO DATABASE
+        // =========================================
+        private void SaveResearchScore(int userId, int researchScore)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"
+                UPDATE ResearchProfile 
+                SET ResearchScore = @ResearchScore, 
+                    UpdatedAt = GETDATE() 
+                WHERE user_id = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userId;
+                cmd.Parameters.Add("@ResearchScore", SqlDbType.Int).Value = researchScore;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // =========================================
+        // UPDATE W, X, Y COUNTS FROM PUBLICATIONS
+        // =========================================
+        private void UpdatePublicationCounts(int userID)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"
+                SELECT 
+                    COUNT(CASE WHEN Category = 'W' THEN 1 END) AS WCount,
+                    COUNT(CASE WHEN Category = 'X' THEN 1 END) AS XCount,
+                    COUNT(CASE WHEN Category = 'Y' THEN 1 END) AS YCount
+                FROM Publications
+                WHERE user_id = @userID";
+
+            int wCount = 0, xCount = 0, yCount = 0;
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        wCount = reader["WCount"] != DBNull.Value ? Convert.ToInt32(reader["WCount"]) : 0;
+                        xCount = reader["XCount"] != DBNull.Value ? Convert.ToInt32(reader["XCount"]) : 0;
+                        yCount = reader["YCount"] != DBNull.Value ? Convert.ToInt32(reader["YCount"]) : 0;
+                    }
+                }
+            }
+
+            string updateQuery = @"
+                UPDATE ResearchProfile 
+                SET WCount = @WCount, 
+                    XCount = @XCount, 
+                    YCount = @YCount,
+                    UpdatedAt = GETDATE()
+                WHERE user_id = @userID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                cmd.Parameters.Add("@WCount", SqlDbType.Int).Value = wCount;
+                cmd.Parameters.Add("@XCount", SqlDbType.Int).Value = xCount;
+                cmd.Parameters.Add("@YCount", SqlDbType.Int).Value = yCount;
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        // =========================================
+        // UPDATE EXPERIENCE SCORE FROM RESEARCH PROFILE
+        // =========================================
+        private void UpdateExperienceScore(int userId)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            // Get MS and PhD students from ResearchProfile
+            int msStudents = 0, phdStudents = 0;
+            string query = "SELECT ISNULL(MS_MPhil_Students, 0), ISNULL(PhDStudents, 0) FROM ResearchProfile WHERE user_id = @UserID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        msStudents = Convert.ToInt32(reader[0]);
+                        phdStudents = Convert.ToInt32(reader[1]);
+                    }
+                }
+            }
+
+            // Calculate Research Supervision Score (MS: 1 each, PhD: 2 each)
+            int researchSupervisionScore = (msStudents * 1) + (phdStudents * 2);
+
+            // Get current ExperienceScore from ExperienceScores table
+            int experienceScore = 0;
+            string expQuery = "SELECT ISNULL(ExperienceScore, 0) FROM ExperienceScores WHERE UserID = @UserID";
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(expQuery, con))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                con.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != DBNull.Value)
+                    experienceScore = Convert.ToInt32(result);
+            }
+
+            // Total Experience Score
+            int totalExperienceScore = experienceScore + researchSupervisionScore;
+
+            // Cap at 25
+            if (totalExperienceScore > 25) totalExperienceScore = 25;
+
+            // Update ExperienceScores table
+            string updateQuery = @"
+                UPDATE ExperienceScores 
+                SET ResearchScore = @ResearchScore, 
+                    TotalExperienceScore = @TotalExperienceScore,
+                    UpdatedAt = GETDATE()
+                WHERE UserID = @UserID";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                cmd.Parameters.AddWithValue("@ResearchScore", researchSupervisionScore);
+                cmd.Parameters.AddWithValue("@TotalExperienceScore", totalExperienceScore);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         // Add Publication (One-to-Many)
         protected void AddPublication()
         {
@@ -177,6 +400,16 @@ VALUES
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
+
+            // Update W, X, Y counts after adding publication
+            UpdatePublicationCounts(userID);
+
+            // Recalculate and save research score
+            int researchScore = CalculateResearchScore();
+            SaveResearchScore(userID, researchScore);
+
+            // UPDATE EXPERIENCE SCORE
+            UpdateExperienceScore(userID);
         }
 
         // Save Research Profile (One-to-One)
@@ -211,11 +444,12 @@ VALUES
 UPDATE ResearchProfile SET
     TotalPublications = @TotalPublications,
     HECPublications = @HECPublications,
-    MSMPhilStudents = @MSMPhilStudents,
+    MS_MPhil_Students = @MSMPhilStudents,
     PhDStudents = @PhDStudents,
     PIProjects = @PIProjects,
     CoPIProjects = @CoPIProjects,
     ConsultancyAmount = @ConsultancyAmount,
+    TotalFundedProjects = @TotalFundedProjects,
     UpdatedAt = GETDATE()
 WHERE user_id = @userID";
                 }
@@ -227,11 +461,12 @@ INSERT INTO ResearchProfile
     user_id,
     TotalPublications,
     HECPublications,
-    MSMPhilStudents,
+    MS_MPhil_Students,
     PhDStudents,
     PIProjects,
     CoPIProjects,
-    ConsultancyAmount
+    ConsultancyAmount,
+    TotalFundedProjects
 )
 VALUES
 (
@@ -242,7 +477,8 @@ VALUES
     @PhDStudents,
     @PIProjects,
     @CoPIProjects,
-    @ConsultancyAmount
+    @ConsultancyAmount,
+    @TotalFundedProjects
 )";
                 }
 
@@ -271,9 +507,21 @@ VALUES
                         cmd.Parameters.Add("@ConsultancyAmount", SqlDbType.NVarChar).Value =
                             string.IsNullOrWhiteSpace(txtConsultancyAmount.Text) ? (object)DBNull.Value : txtConsultancyAmount.Text.Trim();
 
+                        // Save Total Funded Projects (PI + Co-PI)
+                        int piProjects = string.IsNullOrWhiteSpace(txtPIProjects.Text) ? 0 : Convert.ToInt32(txtPIProjects.Text.Trim());
+                        int coPiProjects = string.IsNullOrWhiteSpace(txtCoPIProjects.Text) ? 0 : Convert.ToInt32(txtCoPIProjects.Text.Trim());
+                        cmd.Parameters.Add("@TotalFundedProjects", SqlDbType.Int).Value = piProjects + coPiProjects;
+
                         cmd.ExecuteNonQuery();
                     }
                 }
+
+                // Recalculate and save research score
+                int researchScore = CalculateResearchScore();
+                SaveResearchScore(userID, researchScore);
+
+                // UPDATE EXPERIENCE SCORE
+                UpdateExperienceScore(userID);
             }
             catch (Exception ex)
             {
@@ -344,10 +592,11 @@ VALUES
                 SaveResearchProfile();
                 AddPublication();
 
-                lblMessage.Text = "Publication added successfully!";
+                lblMessage.Text = "Publication added successfully! Research score updated.";
                 lblMessage.CssClass = "ms-3 text-success";
                 ClearPublicationFields();
                 LoadPublications();
+                LoadResearchScore();
             }
             catch (SqlException ex)
             {
@@ -400,6 +649,7 @@ VALUES
                     int index = Convert.ToInt32(e.CommandArgument);
                     GridViewRow row = gvPublications.Rows[index];
                     int publicationId = Convert.ToInt32(row.Cells[0].Text);
+                    int userID = Convert.ToInt32(Session["UserID"]);
 
                     string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
                     string query = @"DELETE FROM Publications WHERE id = @id AND user_id = @userID";
@@ -408,14 +658,25 @@ VALUES
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.Add("@id", SqlDbType.Int).Value = publicationId;
-                        cmd.Parameters.Add("@userID", SqlDbType.Int).Value = Convert.ToInt32(Session["UserID"]);
+                        cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
 
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
 
+                    // Update counts after deletion
+                    UpdatePublicationCounts(userID);
+
+                    // Recalculate and save research score
+                    int researchScore = CalculateResearchScore();
+                    SaveResearchScore(userID, researchScore);
+
+                    // UPDATE EXPERIENCE SCORE
+                    UpdateExperienceScore(userID);
+
                     LoadPublications();
-                    lblMessage.Text = "Publication deleted successfully.";
+                    LoadResearchScore();
+                    lblMessage.Text = "Publication deleted successfully. Research score updated.";
                     lblMessage.CssClass = "ms-3 text-success";
                 }
                 catch (Exception ex)
@@ -430,7 +691,16 @@ VALUES
         {
             try
             {
+                int userID = Convert.ToInt32(Session["UserID"]);
                 SaveResearchProfile();
+
+                // Recalculate and save research score
+                int researchScore = CalculateResearchScore();
+                SaveResearchScore(userID, researchScore);
+
+                // UPDATE EXPERIENCE SCORE
+                UpdateExperienceScore(userID);
+
                 Response.Redirect("Education.aspx");
             }
             catch (Exception ex)

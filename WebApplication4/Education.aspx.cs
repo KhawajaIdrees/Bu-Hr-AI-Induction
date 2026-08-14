@@ -127,12 +127,12 @@ namespace WebApplication4
             string hsscUniversity = hssc_uni.Value;
             string hsscCountry = hssc_country.Value;
 
-            // BS - Get value from dropdown
+            // BS
             string bsType = bs_type.Value;
             string bsDuration = bs_duration.Value;
             string bsSpecialization = bs_specialization.Value;
             int.TryParse(bs_year.Value, out int bsYear);
-            decimal.TryParse(bs_cgpa.Value, out decimal bsCgpa);
+            decimal.TryParse(bs_cgpa.Value, out decimal bsPer);
             string bsUniversity = bs_uni.Value;
             string bsCountry = bs_country.Value;
 
@@ -140,7 +140,7 @@ namespace WebApplication4
             string msDuration = ms_duration.Value;
             string msSpecialization = ms_specialization.Value;
             int.TryParse(ms_year.Value, out int msYear);
-            decimal.TryParse(ms_cgpa.Value, out decimal msCgpa);
+            decimal.TryParse(ms_cgpa.Value, out decimal msPer);
             string msUniversity = ms_uni.Value;
             string msCountry = ms_country.Value;
 
@@ -148,7 +148,7 @@ namespace WebApplication4
             string phdDuration = phd_duration.Value;
             string phdSpecialization = phd_specialization.Value;
             int.TryParse(phd_year.Value, out int phdYear);
-            decimal.TryParse(phd_cgpa.Value, out decimal phdCgpa);
+            decimal.TryParse(phd_cgpa.Value, out decimal phdPer);
             string phdUniversity = phd_uni.Value;
             string phdCountry = phd_country.Value;
 
@@ -156,40 +156,121 @@ namespace WebApplication4
             string postdocDuration = postdoc_duration.Value;
             string postdocSpecialization = postdoc_specialization.Value;
             int.TryParse(postdoc_year.Value, out int postdocYear);
-            decimal.TryParse(postdoc_cgpa.Value, out decimal postdocCgpa);
+            decimal.TryParse(postdoc_cgpa.Value, out decimal postdocPer);
             string postdocUniversity = postdoc_uni.Value;
             string postdocCountry = postdoc_country.Value;
 
-            // Validate Second Division
-            if (SecondDivision(sscPer) || SecondDivision(hsscPer))
+            // =============================================
+            // STEP 1: VALIDATE SECOND DIVISION
+            // =============================================
+            if (SecondDivision(sscPer) || SecondDivision(hsscPer) || SecondDivision(bsPer))
+            {
                 return;
+            }
 
+            // =============================================
+            // STEP 2: CALCULATE ACADEMIC SCORES
+            // =============================================
+            AcademicScores scores = CalculateAcademicScores(sscPer, hsscPer, bsPer, msPer, phdPer);
+
+            // =============================================
+            // STEP 3: SAVE EDUCATION + SCORES TO DATABASE
+            // =============================================
             SaveEducationalInformation(
                 userID,
                 sscDuration, sscSpecialization, sscYear, sscPer, sscUniversity, sscCountry,
                 hsscDuration, hsscSpecialization, hsscYear, hsscPer, hsscUniversity, hsscCountry,
-                bsType, bsDuration, bsSpecialization, bsYear, bsCgpa, bsUniversity, bsCountry,
-                msDuration, msSpecialization, msYear, msCgpa, msUniversity, msCountry,
-                phdDuration, phdSpecialization, phdYear, phdCgpa, phdUniversity, phdCountry,
-                postdocDuration, postdocSpecialization, postdocYear, postdocCgpa, postdocUniversity, postdocCountry
+                bsType, bsDuration, bsSpecialization, bsYear, bsPer, bsUniversity, bsCountry,
+                msDuration, msSpecialization, msYear, msPer, msUniversity, msCountry,
+                phdDuration, phdSpecialization, phdYear, phdPer, phdUniversity, phdCountry,
+                postdocDuration, postdocSpecialization, postdocYear, postdocPer, postdocUniversity, postdocCountry,
+                scores
             );
 
             // Save Other Qualifications
             var otherQualifications = CollectOtherQualificationData();
             SaveOtherQualifications(userID, otherQualifications);
 
-            // Redirect to Reference page (UPDATED)
+            // Redirect to Reference page
             Response.Redirect("UserReference.aspx");
         }
 
+        // =============================================
+        // ACADEMIC SCORING CALCULATION
+        // =============================================
+        private AcademicScores CalculateAcademicScores(decimal sscPer, decimal hsscPer, decimal bsPer, decimal msPer, decimal phdPer)
+        {
+            var scores = new AcademicScores();
+
+            // =============================================
+            // QUALIFICATION SCORE (Max 40)
+            // =============================================
+            if (sscPer > 0) scores.QualificationScore += 5;   // Matric
+            if (hsscPer > 0) scores.QualificationScore += 5;  // FSc
+            if (bsPer > 0) scores.QualificationScore += 5;    // BS
+            if (msPer > 0) scores.QualificationScore += 10;   // MS/MPhil
+            if (phdPer > 0) scores.QualificationScore += 15;  // PhD
+
+            // =============================================
+            // GPA/PERCENTAGE SCORE (Max 10)
+            // =============================================
+            // BS GPA Score (Max 5)
+            if (bsPer > 0)
+            {
+                scores.BSGPAScore = GetGPAScore(bsPer);
+                scores.TotalGPAScore += scores.BSGPAScore;
+            }
+
+            // MS GPA Score (Max 5)
+            if (msPer > 0)
+            {
+                scores.MSGPAScore = GetGPAScore(msPer);
+                scores.TotalGPAScore += scores.MSGPAScore;
+            }
+
+            // =============================================
+            // TOTAL ACADEMIC SCORE (Max 50)
+            // =============================================
+            scores.TotalAcademicScore = scores.QualificationScore + scores.TotalGPAScore;
+
+            return scores;
+        }
+
+        private decimal GetGPAScore(decimal percentage)
+        {
+            if (percentage >= 75)
+                return 5;
+            else if (percentage >= 60 && percentage < 75)
+                return 3;
+            else
+                return 0;
+        }
+
+        protected bool SecondDivision(decimal result)
+        {
+            // Second division check (below 60%)
+            if (result >= 60)
+                return false;
+            else
+            {
+                lblMessage.Text = "Second Division in Education cannot apply!";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return true;
+            }
+        }
+
+        // =============================================
+        // SAVE EDUCATION + SCORES
+        // =============================================
         protected void SaveEducationalInformation(
             int userId,
-            string sscDuration, string sscSpecialization, int sscYear, decimal sscCgpa, string sscUniversity, string sscCountry,
-            string hsscDuration, string hsscSpecialization, int hsscYear, decimal hsscCgpa, string hsscUniversity, string hsscCountry,
-            string bsType, string bsDuration, string bsSpecialization, int bsYear, decimal bsCgpa, string bsUniversity, string bsCountry,
-            string msDuration, string msSpecialization, int? msYear, decimal? msCgpa, string msUniversity, string msCountry,
-            string phdDuration, string phdSpecialization, int? phdYear, decimal? phdCgpa, string phdUniversity, string phdCountry,
-            string postdocDuration, string postdocSpecialization, int? postdocYear, decimal? postdocCgpa, string postdocUniversity, string postdocCountry)
+            string sscDuration, string sscSpecialization, int sscYear, decimal sscPer, string sscUniversity, string sscCountry,
+            string hsscDuration, string hsscSpecialization, int hsscYear, decimal hsscPer, string hsscUniversity, string hsscCountry,
+            string bsType, string bsDuration, string bsSpecialization, int bsYear, decimal bsPer, string bsUniversity, string bsCountry,
+            string msDuration, string msSpecialization, int? msYear, decimal? msPer, string msUniversity, string msCountry,
+            string phdDuration, string phdSpecialization, int? phdYear, decimal? phdPer, string phdUniversity, string phdCountry,
+            string postdocDuration, string postdocSpecialization, int? postdocYear, decimal? postdocPer, string postdocUniversity, string postdocCountry,
+            AcademicScores scores)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
@@ -239,7 +320,13 @@ namespace WebApplication4
                         PostDoc_Year=@PostDoc_Year,
                         PostDoc_Percentage=@PostDoc_Percentage,
                         PostDoc_University=@PostDoc_University,
-                        PostDoc_Country=@PostDoc_Country
+                        PostDoc_Country=@PostDoc_Country,
+
+                        -- SCORES
+                        BS_GPAScore=@BS_GPAScore,
+                        MS_GPAScore=@MS_GPAScore,
+                        QualificationScore=@QualificationScore,
+                        TotalAcademicScore=@TotalAcademicScore
                     WHERE UserID=@UserID;
                 END
                 ELSE
@@ -252,7 +339,8 @@ namespace WebApplication4
                         BS_Type,BS_Duration,BS_Specialization,BS_Year,BS_Percentage,BS_University,BS_Country,
                         MS_Duration,MS_Specialization,MS_Year,MS_Percentage,MS_University,MS_Country,
                         PhD_Duration,PhD_Specialization,PhD_Year,PhD_Percentage,PhD_University,PhD_Country,
-                        PostDoc_Duration,PostDoc_Specialization,PostDoc_Year,PostDoc_Percentage,PostDoc_University,PostDoc_Country
+                        PostDoc_Duration,PostDoc_Specialization,PostDoc_Year,PostDoc_Percentage,PostDoc_University,PostDoc_Country,
+                        BS_GPAScore, MS_GPAScore, QualificationScore, TotalAcademicScore
                     )
                     VALUES
                     (
@@ -262,7 +350,8 @@ namespace WebApplication4
                         @BS_Type,@BS_Duration,@BS_Specialization,@BS_Year,@BS_Percentage,@BS_University,@BS_Country,
                         @MS_Duration,@MS_Specialization,@MS_Year,@MS_Percentage,@MS_University,@MS_Country,
                         @PhD_Duration,@PhD_Specialization,@PhD_Year,@PhD_Percentage,@PhD_University,@PhD_Country,
-                        @PostDoc_Duration,@PostDoc_Specialization,@PostDoc_Year,@PostDoc_Percentage,@PostDoc_University,@PostDoc_Country
+                        @PostDoc_Duration,@PostDoc_Specialization,@PostDoc_Year,@PostDoc_Percentage,@PostDoc_University,@PostDoc_Country,
+                        @BS_GPAScore, @MS_GPAScore, @QualificationScore, @TotalAcademicScore
                     );
                 END";
 
@@ -275,7 +364,7 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@SSC_Duration", sscDuration);
                 cmd.Parameters.AddWithValue("@SSC_Specialization", sscSpecialization);
                 cmd.Parameters.AddWithValue("@SSC_Year", sscYear);
-                cmd.Parameters.AddWithValue("@SSC_Percentage", sscCgpa);
+                cmd.Parameters.AddWithValue("@SSC_Percentage", sscPer);
                 cmd.Parameters.AddWithValue("@SSC_University", sscUniversity);
                 cmd.Parameters.AddWithValue("@SSC_Country", sscCountry);
 
@@ -283,7 +372,7 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@HSSC_Duration", hsscDuration);
                 cmd.Parameters.AddWithValue("@HSSC_Specialization", hsscSpecialization);
                 cmd.Parameters.AddWithValue("@HSSC_Year", hsscYear);
-                cmd.Parameters.AddWithValue("@HSSC_Percentage", hsscCgpa);
+                cmd.Parameters.AddWithValue("@HSSC_Percentage", hsscPer);
                 cmd.Parameters.AddWithValue("@HSSC_University", hsscUniversity);
                 cmd.Parameters.AddWithValue("@HSSC_Country", hsscCountry);
 
@@ -292,54 +381,48 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@BS_Duration", bsDuration);
                 cmd.Parameters.AddWithValue("@BS_Specialization", bsSpecialization);
                 cmd.Parameters.AddWithValue("@BS_Year", bsYear);
-                cmd.Parameters.AddWithValue("@BS_Percentage", bsCgpa);
+                cmd.Parameters.AddWithValue("@BS_Percentage", bsPer);
                 cmd.Parameters.AddWithValue("@BS_University", bsUniversity);
                 cmd.Parameters.AddWithValue("@BS_Country", bsCountry);
 
-                // MS (Optional)
+                // MS
                 cmd.Parameters.AddWithValue("@MS_Duration", (object)msDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Specialization", (object)msSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Year", (object)msYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@MS_Percentage", (object)msCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@MS_Percentage", (object)msPer ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_University", (object)msUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@MS_Country", (object)msCountry ?? DBNull.Value);
 
-                // PhD (Optional)
+                // PhD
                 cmd.Parameters.AddWithValue("@PhD_Duration", (object)phdDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Specialization", (object)phdSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Year", (object)phdYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PhD_Percentage", (object)phdCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@PhD_Percentage", (object)phdPer ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_University", (object)phdUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PhD_Country", (object)phdCountry ?? DBNull.Value);
 
-                // PostDoc (Optional)
+                // PostDoc
                 cmd.Parameters.AddWithValue("@PostDoc_Duration", (object)postdocDuration ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Specialization", (object)postdocSpecialization ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Year", (object)postdocYear ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@PostDoc_Percentage", (object)postdocCgpa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@PostDoc_Percentage", (object)postdocPer ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_University", (object)postdocUniversity ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PostDoc_Country", (object)postdocCountry ?? DBNull.Value);
+
+                // Scores
+                cmd.Parameters.AddWithValue("@BS_GPAScore", scores.BSGPAScore);
+                cmd.Parameters.AddWithValue("@MS_GPAScore", scores.MSGPAScore);
+                cmd.Parameters.AddWithValue("@QualificationScore", scores.QualificationScore);
+                cmd.Parameters.AddWithValue("@TotalAcademicScore", scores.TotalAcademicScore);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
 
-        protected bool SecondDivision(decimal result)
-        {
-            if (result >= 60)
-                return false;
-            else
-            {
-                lblMessage.Text = "Second Division in Education cannot apply!";
-                lblMessage.ForeColor = System.Drawing.Color.Red;
-                return true;
-            }
-        }
-
-        // =========================================
+        // =============================================
         // OTHER QUALIFICATIONS - COLLECT DATA
-        // =========================================
+        // =============================================
         private List<OtherQualificationModel> CollectOtherQualificationData()
         {
             var list = new List<OtherQualificationModel>();
@@ -366,9 +449,9 @@ namespace WebApplication4
             return list;
         }
 
-        // =========================================
+        // =============================================
         // OTHER QUALIFICATIONS - SAVE TO DATABASE
-        // =========================================
+        // =============================================
         private void SaveOtherQualifications(int userID, List<OtherQualificationModel> otherQualifications)
         {
             if (otherQualifications.Count == 0) return;
@@ -379,14 +462,12 @@ namespace WebApplication4
             {
                 con.Open();
 
-                // Delete existing records for this user
                 using (SqlCommand cmd = new SqlCommand("DELETE FROM OtherQualifications WHERE UserID = @UserID", con))
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
                     cmd.ExecuteNonQuery();
                 }
 
-                // Insert new records
                 string insertQuery = @"
                     INSERT INTO OtherQualifications (UserID, Name, Duration, Specialization, Year, Percentage, Institute, Country)
                     VALUES (@UserID, @Name, @Duration, @Specialization, @Year, @Percentage, @Institute, @Country)";
@@ -410,9 +491,21 @@ namespace WebApplication4
         }
     }
 
-    // =========================================
+    // =============================================
+    // ACADEMIC SCORES MODEL
+    // =============================================
+    public class AcademicScores
+    {
+        public decimal QualificationScore { get; set; }  // Max 40
+        public decimal BSGPAScore { get; set; }          // Max 5
+        public decimal MSGPAScore { get; set; }          // Max 5
+        public decimal TotalGPAScore { get; set; }       // Max 10
+        public decimal TotalAcademicScore { get; set; }  // Max 50
+    }
+
+    // =============================================
     // OTHER QUALIFICATIONS MODEL
-    // =========================================
+    // =============================================
     public class OtherQualificationModel
     {
         public string Name { get; set; }
