@@ -162,6 +162,7 @@ namespace WebApplication4
                     e.HSSC_Percentage,
                     e.BS_Percentage,
                     e.MS_Percentage,
+                    e.PhD_Percentage,
                     ISNULL(es.ExperienceScore, 0) AS ExperienceScore,
                     ISNULL(es.ExperienceLevel, 'N/A') AS ExperienceLevel,
                     ISNULL(es.ResearchScore, 0) AS ResearchSupervisionScore,
@@ -205,18 +206,37 @@ namespace WebApplication4
                         int fundedProjects = reader["TotalFundedProjects"] != DBNull.Value ? Convert.ToInt32(reader["TotalFundedProjects"]) : 0;
                         int researchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
 
+                        // ============================================
+                        // ELIGIBILITY LOGIC (COMPLETE)
+                        // ============================================
                         bool isEligible = true;
+
                         decimal sscPer = reader["SSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["SSC_Percentage"]) : 0;
                         decimal hsscPer = reader["HSSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["HSSC_Percentage"]) : 0;
                         decimal bsPer = reader["BS_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["BS_Percentage"]) : 0;
                         decimal msPer = reader["MS_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["MS_Percentage"]) : 0;
+                        decimal phdPer = reader["PhD_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["PhD_Percentage"]) : 0;
 
                         if (sscPer > 0 && sscPer < 60) isEligible = false;
                         if (hsscPer > 0 && hsscPer < 60) isEligible = false;
                         if (bsPer > 0 && bsPer < 60) isEligible = false;
                         if (msPer > 0 && msPer < 60) isEligible = false;
+                        if (phdPer > 0 && phdPer < 60) isEligible = false;
+
+                        decimal bsGpa = reader["BS_GPAScore"] != DBNull.Value ? Convert.ToDecimal(reader["BS_GPAScore"]) : 0;
+                        decimal msGpa = reader["MS_GPAScore"] != DBNull.Value ? Convert.ToDecimal(reader["MS_GPAScore"]) : 0;
+
+                        if (bsGpa > 0 && bsGpa < 2) isEligible = false;
+                        if (msGpa > 0 && msGpa < 2) isEligible = false;
+
+                        int expScore = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0;
+                        if (expScore == 0) isEligible = false;
+
+                        int resScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
+                        if (resScore == 0) isEligible = false;
 
                         decimal grandTotal = totalAcademicScore + totalExperienceScore + researchScore;
+                        if (grandTotal < 40) isEligible = false;
 
                         var app = new ApplicationRow
                         {
@@ -253,6 +273,9 @@ namespace WebApplication4
                 }
             }
 
+            // ============================================
+            // SORT BY SCORE AND ASSIGN RANK
+            // ============================================
             applications = applications.OrderByDescending(x => x.GrandTotalScore).ToList();
             int rank = 1;
             foreach (var app in applications)
@@ -382,6 +405,9 @@ namespace WebApplication4
             rptTabs.DataBind();
         }
 
+        // ============================================
+        // BIND APPLICATIONS (FIXED - Reassign Rank)
+        // ============================================
         private void BindApplications()
         {
             if (applications == null || applications.Count == 0)
@@ -420,6 +446,15 @@ namespace WebApplication4
             }
 
             var result = list.ToList();
+
+            // ============================================
+            // REASSIGN RANK AFTER FILTERING (1, 2, 3, 4, 5...)
+            // ============================================
+            int rank = 1;
+            foreach (var app in result)
+            {
+                app.Rank = rank++;
+            }
 
             pnlApplicationsEmpty.Visible = result.Count == 0;
             gvApplications.DataSource = result;
@@ -467,6 +502,7 @@ namespace WebApplication4
             CurrentTab = e.CommandArgument.ToString();
             CurrentSearch = "";
             txtSearch.Text = "";
+            LoadDataFromDatabase();
             BindAll();
         }
 
@@ -475,12 +511,14 @@ namespace WebApplication4
             CurrentTab = e.CommandArgument.ToString();
             CurrentSearch = "";
             txtSearch.Text = "";
+            LoadDataFromDatabase();
             BindAll();
         }
 
         protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrentSort = ddlSort.SelectedValue;
+            LoadDataFromDatabase();
             BindAll();
         }
 
@@ -489,6 +527,7 @@ namespace WebApplication4
             CurrentSearch = txtSearch.Text.Trim();
             if (CurrentTab == "incomplete")
                 CurrentTab = "all";
+            LoadDataFromDatabase();
             BindAll();
         }
 
@@ -497,6 +536,7 @@ namespace WebApplication4
             CurrentSearch = txtSearch.Text.Trim();
             if (CurrentTab == "incomplete")
                 CurrentTab = "all";
+            LoadDataFromDatabase();
             BindAll();
         }
 
@@ -504,16 +544,19 @@ namespace WebApplication4
         {
             CurrentTab = "incomplete";
             CurrentSearch = txtIncompleteSearch.Text.Trim();
+            LoadDataFromDatabase();
             BindAll();
         }
 
         protected void txtIncompleteSearch_TextChanged(object sender, EventArgs e)
         {
+            LoadDataFromDatabase();
             BindIncomplete();
         }
 
         protected void ddlIncompleteSort_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LoadDataFromDatabase();
             BindIncomplete();
         }
 
