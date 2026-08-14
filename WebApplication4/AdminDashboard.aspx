@@ -1339,17 +1339,11 @@ body{
             </li>
 
             <li class="nav-item">
-
-                <a href="Candidates.aspx"
-                   class="nav-link">
-
-                    <i class="bi bi-people-fill"></i>
-
-                    <span>Candidates</span>
-
-                </a>
-
-            </li>
+    <a href="AdminCandidatesView.aspx" class="nav-link">
+        <i class="bi bi-people-fill"></i>
+        <span>Candidates</span>
+    </a>
+</li>
 
             <li class="nav-item">
 
