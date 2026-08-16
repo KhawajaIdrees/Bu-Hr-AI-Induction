@@ -250,6 +250,9 @@ body{
 
     gap:12px;
 
+    position:relative;
+    cursor:pointer;
+
 }
 
 .profile-circle{
@@ -265,7 +268,99 @@ body{
     font-weight:700;
     font-size:18px;
     font-family:'Inter', 'Segoe UI', sans-serif;
+    cursor:pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
 
+.profile-circle:hover {
+    transform: scale(1.05);
+}
+
+/* Arrow - half inside circle, half outside */
+.profile-circle .dropdown-arrow {
+    position: absolute;
+    bottom: -2px;
+    right: -6px;
+    font-size: 12px;
+    background: #3557b7;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    font-size: 8px;
+    padding: 0;
+    line-height: 1;
+}
+
+/* Dropdown Menu - Works on ALL screen sizes */
+.dropdown-menu-custom {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    min-width: 180px;
+    padding: 8px 0;
+    z-index: 1300;
+    border: 1px solid #e8ecf1;
+    overflow: hidden;
+}
+
+.dropdown-menu-custom.show {
+    display: block;
+}
+
+.dropdown-menu-custom .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #1a2332;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-menu-custom .dropdown-item:hover {
+    background: #f5f7fb;
+}
+
+.dropdown-menu-custom .dropdown-item i {
+    font-size: 18px;
+    color: #64748b;
+}
+
+.dropdown-menu-custom .dropdown-divider {
+    height: 1px;
+    background: #e8ecf1;
+    margin: 4px 0;
+}
+
+.dropdown-menu-custom .dropdown-item.logout-item {
+    color: #dc3545;
+}
+
+.dropdown-menu-custom .dropdown-item.logout-item i {
+    color: #dc3545;
+}
+
+.dropdown-menu-custom .dropdown-item.logout-item:hover {
+    background: #fef2f2;
 }
 
 /*====================================================
@@ -372,6 +467,7 @@ body{
 
     margin-top:18px;
     padding:0;
+    flex: 1;
 
 }
 
@@ -423,58 +519,6 @@ body{
 .sidebar .nav-link span{
 
     transition:opacity .2s ease;
-
-}
-
-.logout{
-
-    margin-top:auto;
-    padding:20px 0;
-    border-top:1px solid rgba(255,255,255,.08);
-
-}
-
-/*============ COLLAPSED ============*/
-
-.sidebar.collapsed .nav-link{
-
-    justify-content:center;
-    width:56px;
-    margin:0 auto 8px;
-    padding:0;
-
-}
-
-.sidebar.collapsed .nav-link i{
-
-    width:100%;
-    margin:0;
-    font-size:22px;
-
-}
-
-.sidebar.collapsed .nav-link span{
-
-    display:none;
-
-}
-
-.sidebar.collapsed .logout .nav-link{
-
-    justify-content:center;
-
-}
-
-.sidebar.collapsed .sidebar-header{
-
-    justify-content:center;
-
-}
-
-.sidebar.collapsed + .top-header{
-
-    left:80px;
-    width:calc(100% - 80px);
 
 }
 
@@ -814,7 +858,7 @@ body{
     font-weight: 600;
     font-size: 13px;
     color: #0f172a;
-    padding: 0 15px;
+    padding: 0;
 }
 
 .applicant-table .hiring-badge {
@@ -904,6 +948,34 @@ body{
     font-size: 11px;
     font-weight: 600;
     font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/*====================================================
+                MOBILE HAMBURGER MENU
+====================================================*/
+
+/* Mobile overlay */
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.mobile-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Prevent body scroll when sidebar is open */
+body.no-scroll {
+    overflow: hidden !important;
 }
 
 /*====================================================
@@ -1133,6 +1205,97 @@ body{
 
 @media (max-width:767px){
 
+    /* Show hamburger button in header */
+    .menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: none;
+        font-size: 28px;
+        color: #101827;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Hide desktop toggle button on mobile */
+    .sidebar-header .toggle-btn {
+        display: none;
+    }
+
+    /* Sidebar becomes off-canvas drawer */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        transition: transform 0.35s ease;
+        z-index: 1000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .sidebar.collapsed {
+        width: 280px;
+    }
+    .sidebar.collapsed .nav-link span {
+        display: inline;
+    }
+    .sidebar.collapsed .nav-link i {
+        width: 42px;
+        min-width: 42px;
+    }
+
+    /* Sidebar content - no scroll */
+    .sidebar .nav {
+        flex: 1;
+        overflow: hidden;
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    .sidebar .nav-item {
+        margin-bottom: 6px;
+    }
+
+    .sidebar .nav-link {
+        height: 46px;
+        margin: 0 12px;
+        padding: 0 14px;
+        font-size: 14px;
+    }
+
+    .sidebar .nav-link i {
+        width: 36px;
+        min-width: 36px;
+        font-size: 18px;
+    }
+
+    /* Dropdown on mobile */
+    .dropdown-menu-custom {
+        position: fixed;
+        top: 60px;
+        right: 10px;
+        min-width: 160px;
+    }
+
+    .dropdown-menu-custom .dropdown-item {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    /* Overlay */
+    .mobile-overlay {
+        display: block;
+        z-index: 999;
+    }
+
     .top-header{
 
         height:70px;
@@ -1228,88 +1391,6 @@ body{
 
     }
 
-    .menu-btn{
-
-        display:flex;
-
-        align-items:center;
-
-        justify-content:center;
-
-        border:none;
-
-        background:none;
-
-        font-size:28px;
-
-        color:#101827;
-
-        padding:0;
-
-    }
-
-    #headerSidebarToggle{
-
-        display:none;
-
-    }
-
-    .wrapper{
-
-        display:block;
-
-        padding-top:0px;
-
-    }
-
-    .sidebar{
-
-        position:relative;
-
-        top:0;
-
-        width:100%;
-
-        height:0;
-
-        min-height:0;
-
-        overflow:hidden;
-
-        transition:height .3s ease;
-
-    }
-
-    .sidebar.show{
-
-        height:265px;
-
-    }
-
-    .sidebar.collapsed{
-
-        width:100%;
-
-    }
-
-    .sidebar-header{
-
-        display:none;
-
-    }
-
-    .sidebar .nav-link span{
-
-        display:inline;
-
-    }
-
-    .sidebar .nav-link{
-
-        justify-content:flex-start;
-
-    }
-
     .content{
 
         margin-left:0;
@@ -1317,6 +1398,8 @@ body{
         width:100%;
 
         padding:20px 15px;
+
+        min-height:calc(100vh - 70px);
 
     }
 
@@ -1389,6 +1472,18 @@ body{
 
     }
 
+    .mobile-overlay {
+        display: none !important;
+    }
+
+    /* Dropdown works on desktop too */
+    .dropdown-menu-custom {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        min-width: 180px;
+    }
+
     #headerSidebarToggle{
 
         display:flex;
@@ -1452,7 +1547,7 @@ body{
 
         </button>
       <p>|</p>  
-        <div class="admin-box">
+        <div class="admin-box" onclick="toggleDropdown(event)">
 
             <div class="text-end">
 
@@ -1471,9 +1566,22 @@ body{
             </div>
 
             <div class="profile-circle">
-
                 A
+                <span class="dropdown-arrow">▼</span>
+            </div>
 
+            <!-- Dropdown Menu - Works on ALL screen sizes -->
+            <div id="dropdownMenu" class="dropdown-menu-custom">
+                <a href="#" class="dropdown-item" onclick="event.stopPropagation();">
+                    <i class="bi bi-person-circle"></i> My Profile
+                </a>
+                <a href="Settings.aspx" class="dropdown-item" onclick="event.stopPropagation();">
+                    <i class="bi bi-gear"></i> Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="Logout.aspx" class="dropdown-item logout-item" onclick="event.stopPropagation();">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
             </div>
 
         </div>
@@ -1481,6 +1589,9 @@ body{
     </div>
 
 </header>
+
+<!-- Mobile Overlay -->
+<div id="mobileOverlay" class="mobile-overlay"></div>
 
 <div class="wrapper">
 
@@ -1514,33 +1625,7 @@ body{
                 </a>
             </li>
 
-            <li class="nav-item">
-
-                <a href="Settings.aspx"
-                   class="nav-link">
-
-                    <i class="bi bi-gear-fill"></i>
-
-                    <span>Settings</span>
-
-                </a>
-
-            </li>
-
         </ul>
-
-        <div class="logout">
-
-            <a href="Logout.aspx"
-               class="nav-link">
-
-                <i class="bi bi-box-arrow-right"></i>
-
-                <span>Logout</span>
-
-            </a>
-
-        </div>
 
     </div>
 
@@ -1987,18 +2072,78 @@ body{
 <script>
 
     //
-    // Mobile Sidebar
+    // Dropdown Toggle - Works on ALL screen sizes
+    //
+    function toggleDropdown(event) {
+        event.stopPropagation();
+        var dropdown = document.getElementById('dropdownMenu');
+        dropdown.classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (event) {
+        var dropdown = document.getElementById('dropdownMenu');
+        var adminBox = document.querySelector('.admin-box');
+        if (dropdown && adminBox) {
+            if (!adminBox.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        }
+    });
+
+    //
+    // Mobile Sidebar Toggle
     //
     function toggleSidebar() {
-
         const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("mobileOverlay");
+        const body = document.body;
 
-        if (!sidebar) {
-            return;
+        if (!sidebar) return;
+
+        sidebar.classList.toggle("mobile-open");
+        overlay.classList.toggle("active");
+
+        // Prevent/allow body scroll
+        if (sidebar.classList.contains('mobile-open')) {
+            body.classList.add('no-scroll');
+        } else {
+            body.classList.remove('no-scroll');
         }
 
-        sidebar.classList.toggle("show");
+        // Change icon
+        const icon = document.querySelector('.menu-btn i');
+        if (icon) {
+            if (sidebar.classList.contains('mobile-open')) {
+                icon.className = 'bi bi-x-lg fs-4';
+            } else {
+                icon.className = 'bi bi-list fs-4';
+            }
+        }
     }
+
+    // Close sidebar when clicking overlay
+    document.addEventListener('DOMContentLoaded', function () {
+        const overlay = document.getElementById('mobileOverlay');
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && sidebar.classList.contains('mobile-open')) {
+                    toggleSidebar();
+                }
+            });
+        }
+
+        // Close sidebar when clicking a nav link
+        document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
+            link.addEventListener('click', function () {
+                const sidebar = document.getElementById('sidebar');
+                if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('mobile-open')) {
+                    toggleSidebar();
+                }
+            });
+        });
+    });
 
     //
     // Desktop Sidebar Toggle (Arrow Button)
@@ -2007,17 +2152,20 @@ body{
         var toggleBtn = document.getElementById('sidebarToggleBtn');
         var sidebar = document.getElementById('sidebar');
         var content = document.getElementById('content');
-        var icon = toggleBtn.querySelector('i');
+        var icon = toggleBtn ? toggleBtn.querySelector('i') : null;
 
         if (toggleBtn) {
             toggleBtn.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-                content.classList.toggle('expanded');
+                // Only work on desktop
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('collapsed');
+                    content.classList.toggle('expanded');
 
-                if (sidebar.classList.contains('collapsed')) {
-                    icon.className = 'bi bi-arrow-right-circle';
-                } else {
-                    icon.className = 'bi bi-arrow-left-circle';
+                    if (sidebar.classList.contains('collapsed')) {
+                        icon.className = 'bi bi-arrow-right-circle';
+                    } else {
+                        icon.className = 'bi bi-arrow-left-circle';
+                    }
                 }
             });
         }

@@ -112,10 +112,9 @@
             text-align: center;
             font-size: 20px;
         }
+        /* Logout and Settings removed from sidebar */
         .logout {
-            margin-top: auto;
-            padding: 20px 0;
-            border-top: 1px solid rgba(255,255,255,.08);
+            display: none;
         }
 
         /* ============================================
@@ -1046,20 +1045,9 @@
                         <span>Candidates</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="Settings.aspx" class="nav-link">
-                        <i class="bi bi-gear-fill"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
             </ul>
 
-            <div class="logout">
-                <a href="Logout.aspx" class="nav-link">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
+            <!-- Logout and Settings removed from sidebar -->
         </div>
 
         <!-- ==========================================
