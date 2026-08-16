@@ -35,7 +35,7 @@ body{
 
     background:#f5f7fb;
 
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
     overflow-x:hidden;
 
@@ -127,7 +127,7 @@ body{
 
     color:#101827;
 
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -143,7 +143,7 @@ body{
 
 .dashboard-title{
     font-size:2.3rem;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 }
 
 .create-job-btn{
@@ -267,7 +267,7 @@ body{
     justify-content:center;
     font-weight:700;
     font-size:18px;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
     cursor:pointer;
     transition: all 0.3s ease;
     position: relative;
@@ -328,7 +328,7 @@ body{
     font-size: 14px;
     font-weight: 500;
     transition: all 0.2s ease;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     border: none;
     background: none;
     width: 100%;
@@ -489,7 +489,7 @@ body{
     text-decoration:none;
     transition:.25s;
     white-space:nowrap;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -555,7 +555,7 @@ body{
     font-weight:700;
     color:#101827;
     margin-bottom:30px;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -577,7 +577,7 @@ body{
     border:none;
     border-radius:16px 16px 0 0 !important;
     font-weight:600;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -611,21 +611,21 @@ body{
     color:#101827;
     margin-bottom:8px;
     text-align:center;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 }
 
 .stats-card h6{
     font-weight:600;
     margin-bottom:4px;
     text-align:center;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 }
 
 .stats-card small{
     color:#6c757d;
     text-align:center;
     display:block;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 }
 .stat-icon{
     width:54px;
@@ -673,7 +673,7 @@ body{
 
     border-radius:10px;
     font-weight:500;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -767,7 +767,7 @@ body{
 .applicant-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .applicant-table thead {
@@ -827,7 +827,7 @@ body{
     font-weight: 700;
     font-size: 16px;
     flex-shrink: 0;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .applicant-table .candidate-name {
@@ -911,7 +911,7 @@ body{
     text-transform: uppercase;
     letter-spacing: 0.3px;
     display: inline-block;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 .status-pending { background: #fef3c7; color: #92400e; }
@@ -947,7 +947,7 @@ body{
 .eligibility-text {
     font-size: 11px;
     font-weight: 600;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 /*====================================================
@@ -988,7 +988,7 @@ body.no-scroll {
     border-radius:10px;
     min-height:45px;
     box-shadow:none;
-    font-family:'Inter', 'Segoe UI', sans-serif;
+    font-family:'Segoe UI', Arial, sans-serif;
 
 }
 
@@ -1639,10 +1639,10 @@ body.no-scroll {
 
             <!-- Page Title -->
             <div class="mb-4">
-                <h1 class="fw-bold text-slate-900" style="font-size:28px; font-family:Inter, Segoe UI, sans-serif;">
+                <h1 class="fw-bold text-slate-900" style="font-size:28px; font-family:'Segoe UI', Arial, sans-serif;">
                     System Dashboard
                 </h1>
-                <p class="text-muted" style="font-family:Inter, Segoe UI, sans-serif; font-size:14px;">
+                <p class="text-muted" style="font-family:'Segoe UI', Arial, sans-serif; font-size:14px;">
                     Overview of all candidate applications across all stages.
                 </p>
             </div>
@@ -1718,7 +1718,7 @@ body.no-scroll {
                             CssClass='<%# GetTabClass(Eval("Id").ToString()) %>'
                             CommandName="select"
                             CommandArgument='<%# Eval("Id") %>'
-                            style="font-size:12px; font-weight:700; padding:6px 18px; border-radius:20px; font-family:Inter, Segoe UI, sans-serif;">
+                            style="font-size:12px; font-weight:700; padding:6px 18px; border-radius:20px; font-family:'Segoe UI', Arial, sans-serif;">
 
                             <%# Eval("Label") %>
 
@@ -1812,7 +1812,7 @@ body.no-scroll {
 
                         <div class="text-center py-5">
                             <i class="bi bi-inbox" style="font-size:48px; color:#cbd5e1;"></i>
-                            <p class="text-muted mt-3" style="font-family:Inter, Segoe UI, sans-serif;">No applications found.</p>
+                            <p class="text-muted mt-3" style="font-family:'Segoe UI', Arial, sans-serif;">No applications found.</p>
                         </div>
 
                     </asp:Panel>
@@ -1984,7 +1984,7 @@ body.no-scroll {
 
                         <div class="text-center py-5">
                             <i class="bi bi-inbox" style="font-size:48px; color:#cbd5e1;"></i>
-                            <p class="text-muted mt-3" style="font-family:Inter, Segoe UI, sans-serif;">No incomplete applicants found.</p>
+                            <p class="text-muted mt-3" style="font-family:'Segoe UI', Arial, sans-serif;">No incomplete applicants found.</p>
                         </div>
 
                     </asp:Panel>
