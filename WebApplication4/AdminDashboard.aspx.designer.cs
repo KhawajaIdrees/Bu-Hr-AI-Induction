@@ -33,24 +33,6 @@ namespace WebApplication4
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
-        /// lnkCreateTeachingJob control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCreateTeachingJob;
-
-        /// <summary>
-        /// lnkCreateNonTeachingJob control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCreateNonTeachingJob;
-
-        /// <summary>
         /// rptStats control.
         /// </summary>
         /// <remarks>
@@ -132,13 +114,13 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Panel pnlApplicationsEmpty;
 
         /// <summary>
-        /// gvApplications control.
+        /// rptApplicantCards control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvApplications;
+        protected global::System.Web.UI.WebControls.Repeater rptApplicantCards;
 
         /// <summary>
         /// upnlIncomplete control.
@@ -204,12 +186,12 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Panel pnlIncompleteEmpty;
 
         /// <summary>
-        /// gvIncomplete control.
+        /// rptIncompleteCards control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvIncomplete;
+        protected global::System.Web.UI.WebControls.Repeater rptIncompleteCards;
     }
 }

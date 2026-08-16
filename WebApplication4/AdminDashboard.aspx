@@ -1,6 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true"
-    CodeBehind="AdminDashboard.aspx.cs"
-    Inherits="WebApplication4.AdminDashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AdminDashboard.aspx.cs" Inherits="WebApplication4.AdminDashboard" %>
 
 <!DOCTYPE html>
 
@@ -711,49 +709,201 @@ body{
 }
 
 /*====================================================
-                    TABLES
+                APPLICANT TABLE
 ====================================================*/
 
-.table-responsive{
-
-    border-radius:12px;
-
+.applicant-table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e8ecf1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    overflow: hidden;
 }
 
-.table{
-
-    margin-bottom:0;
-    border-radius:12px;
-    overflow:hidden;
-
+.applicant-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
-.table thead{
-
-    background:#f3f4f6;
-
+.applicant-table thead {
+    background: #f8fafc;
+    border-bottom: 1px solid #e8ecf1;
 }
 
-.table th{
-
-    font-weight:600;
-    color:#101827;
-    white-space:nowrap;
-    font-family:'Inter', 'Segoe UI', sans-serif;
-
+.applicant-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.table td{
-
-    vertical-align:middle;
-    font-family:'Inter', 'Segoe UI', sans-serif;
-
+.applicant-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f1f4f9;
+    vertical-align: middle;
 }
 
-.table-hover tbody tr:hover{
+.applicant-table tbody tr {
+    transition: background 0.2s ease;
+}
 
-    background:#f8f9fb;
+.applicant-table tbody tr:hover {
+    background: #f8faff;
+}
 
+.applicant-table .candidate-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.applicant-table .avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e8ecf1;
+    background: #f8faff;
+    flex-shrink: 0;
+}
+
+.applicant-table .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1a3a7a;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.applicant-table .candidate-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.applicant-table .candidate-name:hover {
+    color: #1a3a7a;
+}
+
+.applicant-table .candidate-email {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Position & Hiring - Stacked vertically with left alignment */
+.applicant-table .position-hiring-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.applicant-table .position-text {
+    font-weight: 600;
+    font-size: 13px;
+    color: #0f172a;
+    padding: 0 15px;
+}
+
+.applicant-table .hiring-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: inline-block;
+    background: #e0e7ff;
+    color: #3730a3;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.applicant-table .score-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.applicant-table .score-number {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+    min-width: 30px;
+}
+
+.applicant-table .progress-bar {
+    width: 80px;
+    height: 4px;
+    background: #eef2f6;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.applicant-table .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: #1a3a7a;
+    transition: width 0.3s ease;
+}
+
+.applicant-table .status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: inline-block;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-shortlisted { background: #d1fae5; color: #065f46; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
+.status-hired { background: #e0e7ff; color: #3730a3; }
+
+.applicant-table .action-link {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #1a3a7a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+.applicant-table .action-link:hover {
+    background: #1a3a7a;
+    color: #ffffff;
+    border-color: #1a3a7a;
+}
+
+.applicant-table .action-link i {
+    font-size: 16px;
+}
+
+/* Eligibility text */
+.eligibility-text {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
 /*====================================================
@@ -975,16 +1125,6 @@ body{
         font-size:15px;
     }
 
-    /* Tables */
-
-    .table-responsive{
-        overflow-x:auto;
-    }
-
-    .table{
-        min-width:850px;
-    }
-
 }
 
 /* ===========================
@@ -1196,16 +1336,43 @@ body{
 
     }
 
-    .table-responsive{
-
-        overflow-x:auto;
-
+    /* Mobile Table */
+    .applicant-table-container {
+        overflow-x: auto;
     }
 
-    .table{
+    .applicant-table {
+        min-width: 650px;
+    }
 
-        min-width:700px;
+    .applicant-table th,
+    .applicant-table td {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
 
+    .applicant-table .avatar-img,
+    .applicant-table .avatar-placeholder {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .applicant-table .candidate-name {
+        font-size: 13px;
+    }
+
+    .applicant-table .candidate-email {
+        font-size: 11px;
+    }
+
+    .applicant-table .progress-bar {
+        width: 50px;
+    }
+
+    .applicant-table .score-number {
+        font-size: 13px;
+        min-width: 24px;
     }
 
 }
@@ -1385,445 +1552,427 @@ body{
 
         <div class="container-fluid pt-2 pb-4 p-0">
 
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <!-- Page Title -->
+            <div class="mb-4">
+                <h1 class="fw-bold text-slate-900" style="font-size:28px; font-family:Inter, Segoe UI, sans-serif;">
+                    System Dashboard
+                </h1>
+                <p class="text-muted" style="font-family:Inter, Segoe UI, sans-serif; font-size:14px;">
+                    Overview of all candidate applications across all stages.
+                </p>
+            </div>
 
-                <h2 class="fw-bold mb-0 dashboard-title">
-                    Admin Dashboard
-                </h2>
+            <!-- ========================= -->
+            <!-- Statistics Cards -->
+            <!-- ========================= -->
 
-                <div class="job-buttons-container">
-                    <!-- Teaching Job Post Button -->
-                    <asp:HyperLink
-                        ID="lnkCreateTeachingJob"
-                        runat="server"
-                        NavigateUrl="~/CreateJob.aspx?type=Teaching"
-                        CssClass="btn btn-teaching">
+            <div class="row g-3 mb-4">
 
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Create Teaching Job
+                <asp:Repeater
+                    ID="rptStats"
+                    runat="server"
+                    OnItemCommand="rptStats_ItemCommand">
 
-                    </asp:HyperLink>
+                    <ItemTemplate>
 
-                    <!-- Non-Teaching Job Post Button -->
-                    <asp:HyperLink
-                        ID="lnkCreateNonTeachingJob"
-                        runat="server"
-                        NavigateUrl="~/NonCreateJob.aspx"
-                        CssClass="btn btn-non-teaching">
+                        <div class="col-6 col-sm-4 col-md-3 col-xl-2">
 
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Create Non-Teaching Job
+                            <asp:LinkButton
+                                ID="btnStat"
+                                runat="server"
+                                CssClass="text-decoration-none d-block"
+                                CommandName="select"
+                                CommandArgument='<%# Eval("Key") %>'>
 
-                    </asp:HyperLink>
-                </div>
+                                <div class="card stats-card h-100">
+
+                                   <div class="card-body">
+
+                                        <div class="stat-icon">
+                                            <i class='<%# GetStatIcon(Eval("Key").ToString()) %>'></i>
+                                        </div>
+
+                                        <h3 class="fw-bold mt-2 mb-0" style="font-size:24px;">
+                                            <%# Eval("Value") %>
+                                        </h3>
+
+                                        <h6 class="mb-0 mt-1" style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">
+                                            <%# Eval("Label") %>
+                                        </h6>
+
+                                    </div>
+
+                                </div>
+
+                            </asp:LinkButton>
+
+                        </div>
+
+                    </ItemTemplate>
+
+                </asp:Repeater>
 
             </div>
+
             <!-- ========================= -->
-<!-- Statistics Cards -->
-<!-- ========================= -->
+            <!-- Tabs -->
+            <!-- ========================= -->
 
-<div class="row g-3 mb-4">
+            <div class="d-flex flex-wrap gap-2 mb-4">
 
-    <asp:Repeater
-        ID="rptStats"
-        runat="server"
-        OnItemCommand="rptStats_ItemCommand">
-
-        <ItemTemplate>
-
-            <div class="col-12 col-sm-6 col-md-4 col-xl-2">
-
-                <asp:LinkButton
-                    ID="btnStat"
+                <asp:Repeater
+                    ID="rptTabs"
                     runat="server"
-                    CssClass="text-decoration-none"
-                    CommandName="select"
-                    CommandArgument='<%# Eval("Key") %>'>
+                    OnItemCommand="rptTabs_ItemCommand">
 
-                    <div class="card stats-card h-100">
+                    <ItemTemplate>
 
-                       <div class="card-body">
+                        <asp:LinkButton
+                            ID="btnTab"
+                            runat="server"
+                            CssClass='<%# GetTabClass(Eval("Id").ToString()) %>'
+                            CommandName="select"
+                            CommandArgument='<%# Eval("Id") %>'
+                            style="font-size:12px; font-weight:700; padding:6px 18px; border-radius:20px; font-family:Inter, Segoe UI, sans-serif;">
 
-    <div class="stat-icon">
-        <i class='<%# GetStatIcon(Eval("Key").ToString()) %>'></i>
-    </div>
+                            <%# Eval("Label") %>
 
-    <h3 class="fw-bold mt-3 mb-1">
-        <%# Eval("Value") %>
-    </h3>
+                        </asp:LinkButton>
 
-    <h6 class="mb-1">
-        <%# Eval("Label") %>
-    </h6>
+                    </ItemTemplate>
 
-    <small class="text-muted">
-        <%# Eval("Hint") %>
-    </small>
+                </asp:Repeater>
 
-</div>
+            </div>
+
+            <!-- ========================= -->
+            <!-- Search & Sort -->
+            <!-- ========================= -->
+
+            <asp:UpdatePanel ID="upnlMain" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+                <ContentTemplate>
+
+            <asp:Panel
+                ID="pnlSort"
+                runat="server">
+
+                <div class="row g-3 align-items-end mb-4">
+
+                    <div class="col-12 col-lg-8">
+
+                        <div class="search-group">
+
+                            <asp:TextBox
+                                ID="txtSearch"
+                                runat="server"
+                                CssClass="form-control"
+                                placeholder="Search candidate name, email, or position..."
+                                AutoPostBack="true"
+                                OnTextChanged="txtSearch_TextChanged"
+                                style="font-size:14px; padding:10px 16px; height:46px; border-radius:10px 0 0 10px;">
+                            </asp:TextBox>
+
+                            <asp:Button
+                                ID="btnSearch"
+                                runat="server"
+                                Text="Search"
+                                CssClass="btn-search"
+                                OnClick="btnSearch_Click"
+                                style="padding:0 20px; height:46px; border-radius:0 10px 10px 0; background:#101827; color:#fff; border:1px solid #101827; font-weight:600; font-size:13px;" />
+
+                        </div>
 
                     </div>
 
-                </asp:LinkButton>
+                    <div class="col-12 col-lg-4">
 
-            </div>
+                        <asp:DropDownList
+                            ID="ddlSort"
+                            runat="server"
+                            CssClass="form-select"
+                            AutoPostBack="true"
+                            OnSelectedIndexChanged="ddlSort_SelectedIndexChanged"
+                            style="font-size:13px; font-weight:600; height:46px; border-radius:10px; border-color:#e2e8f0;">
 
-        </ItemTemplate>
+                            <asp:ListItem
+                                Text="Top Scored"
+                                Value="score" />
 
-    </asp:Repeater>
+                            <asp:ListItem
+                                Text="Most Recent"
+                                Value="submitted" />
 
-</div>
+                        </asp:DropDownList>
 
-<hr class="my-4"/>
-
-<!-- ========================= -->
-<!-- Tabs -->
-<!-- ========================= -->
-
-<div class="d-flex flex-wrap gap-2 mb-4">
-
-    <asp:Repeater
-        ID="rptTabs"
-        runat="server"
-        OnItemCommand="rptTabs_ItemCommand">
-
-        <ItemTemplate>
-
-            <div class="me-3 mb-2">
-
-                <asp:LinkButton
-                    ID="btnTab"
-                    runat="server"
-                    CssClass='<%# GetTabClass(Eval("Id").ToString()) %>'
-                    CommandName="select"
-                    CommandArgument='<%# Eval("Id") %>'>
-
-                    <%# Eval("Label") %>
-
-                </asp:LinkButton>
-
-            </div>
-
-        </ItemTemplate>
-
-    </asp:Repeater>
-
-</div>
-
-<!-- ========================= -->
-<!-- Search & Sort -->
-<!-- ========================= -->
-
-<asp:UpdatePanel ID="upnlMain" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
-    <ContentTemplate>
-
-<asp:Panel
-    ID="pnlSort"
-    runat="server">
-
-    <div class="row g-3 align-items-end mb-4">
-
-        <div class="col-12 col-lg-8">
-
-            <div class="search-group">
-
-                <asp:TextBox
-                    ID="txtSearch"
-                    runat="server"
-                    CssClass="form-control"
-                    placeholder="Search applicant..."
-                    AutoPostBack="true"
-                    OnTextChanged="txtSearch_TextChanged">
-                </asp:TextBox>
-
-                <asp:Button
-                    ID="btnSearch"
-                    runat="server"
-                    Text="Search"
-                    CssClass="btn-search"
-                    OnClick="btnSearch_Click" />
-
-            </div>
-
-        </div>
-
-        <div class="col-12 col-lg-4">
-
-            <asp:DropDownList
-                ID="ddlSort"
-                runat="server"
-                CssClass="form-select"
-                AutoPostBack="true"
-                OnSelectedIndexChanged="ddlSort_SelectedIndexChanged">
-
-                <asp:ListItem
-                    Text="Latest Submitted"
-                    Value="submitted" />
-
-                <asp:ListItem
-                    Text="Highest Score"
-                    Value="score" />
-
-            </asp:DropDownList>
-
-        </div>
-
-    </div>
-
-</asp:Panel>
-
-<!-- ========================= -->
-<!-- Applications Section -->
-<!-- ========================= -->
-
-<asp:Panel
-    ID="pnlApplications"
-    runat="server">
-
-    <div class="card shadow-sm">
-
-        <div class="card-header bg-primary text-white">
-
-            Submitted Applications
-
-        </div>
-
-        <div class="card-body">
-
-            <asp:Panel
-                ID="pnlApplicationsEmpty"
-                runat="server"
-                Visible="false">
-
-                <div class="alert alert-warning mb-3">
-
-                    No applications found.
+                    </div>
 
                 </div>
 
             </asp:Panel>
-            <div class="table-responsive">
 
-            <asp:GridView
-                ID="gvApplications"
-                runat="server"
-                CssClass="table table-bordered table-hover table-striped"
-                AutoGenerateColumns="False"
-                OnRowDataBound="gvApplications_RowDataBound"
-                DataKeyNames="Id">
-
-                <Columns>
-
-                    <asp:BoundField
-                        HeaderText="#"
-                        DataField="Rank" />
-
-                    <asp:TemplateField HeaderText="Applicant">
-                        <ItemTemplate>
-                            <!-- Applicant Name - BLACK -->
-                            <strong style="color: #000000;">
-                                <%# Eval("Applicant.FullName") %>
-                            </strong>
-                            <br />
-                            <small class="text-muted">
-                                <%# Eval("Applicant.Email") %>
-                            </small>
-                            <br />
-                            <small>
-                                <!-- Eligibility Status - Using Label with ForeColor -->
-                                <asp:Label ID="lblEligibility" runat="server" 
-                                    Text='<%# Eval("EligibilityStatus") %>' 
-                                    Font-Bold="true"
-                                    ForeColor='<%# Eval("EligibilityStatus").ToString().Contains("Not Eligible") ? System.Drawing.Color.Red : System.Drawing.Color.Green %>' />
-                            </small>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField
-                        HeaderText="Academic<br/>(Max 50)"
-                        DataField="TotalAcademicScore"
-                        HtmlEncode="false" />
-
-                    <asp:BoundField
-                        HeaderText="Experience<br/>(Max 25)"
-                        DataField="TotalExperienceScore"
-                        HtmlEncode="false" />
-
-                    <asp:BoundField
-                        HeaderText="Research<br/>(Max 25)"
-                        DataField="ResearchScore"
-                        HtmlEncode="false" />
-
-                    <asp:TemplateField HeaderText="Total<br/>(Max 100)">
-                        <ItemTemplate>
-                            <strong class='<%# Eval("ScoreColor") %>'>
-                                <%# Eval("GrandTotalScore") %>
-                            </strong>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField
-                        HeaderText="Status"
-                        DataField="Status" />
-
-                    <asp:TemplateField HeaderText="Submitted">
-                        <ItemTemplate>
-                            <%# FormatDate(Eval("SubmittedAt")) %>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-
-            </asp:GridView>
-                
-</div>
-
-        </div>
-
-    </div>
-
-</asp:Panel>
-
-    </ContentTemplate>
-</asp:UpdatePanel>
-
-<br />
-
-<!-- ========================= -->
-<!-- Incomplete Applicants -->
-<!-- ========================= -->
-
-<asp:UpdatePanel ID="upnlIncomplete" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
-    <ContentTemplate>
-
-<asp:Panel
-    ID="pnlIncomplete"
-    runat="server">
-
-    <asp:Panel
-        ID="pnlIncompleteSort"
-        runat="server">
-
-        <div class="row mb-4">
-
-            <div class="col-md-6">
-
-                <div class="search-group">
-
-                    <asp:TextBox
-                        ID="txtIncompleteSearch"
-                        runat="server"
-                        CssClass="form-control"
-                        placeholder="Search applicant..."
-                        AutoPostBack="true"
-                        OnTextChanged="txtIncompleteSearch_TextChanged">
-                    </asp:TextBox>
-
-                    <asp:Button
-                        ID="btnIncompleteSearch"
-                        runat="server"
-                        Text="Search"
-                        CssClass="btn-search"
-                        OnClick="btnIncompleteSearch_Click" />
-
-                </div>
-
-            </div>
-
-            <div class="col-md-3">
-
-                <asp:DropDownList
-                    ID="ddlIncompleteSort"
-                    runat="server"
-                    CssClass="form-select"
-                    AutoPostBack="true"
-                    OnSelectedIndexChanged="ddlIncompleteSort_SelectedIndexChanged">
-
-                    <asp:ListItem
-                        Text="Latest Registered"
-                        Value="registered" />
-
-                    <asp:ListItem
-                        Text="Name (A-Z)"
-                        Value="name" />
-
-                </asp:DropDownList>
-
-            </div>
-
-        </div>
-
-    </asp:Panel>
-
-    <div class="card shadow-sm">
-
-        <div class="card-header text-white"
-             style="background:#b71c1c;">
-
-            Applicants Not Submitted Yet
-
-        </div>
-
-        <div class="card-body">
+            <!-- ========================= -->
+            <!-- Applications Table -->
+            <!-- ========================= -->
 
             <asp:Panel
-                ID="pnlIncompleteEmpty"
-                runat="server"
-                Visible="false">
+                ID="pnlApplications"
+                runat="server">
 
-                <div class="alert alert-info">
+                <div class="applicant-table-container">
 
-                    No incomplete applicants found.
+                    <asp:Panel
+                        ID="pnlApplicationsEmpty"
+                        runat="server"
+                        Visible="false">
+
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox" style="font-size:48px; color:#cbd5e1;"></i>
+                            <p class="text-muted mt-3" style="font-family:Inter, Segoe UI, sans-serif;">No applications found.</p>
+                        </div>
+
+                    </asp:Panel>
+
+                    <table class="applicant-table">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Position &amp; Hiring</th>
+                                <th>Total Score</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater
+                                ID="rptApplicantCards"
+                                runat="server"
+                                OnItemDataBound="rptApplicantCards_ItemDataBound">
+
+                                <ItemTemplate>
+
+                                    <tr>
+                                        <td>
+                                            <div class="candidate-cell">
+                                                <asp:Image ID="imgApplicant" runat="server" 
+                                                    ImageUrl='<%# GetProfileImageUrl(Eval("Applicant.UserId")) %>'
+                                                    CssClass="avatar-img"
+                                                    AlternateText="Profile" />
+                                                <div>
+                                                    <asp:HyperLink ID="hlApplicantName" runat="server"
+                                                        NavigateUrl='<%# "AdminCandidatesView.aspx?id=" + Eval("Applicant.UserId") %>'
+                                                        CssClass="candidate-name">
+                                                        <%# Eval("Applicant.FullName") %>
+                                                    </asp:HyperLink>
+                                                    <div class="candidate-email">
+                                                        <%# Eval("Applicant.Email") %>
+                                                    </div>
+                                                    <asp:Label ID="lblEligibility" runat="server" 
+                                                        CssClass="eligibility-text"
+                                                        Text='<%# Eval("EligibilityStatus") %>' 
+                                                        ForeColor='<%# Eval("EligibilityStatus").ToString().Contains("Not Eligible") ? System.Drawing.Color.Red : System.Drawing.Color.Green %>' />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="position-hiring-wrapper">
+                                                <span class="position-text">Lecturer</span>
+                                                <span class="hiring-badge">PERMANENT</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="score-wrapper">
+                                                <span class="score-number"><%# Eval("GrandTotalScore") %></span>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" 
+                                                         style='width: <%# GetProgressWidth(Eval("GrandTotalScore")) %>;'>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class='status-badge status-<%# Eval("Status").ToString().ToLower() %>'>
+                                                <%# Eval("Status") %>
+                                            </span>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <asp:HyperLink ID="hlViewApplicant" runat="server"
+                                                NavigateUrl='<%# "AdminCandidatesView.aspx?id=" + Eval("Applicant.UserId") %>'
+                                                CssClass="action-link"
+                                                ToolTip="View Applicant Details">
+
+                                                <i class="bi bi-arrow-right"></i>
+
+                                            </asp:HyperLink>
+                                        </td>
+                                    </tr>
+
+                                </ItemTemplate>
+
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
 
                 </div>
 
             </asp:Panel>
-            <div class="table-responsive">
 
-            <asp:GridView
-                ID="gvIncomplete"
-                runat="server"
-                CssClass="table table-bordered table-hover table-striped"
-                AutoGenerateColumns="False"
-                DataKeyNames="Id">
+                </ContentTemplate>
+            </asp:UpdatePanel>
 
-                <Columns>
+            <br />
 
-                    <asp:BoundField
-                        DataField="Id"
-                        HeaderText="ID" />
+            <!-- ========================= -->
+            <!-- Incomplete Applicants -->
+            <!-- ========================= -->
 
-                    <asp:BoundField
-                        DataField="FullName"
-                        HeaderText="Full Name" />
+            <asp:UpdatePanel ID="upnlIncomplete" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
+                <ContentTemplate>
 
-                    <asp:BoundField
-                        DataField="Email"
-                        HeaderText="Email" />
+            <asp:Panel
+                ID="pnlIncomplete"
+                runat="server">
 
-                    <asp:BoundField
-                        DataField="Phone"
-                        HeaderText="Phone" />
+                <asp:Panel
+                    ID="pnlIncompleteSort"
+                    runat="server">
 
-                    <asp:TemplateField HeaderText="Registered">
-                        <ItemTemplate>
-                            <%# FormatDate(Eval("RegisteredAt")) %>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                    <div class="row mb-4">
 
-                </Columns>
+                        <div class="col-md-6">
 
-            </asp:GridView>
+                            <div class="search-group">
+
+                                <asp:TextBox
+                                    ID="txtIncompleteSearch"
+                                    runat="server"
+                                    CssClass="form-control"
+                                    placeholder="Search applicant..."
+                                    AutoPostBack="true"
+                                    OnTextChanged="txtIncompleteSearch_TextChanged"
+                                    style="font-size:14px; padding:10px 16px; height:46px; border-radius:10px 0 0 10px;">
+                                </asp:TextBox>
+
+                                <asp:Button
+                                    ID="btnIncompleteSearch"
+                                    runat="server"
+                                    Text="Search"
+                                    CssClass="btn-search"
+                                    OnClick="btnIncompleteSearch_Click"
+                                    style="padding:0 20px; height:46px; border-radius:0 10px 10px 0; background:#101827; color:#fff; border:1px solid #101827; font-weight:600; font-size:13px;" />
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <asp:DropDownList
+                                ID="ddlIncompleteSort"
+                                runat="server"
+                                CssClass="form-select"
+                                AutoPostBack="true"
+                                OnSelectedIndexChanged="ddlIncompleteSort_SelectedIndexChanged"
+                                style="font-size:13px; font-weight:600; height:46px; border-radius:10px; border-color:#e2e8f0;">
+
+                                <asp:ListItem
+                                    Text="Latest Registered"
+                                    Value="registered" />
+
+                                <asp:ListItem
+                                    Text="Name (A-Z)"
+                                    Value="name" />
+
+                            </asp:DropDownList>
+
+                        </div>
+
+                    </div>
+
+                </asp:Panel>
+
+                <div class="applicant-table-container">
+
+                    <asp:Panel
+                        ID="pnlIncompleteEmpty"
+                        runat="server"
+                        Visible="false">
+
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox" style="font-size:48px; color:#cbd5e1;"></i>
+                            <p class="text-muted mt-3" style="font-family:Inter, Segoe UI, sans-serif;">No incomplete applicants found.</p>
+                        </div>
+
+                    </asp:Panel>
+
+                    <table class="applicant-table">
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Registered</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater
+                                ID="rptIncompleteCards"
+                                runat="server">
+
+                                <ItemTemplate>
+
+                                    <tr>
+                                        <td>
+                                            <div class="candidate-cell">
+                                                <asp:Image ID="imgIncompleteApplicant" runat="server" 
+                                                    ImageUrl='<%# GetProfileImageUrl(Eval("UserId")) %>'
+                                                    CssClass="avatar-img"
+                                                    AlternateText="Profile" />
+                                                <div>
+                                                    <asp:HyperLink ID="hlIncompleteName" runat="server"
+                                                        NavigateUrl='<%# "AdminCandidatesView.aspx?id=" + Eval("UserId") %>'
+                                                        CssClass="candidate-name">
+                                                        <%# Eval("FullName") %>
+                                                    </asp:HyperLink>
+                                                    <div class="candidate-email">
+                                                        <%# Eval("Email") %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span style="font-size:13px; color:#64748b;">
+                                                <%# FormatDate(Eval("RegisteredAt")) %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-pending">
+                                                Incomplete
+                                            </span>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <asp:HyperLink ID="hlViewIncomplete" runat="server"
+                                                NavigateUrl='<%# "AdminCandidatesView.aspx?id=" + Eval("UserId") %>'
+                                                CssClass="action-link"
+                                                ToolTip="View Applicant Details">
+
+                                                <i class="bi bi-arrow-right"></i>
+
+                                            </asp:HyperLink>
+                                        </td>
+                                    </tr>
+
+                                </ItemTemplate>
+
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+
                 </div>
 
-        </div>
+            </asp:Panel>
 
-    </div>
-
-</asp:Panel>
-
-    </ContentTemplate>
-</asp:UpdatePanel>
+                </ContentTemplate>
+            </asp:UpdatePanel>
 
                     </div>   <!-- container-fluid -->
 

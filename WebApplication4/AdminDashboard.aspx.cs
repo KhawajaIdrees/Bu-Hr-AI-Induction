@@ -74,6 +74,7 @@ namespace WebApplication4
 
         public class ApplicantInfo
         {
+            public int UserId { get; set; }
             public string FullName { get; set; }
             public string Email { get; set; }
         }
@@ -113,6 +114,7 @@ namespace WebApplication4
         public class IncompleteApplicant
         {
             public int Id { get; set; }
+            public int UserId { get; set; }
             public string FullName { get; set; }
             public string Email { get; set; }
             public string Phone { get; set; }
@@ -135,6 +137,104 @@ namespace WebApplication4
 
                 LoadDataFromDatabase();
                 BindAll();
+            }
+        }
+
+        // ============================================
+        // GET PROFILE IMAGE URL
+        // ============================================
+        public string GetProfileImageUrl(object userId)
+        {
+            if (userId == null)
+                return "~/Images/default-avatar.png";
+
+            try
+            {
+                int id = Convert.ToInt32(userId);
+                string imagePath = $"~/Images/Profile_{id}.jpg";
+                string physicalPath = Server.MapPath(imagePath);
+
+                if (System.IO.File.Exists(physicalPath))
+                    return imagePath;
+
+                imagePath = $"~/Images/Profile_{id}.png";
+                physicalPath = Server.MapPath(imagePath);
+
+                if (System.IO.File.Exists(physicalPath))
+                    return imagePath;
+
+                return "~/Images/default-avatar.png";
+            }
+            catch
+            {
+                return "~/Images/default-avatar.png";
+            }
+        }
+
+        // ============================================
+        // GET SCORE PERCENTAGE - For Progress Bar
+        // ============================================
+        public string GetScorePercentage(object score)
+        {
+            if (score == null)
+                return "0";
+
+            try
+            {
+                decimal value = Convert.ToDecimal(score);
+                decimal percentage = (value / 100) * 100;
+                return Math.Min(percentage, 100).ToString("F0");
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        // ============================================
+        // GET PROGRESS WIDTH - For Progress Bar Width
+        // ============================================
+        public string GetProgressWidth(object score)
+        {
+            string percentage = GetScorePercentage(score);
+            return percentage + "%";
+        }
+
+        // ============================================
+        // GET INITIALS - For Avatar Display
+        // ============================================
+        public string GetInitials(object fullName)
+        {
+            if (fullName == null || string.IsNullOrEmpty(fullName.ToString()))
+                return "?";
+
+            string name = fullName.ToString().Trim();
+            string[] parts = name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 0)
+                return "?";
+
+            if (parts.Length == 1)
+                return parts[0].Substring(0, 1).ToUpper();
+
+            return (parts[0].Substring(0, 1) + parts[parts.Length - 1].Substring(0, 1)).ToUpper();
+        }
+
+        // ============================================
+        // FORMAT DATE
+        // ============================================
+        public string FormatDate(object date)
+        {
+            if (date == null || date == DBNull.Value)
+                return "N/A";
+
+            try
+            {
+                return Convert.ToDateTime(date).ToString("dd MMM yyyy");
+            }
+            catch
+            {
+                return "N/A";
             }
         }
 
@@ -206,12 +306,9 @@ namespace WebApplication4
                         int fundedProjects = reader["TotalFundedProjects"] != DBNull.Value ? Convert.ToInt32(reader["TotalFundedProjects"]) : 0;
                         int researchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
 
-                        // ============================================
-                        // ELIGIBILITY LOGIC (COMPLETE - FIXED)
-                        // ============================================
+                        // ELIGIBILITY LOGIC
                         bool isEligible = true;
 
-                        // 1. Check Second Division (percentage < 60%)
                         decimal sscPer = reader["SSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["SSC_Percentage"]) : 0;
                         decimal hsscPer = reader["HSSC_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["HSSC_Percentage"]) : 0;
                         decimal bsPer = reader["BS_Percentage"] != DBNull.Value ? Convert.ToDecimal(reader["BS_Percentage"]) : 0;
@@ -224,15 +321,12 @@ namespace WebApplication4
                         if (msPer > 0 && msPer < 60) isEligible = false;
                         if (phdPer > 0 && phdPer < 60) isEligible = false;
 
-                        // 2. Check Experience Score (MUST be > 0 for faculty positions)
                         int expScore = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0;
                         if (expScore == 0) isEligible = false;
 
-                        // 3. Check Research Score (MUST be > 0 for faculty positions)
                         int resScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
                         if (resScore == 0) isEligible = false;
 
-                        // 4. Check Minimum Overall Score (at least 40%)
                         decimal grandTotal = totalAcademicScore + totalExperienceScore + researchScore;
                         if (grandTotal < 40) isEligible = false;
 
@@ -241,6 +335,7 @@ namespace WebApplication4
                             Id = id++,
                             Applicant = new ApplicantInfo
                             {
+                                UserId = reader["UserID"] != DBNull.Value ? Convert.ToInt32(reader["UserID"]) : 0,
                                 FullName = reader["FullName"].ToString(),
                                 Email = reader["Email"].ToString()
                             },
@@ -271,9 +366,7 @@ namespace WebApplication4
                 }
             }
 
-            // ============================================
             // SORT BY SCORE AND ASSIGN RANK
-            // ============================================
             applications = applications.OrderByDescending(x => x.GrandTotalScore).ToList();
             int rank = 1;
             foreach (var app in applications)
@@ -305,6 +398,7 @@ namespace WebApplication4
                         var inc = new IncompleteApplicant
                         {
                             Id = id++,
+                            UserId = reader["UserID"] != DBNull.Value ? Convert.ToInt32(reader["UserID"]) : 0,
                             FullName = reader["FullName"].ToString(),
                             Email = reader["Email"].ToString(),
                             Phone = reader["Phone"] != DBNull.Value ? reader["Phone"].ToString() : "N/A",
@@ -335,25 +429,8 @@ namespace WebApplication4
         }
 
         // ============================================
-        // ROW DATA BOUND - FIXED (DO NOT OVERWRITE COLOR)
+        // BIND METHODS
         // ============================================
-        protected void gvApplications_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                ApplicationRow row = (ApplicationRow)e.Row.DataItem;
-
-                // DO NOT set ForeColor here - let ASPX handle it via inline style
-                // This prevents the color from being overwritten
-
-                // Highlight top 3 rows
-                if (row.Rank <= 3)
-                {
-                    e.Row.BackColor = System.Drawing.Color.FromArgb(255, 255, 240);
-                }
-            }
-        }
-
         private void BindAll()
         {
             BindStats();
@@ -402,16 +479,13 @@ namespace WebApplication4
             rptTabs.DataBind();
         }
 
-        // ============================================
-        // BIND APPLICATIONS (FIXED - Reassign Rank)
-        // ============================================
         private void BindApplications()
         {
             if (applications == null || applications.Count == 0)
             {
                 pnlApplicationsEmpty.Visible = true;
-                gvApplications.DataSource = null;
-                gvApplications.DataBind();
+                rptApplicantCards.DataSource = null;
+                rptApplicantCards.DataBind();
                 return;
             }
 
@@ -444,9 +518,7 @@ namespace WebApplication4
 
             var result = list.ToList();
 
-            // ============================================
-            // REASSIGN RANK AFTER FILTERING (1, 2, 3, 4, 5...)
-            // ============================================
+            // REASSIGN RANK AFTER FILTERING
             int rank = 1;
             foreach (var app in result)
             {
@@ -454,8 +526,8 @@ namespace WebApplication4
             }
 
             pnlApplicationsEmpty.Visible = result.Count == 0;
-            gvApplications.DataSource = result;
-            gvApplications.DataBind();
+            rptApplicantCards.DataSource = result;
+            rptApplicantCards.DataBind();
         }
 
         private void BindIncomplete()
@@ -463,8 +535,8 @@ namespace WebApplication4
             if (incomplete == null || incomplete.Count == 0)
             {
                 pnlIncompleteEmpty.Visible = true;
-                gvIncomplete.DataSource = null;
-                gvIncomplete.DataBind();
+                rptIncompleteCards.DataSource = null;
+                rptIncompleteCards.DataBind();
                 return;
             }
 
@@ -487,8 +559,8 @@ namespace WebApplication4
             var result = list.ToList();
 
             pnlIncompleteEmpty.Visible = result.Count == 0;
-            gvIncomplete.DataSource = result;
-            gvIncomplete.DataBind();
+            rptIncompleteCards.DataSource = result;
+            rptIncompleteCards.DataBind();
         }
 
         // ============================================
@@ -557,37 +629,24 @@ namespace WebApplication4
             BindIncomplete();
         }
 
-        protected string FormatDate(object value)
+        protected void rptApplicantCards_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (value == null || value == DBNull.Value) return "";
-            if (DateTime.TryParse(value.ToString(), out DateTime date))
-                return date.ToString("dd MMM yyyy");
-            return "";
+            // This is used for any additional data binding logic
         }
 
-        protected string StatusBadgeClass(string status)
-        {
-            if (string.IsNullOrEmpty(status)) return "bg-secondary";
-            switch (status.ToLower())
-            {
-                case "pending": return "bg-warning text-dark";
-                case "shortlisted": return "bg-primary";
-                case "rejected": return "bg-danger";
-                case "hired": return "bg-success";
-                default: return "bg-secondary";
-            }
-        }
-
+        // ============================================
+        // HELPER METHODS FOR ASPX
+        // ============================================
         protected string GetStatIcon(string key)
         {
             switch (key.ToLower())
             {
+                case "all":
                 case "submitted": return "bi bi-people-fill icon-submitted";
                 case "pending": return "bi bi-clock-history icon-pending";
                 case "shortlisted": return "bi bi-person-check-fill icon-shortlisted";
                 case "rejected": return "bi bi-x-circle-fill icon-rejected";
                 case "hired": return "bi bi-briefcase-fill icon-hired";
-                case "notsubmitted":
                 case "incomplete": return "bi bi-file-earmark-text-fill icon-incomplete";
                 default: return "bi bi-bar-chart-fill";
             }
