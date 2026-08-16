@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Candidate Pipeline</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -501,46 +503,506 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 60px;
+        /* ============================================
+           MOBILE HEADER
+        ============================================ */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #ffffff;
+            z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            width: 100%;
+        }
+        .mobile-header .mobile-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 0.3px;
+            text-align: right;
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: none !important;
+            border: none;
+            color: #1a3a7a;
+            font-size: 28px;
+            padding: 0;
+            cursor: pointer;
+            z-index: 1002;
+            transition: all 0.3s ease;
+            box-shadow: none !important;
+            width: 40px;
+            height: 40px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .hamburger-btn:hover {
+            transform: scale(1.05);
+        }
+        .hamburger-btn:active {
+            transform: scale(0.95);
+        }
+        .hamburger-btn i {
+            font-size: 28px;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Mobile Back Button */
+        .mobile-back-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #1a3a7a;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 0 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .mobile-back-btn i {
+            font-size: 20px;
+        }
+        .mobile-back-btn:hover {
+            color: #0f1f4a;
+        }
+        .mobile-back-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE (768px and below)
+        ============================================ */
+        @media only screen and (max-width: 768px) {
+            /* Force mobile view */
+            body {
+                overflow: hidden;
+                position: relative;
             }
-            .sidebar .nav-link span {
+
+            /* Mobile header */
+            .mobile-header {
+                display: flex;
+            }
+
+            /* Hamburger button - positioned within header */
+            .hamburger-btn {
+                display: flex !important;
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                z-index: 1002;
+                width: 40px;
+                height: 40px;
+                background: none !important;
+                border: none;
+                color: #1a3a7a;
+                font-size: 28px;
+                padding: 0;
+                cursor: pointer;
+                box-shadow: none !important;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            /* Hide desktop sidebar on mobile */
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                transition: transform 0.35s ease;
+                z-index: 1000;
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            /* Override collapsed state on mobile */
+            .sidebar.collapsed {
+                width: 280px;
+            }
+            .sidebar.collapsed .nav-link span {
+                display: inline;
+            }
+            .sidebar.collapsed .nav-link i {
+                width: 42px;
+                min-width: 42px;
+            }
+
+            /* Hide desktop toggle button on mobile */
+            .sidebar-header .toggle-btn {
                 display: none;
             }
-            .sidebar .nav-link i {
-                width: 100%;
-                min-width: unset;
-            }
-            .sidebar.collapsed {
-                width: 0;
-                padding: 0;
-                overflow: hidden;
-            }
+
+            /* Content takes full width */
             .content {
-                margin-left: 60px;
-                width: calc(100% - 60px);
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding-top: 56px;
+                height: 100vh;
             }
             .content.expanded {
-                margin-left: 0;
-                width: 100%;
+                margin-left: 0 !important;
+                width: 100% !important;
             }
-            .left-panel {
-                width: 100%;
-                min-width: unset;
-                border-right: none;
-                border-bottom: 1px solid #e2e8f0;
-                height: 45vh;
-            }
-            .right-panel {
-                height: 55vh;
-                padding: 10px;
-            }
+
+            /* Pipeline container - mobile stack */
             .pipeline-container {
                 flex-direction: column;
+                height: calc(100vh - 56px);
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* LEFT PANEL - Candidate List (shown by default) */
+            .left-panel {
+                width: 100% !important;
+                min-width: unset !important;
+                border-right: none !important;
+                border-bottom: none !important;
+                height: 100% !important;
+                padding: 10px 14px 20px 14px;
+                display: flex !important;
+                flex-direction: column;
+                background: #f5f7fb;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+            .left-panel.mobile-hidden {
+                display: none !important;
+            }
+            .left-panel .pipeline-title {
+                display: none;
+            }
+            .left-panel .search-box {
+                font-size: 14px;
+                padding: 10px 14px 10px 40px;
+                background-size: 16px;
+                border-radius: 10px;
+                margin-top: 0;
+                flex-shrink: 0;
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+            }
+            .left-panel .tabs {
+                margin: 10px 0 12px 0;
+                gap: 6px;
+                flex-shrink: 0;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #eef2f6;
+            }
+            .left-panel .tab-btn {
+                font-size: 11px;
+                padding: 5px 14px;
+                border-radius: 20px;
+            }
+            .left-panel .candidate-list-container {
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 120px;
+                padding-top: 4px;
+                min-height: 0;
+                margin-bottom: 0;
+            }
+
+            /* Candidate cards - bigger tap targets */
+            .candidate-card {
+                padding: 14px 16px;
+                margin-bottom: 10px;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                background: #ffffff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+                min-height: 64px;
+            }
+            .candidate-card:active {
+                transform: scale(0.98);
+                background: #f8faff;
+            }
+            .candidate-card .avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .candidate-card .candidate-name {
+                font-size: 15px;
+                font-weight: 600;
+            }
+            .candidate-card .candidate-email {
+                font-size: 12px;
+                margin-top: 1px;
+            }
+            .candidate-card .score-badge {
+                font-size: 12px;
+                padding: 2px 12px;
+            }
+            .candidate-card .status-badge {
+                font-size: 9px;
+                padding: 2px 12px;
+            }
+
+            /* RIGHT PANEL - Candidate Details (hidden by default on mobile) */
+            .right-panel {
+                display: none !important;
+                height: 100% !important;
+                padding: 10px 12px 20px 12px;
+                background: #f5f7fb;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 2;
+                width: 100% !important;
+            }
+            .right-panel.mobile-show {
+                display: block !important;
+            }
+
+            .detail-card {
+                padding: 16px 16px 60px 16px;
+                border-radius: 12px;
+                margin-bottom: 10px;
+            }
+
+            /* Back button on mobile - always visible in details view */
+            .mobile-back-btn {
+                display: flex !important;
+                flex-shrink: 0;
+            }
+
+            /* Candidate header mobile */
+            .candidate-header .name {
+                font-size: 20px;
+                font-weight: 800;
+            }
+            .candidate-header .position {
+                font-size: 14px;
+            }
+            .candidate-header .info-label {
+                font-size: 10px;
+                margin-top: 10px;
+            }
+            .candidate-header .info-value {
+                font-size: 14px;
+            }
+            .candidate-header .total-score {
+                font-size: 26px;
+            }
+            .candidate-header .total-score-label {
+                font-size: 12px;
+            }
+
+            /* Score boxes mobile */
+            .score-box {
+                padding: 12px 8px;
+            }
+            .score-box .score-value {
+                font-size: 1.6rem;
+            }
+            .score-box .score-label {
+                font-size: 10px;
+            }
+            .score-box .score-max {
+                font-size: 11px;
+            }
+
+            /* Section headers mobile */
+            .section-header {
+                font-size: 12px;
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+            }
+
+            /* Items mobile */
+            .edu-item, .exp-item, .pub-item {
+                padding: 10px 14px;
+                margin-bottom: 6px;
+                border-radius: 8px;
+            }
+            .edu-item .edu-degree,
+            .exp-item .exp-title,
+            .pub-item .pub-title {
+                font-size: 14px;
+            }
+            .edu-item .edu-institute,
+            .exp-item .exp-org,
+            .pub-item .pub-journal {
+                font-size: 13px;
+            }
+            .edu-item .edu-year,
+            .exp-item .exp-date,
+            .pub-item .pub-year {
+                font-size: 12px;
+            }
+            .edu-item .edu-percentage {
+                font-size: 11px;
+            }
+
+            .status-dropdown {
+                font-size: 13px;
+                min-width: 120px;
+                padding: 6px 12px;
+            }
+
+            .empty-message {
+                font-size: 12px;
+            }
+
+            /* Hide select placeholder on mobile */
+            .select-placeholder {
+                min-height: 300px;
+            }
+            .select-placeholder i {
+                font-size: 40px;
+            }
+            .select-placeholder h5 {
+                font-size: 16px;
+            }
+            .select-placeholder p {
+                font-size: 13px;
+            }
+            
+            /* Make sure dropdown works on mobile */
+            .status-dropdown {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+
+        /* Small phones (480px and below) */
+        @media only screen and (max-width: 480px) {
+            .mobile-header {
+                height: 48px;
+                padding: 0 12px;
+            }
+            .mobile-header .mobile-title {
+                font-size: 15px;
+            }
+            .hamburger-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 22px;
+            }
+            .hamburger-btn i {
+                font-size: 22px;
+            }
+            .content {
+                padding-top: 48px;
+            }
+            .pipeline-container {
+                height: calc(100vh - 48px);
+            }
+            .left-panel {
+                padding: 8px 10px 16px 10px;
+            }
+            .left-panel .search-box {
+                font-size: 12px;
+                padding: 8px 12px 8px 34px;
+                background-size: 14px;
+            }
+            .left-panel .tab-btn {
+                font-size: 9px;
+                padding: 4px 10px;
+            }
+            .left-panel .candidate-list-container {
+                padding-bottom: 100px;
+            }
+            .candidate-card {
+                padding: 10px 12px;
+                margin-bottom: 8px;
+                min-height: 56px;
+            }
+            .candidate-card .avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+            .candidate-card .candidate-name {
+                font-size: 13px;
+            }
+            .candidate-card .candidate-email {
+                font-size: 11px;
+            }
+            .candidate-card .score-badge {
+                font-size: 10px;
+                padding: 1px 10px;
+            }
+            .candidate-card .status-badge {
+                font-size: 8px;
+                padding: 1px 10px;
+            }
+            .right-panel {
+                padding: 6px 10px 16px 10px;
             }
             .detail-card {
-                padding: 16px;
+                padding: 12px 12px 50px 12px;
+            }
+            .candidate-header .name {
+                font-size: 18px;
+            }
+            .score-box .score-value {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Extra large tap targets for touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .candidate-card {
+                min-height: 64px;
+            }
+            .candidate-card .candidate-name {
+                font-size: 16px;
+            }
+            .tab-btn {
+                padding: 6px 16px !important;
+                font-size: 12px !important;
             }
         }
     </style>
@@ -549,7 +1011,20 @@
     <form id="form1" runat="server">
 
         <!-- ==========================================
-        SIDEBAR - Only Arrow Button (No Text)
+        MOBILE HEADER
+        ========================================== -->
+        <div id="mobileHeader" class="mobile-header">
+            <button type="button" id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <span class="mobile-title">Candidate Pipeline</span>
+        </div>
+
+        <!-- Mobile Overlay -->
+        <div id="mobileOverlay" class="mobile-overlay"></div>
+
+        <!-- ==========================================
+        SIDEBAR
         ========================================== -->
         <div id="sidebar" class="sidebar">
             <div class="sidebar-header">
@@ -594,11 +1069,9 @@
             <div class="pipeline-container">
 
                 <!-- ==========================================
-                LEFT PANEL
+                LEFT PANEL - Candidate List
                 ========================================== -->
-                <div class="left-panel">
-                    <div class="pipeline-title">Candidate Pipeline</div>
-
+                <div id="leftPanel" class="left-panel">
                     <!-- Search -->
                     <asp:TextBox ID="txtSearch" runat="server" CssClass="search-box" 
                         placeholder="Search candidates..." 
@@ -610,7 +1083,7 @@
                         <asp:LinkButton ID="btnAll" runat="server" CssClass="tab-btn active" 
                             OnClick="btnTab_Click" CommandArgument="all">All</asp:LinkButton>
                         <asp:LinkButton ID="btnPending" runat="server" CssClass="tab-btn" 
-                            OnClick="btnTab_Click" CommandArgument="pending">Pending Review</asp:LinkButton>
+                            OnClick="btnTab_Click" CommandArgument="pending">Pending</asp:LinkButton>
                         <asp:LinkButton ID="btnShortlisted" runat="server" CssClass="tab-btn" 
                             OnClick="btnTab_Click" CommandArgument="shortlisted">Shortlisted</asp:LinkButton>
                         <asp:LinkButton ID="btnRejected" runat="server" CssClass="tab-btn" 
@@ -626,7 +1099,7 @@
                         </div>
                     </asp:Panel>
 
-                    <div style="flex: 1; overflow-y: auto;">
+                    <div class="candidate-list-container">
                         <asp:Repeater ID="rptCandidates" runat="server" OnItemDataBound="rptCandidates_ItemDataBound">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnCandidate" runat="server" 
@@ -653,12 +1126,17 @@
                 </div>
 
                 <!-- ==========================================
-                RIGHT PANEL
+                RIGHT PANEL - Candidate Details
                 ========================================== -->
-                <div class="right-panel">
+                <div id="rightPanel" class="right-panel">
                     <!-- Details View -->
                     <asp:Panel ID="pnlDetails" runat="server" Visible="false">
                         <div class="detail-card">
+
+                            <!-- Mobile Back Button -->
+                            <button type="button" id="mobileBackBtn" class="mobile-back-btn">
+                                <i class="bi bi-arrow-left"></i> Back to Candidates
+                            </button>
 
                             <div class="candidate-header">
                                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
@@ -694,21 +1172,21 @@
                             <hr class="my-4" />
 
                             <div class="row g-3 mb-4">
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="score-box score-academic">
                                         <div class="score-label">Academics</div>
                                         <div class="score-value"><asp:Label ID="lblAcademic" runat="server" /></div>
                                         <div class="score-max">/ 50</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="score-box score-experience">
                                         <div class="score-label">Experience</div>
                                         <div class="score-value"><asp:Label ID="lblExperience" runat="server" /></div>
                                         <div class="score-max">/ 25</div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-4">
                                     <div class="score-box score-publications">
                                         <div class="score-label">Publications</div>
                                         <div class="score-value"><asp:Label ID="lblResearch" runat="server" /></div>
@@ -776,7 +1254,7 @@
                         <div class="select-placeholder">
                             <i class="bi bi-search"></i>
                             <h5>Select a Candidate</h5>
-                            <p>Choose a candidate from the left panel to view details</p>
+                            <p>Choose a candidate from the list to view details</p>
                         </div>
                     </asp:Panel>
                 </div>
@@ -788,24 +1266,201 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ============================================
-        // SIDEBAR TOGGLE (Collapse/Expand) - FIXED
+        // MOBILE NAVIGATION
         // ============================================
         document.addEventListener('DOMContentLoaded', function () {
-            var toggleBtn = document.getElementById('toggleSidebarBtn');
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
             var sidebar = document.getElementById('sidebar');
-            var content = document.getElementById('content');
-            var icon = toggleBtn.querySelector('i');
+            var overlay = document.getElementById('mobileOverlay');
+            var leftPanel = document.getElementById('leftPanel');
+            var rightPanel = document.getElementById('rightPanel');
+            var mobileBackBtn = document.getElementById('mobileBackBtn');
+            var isMobile = window.innerWidth <= 768;
 
-            toggleBtn.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-                content.classList.toggle('expanded');
-
-                if (sidebar.classList.contains('collapsed')) {
-                    icon.className = 'bi bi-arrow-right-circle';
+            function updateMobileState() {
+                isMobile = window.innerWidth <= 768;
+                if (!isMobile) {
+                    // Desktop: reset all mobile states
+                    sidebar.classList.remove('mobile-open');
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                    leftPanel.classList.remove('mobile-hidden');
+                    rightPanel.classList.remove('mobile-show');
+                    leftPanel.style.position = '';
+                    leftPanel.style.width = '';
+                    leftPanel.style.zIndex = '';
+                    rightPanel.style.position = '';
+                    rightPanel.style.zIndex = '';
+                    // Reset hamburger icon
+                    hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                    // Show both panels in desktop layout
+                    leftPanel.style.display = '';
+                    rightPanel.style.display = '';
                 } else {
-                    icon.className = 'bi bi-arrow-left-circle';
+                    // Mobile: ensure overlay is hidden by default
+                    overlay.style.display = 'block';
+                    // Show left panel, hide right panel by default
+                    leftPanel.style.display = '';
+                    rightPanel.style.display = '';
+                    leftPanel.classList.remove('mobile-hidden');
+                    rightPanel.classList.remove('mobile-show');
+                    // If details panel is visible on mobile, show it properly
+                    var pnlDetails = document.querySelector('#pnlDetails');
+                    if (pnlDetails && pnlDetails.style.display !== 'none') {
+                        // Details are loaded, show right panel
+                        showDetailsView();
+                    }
+                }
+            }
+
+            function toggleMobileMenu(e) {
+                e.stopPropagation();
+                if (!isMobile) return;
+                sidebar.classList.toggle('mobile-open');
+                overlay.classList.toggle('active');
+                var icon = hamburgerBtn.querySelector('i');
+                if (sidebar.classList.contains('mobile-open')) {
+                    icon.className = 'bi bi-x-lg';
+                } else {
+                    icon.className = 'bi bi-list';
+                }
+            }
+
+            function closeMobileMenu() {
+                if (isMobile) {
+                    sidebar.classList.remove('mobile-open');
+                    overlay.classList.remove('active');
+                    hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                }
+            }
+
+            function showDetailsView() {
+                if (!isMobile) return;
+                leftPanel.classList.add('mobile-hidden');
+                leftPanel.style.display = 'none';
+                rightPanel.classList.add('mobile-show');
+                rightPanel.style.display = 'block';
+                // Close sidebar if open
+                closeMobileMenu();
+                // Scroll to top of details
+                rightPanel.scrollTop = 0;
+            }
+
+            function showListView() {
+                if (!isMobile) return;
+                leftPanel.classList.remove('mobile-hidden');
+                leftPanel.style.display = '';
+                rightPanel.classList.remove('mobile-show');
+                rightPanel.style.display = '';
+                // Scroll to top of list
+                var listContainer = leftPanel.querySelector('.candidate-list-container');
+                if (listContainer) {
+                    listContainer.scrollTop = 0;
+                }
+            }
+
+            // Hamburger click
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+
+            // Overlay click to close
+            overlay.addEventListener('click', closeMobileMenu);
+
+            // Close when a nav link is clicked
+            document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (isMobile) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+
+            // Mobile back button
+            if (mobileBackBtn) {
+                mobileBackBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    showListView();
+                });
+            }
+
+            // ============================================
+            // CANDIDATE CARD CLICK - Show Details on Mobile
+            // ============================================
+            // We need to intercept candidate clicks on mobile
+            document.querySelectorAll('.candidate-card').forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    if (isMobile) {
+                        // Allow the postback to happen, then show details
+                        setTimeout(function () {
+                            // Check if details are now visible
+                            var pnlDetails = document.querySelector('#pnlDetails');
+                            if (pnlDetails && pnlDetails.style.display !== 'none') {
+                                showDetailsView();
+                            }
+                        }, 200);
+                    }
+                });
+            });
+
+            // ============================================
+            // SIDEBAR TOGGLE (Collapse/Expand) - Desktop only
+            // ============================================
+            var toggleBtn = document.getElementById('toggleSidebarBtn');
+            var content = document.getElementById('content');
+            var toggleIcon = toggleBtn.querySelector('i');
+
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                // Only work on desktop
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('collapsed');
+                    content.classList.toggle('expanded');
+
+                    if (sidebar.classList.contains('collapsed')) {
+                        toggleIcon.className = 'bi bi-arrow-right-circle';
+                    } else {
+                        toggleIcon.className = 'bi bi-arrow-left-circle';
+                    }
+                } else {
+                    // On mobile, this should toggle the menu
+                    toggleMobileMenu(e);
                 }
             });
+
+            // ============================================
+            // WINDOW RESIZE HANDLER
+            // ============================================
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    updateMobileState();
+                }, 300);
+            });
+
+            // Initial setup
+            updateMobileState();
+
+            // ============================================
+            // AUTO SCROLL TO SELECTED CANDIDATE ON MOBILE
+            // ============================================
+            var selectedCard = document.querySelector('.candidate-card.active');
+            if (selectedCard && window.innerWidth <= 768) {
+                setTimeout(function () {
+                    selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 400);
+            }
+
+            // ============================================
+            // Check if details should be shown on mobile load
+            // ============================================
+            setTimeout(function () {
+                var pnlDetails = document.querySelector('#pnlDetails');
+                if (pnlDetails && pnlDetails.style.display !== 'none' && window.innerWidth <= 768) {
+                    showDetailsView();
+                }
+            }, 200);
+
+            console.log('Mobile navigation initialized');
         });
     </script>
 </body>
