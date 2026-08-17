@@ -248,22 +248,6 @@
             box-sizing: border-box;
         }
 
-        /* Grade - CENTERED */
-        .education-table input[id$="_grade"] {
-            border: 1px solid #d0d7e6;
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-size: 14px;
-            background: #f8faff;
-            width: 100%;
-            min-width: 70px;
-            max-width: 100px;
-            text-align: center;
-            color: #1a2332;
-            font-weight: 500;
-            box-sizing: border-box;
-        }
-
         .education-table input:focus {
             outline: none;
             border-color: #1a3a7a;
@@ -595,14 +579,6 @@
                 text-align: center;
             }
 
-            .education-table input[id$="_grade"] {
-                font-size: 12px;
-                padding: 4px 6px;
-                min-width: 55px;
-                max-width: 75px;
-                text-align: center;
-            }
-
             .radio-group {
                 gap: 15px;
             }
@@ -693,14 +669,6 @@
                 padding: 3px 4px;
                 min-width: 55px;
                 max-width: 65px;
-                text-align: center;
-            }
-
-            .education-table input[id$="_grade"] {
-                font-size: 11px;
-                padding: 3px 4px;
-                min-width: 45px;
-                max-width: 60px;
                 text-align: center;
             }
 
@@ -845,7 +813,6 @@
                                         <th style="min-width:150px;">Institute</th>
                                         <th style="min-width:65px;">Year</th>
                                         <th style="min-width:85px;">Result (%)</th>
-                                        <th style="min-width:70px;">Grade</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -854,32 +821,28 @@
                                         <td><input type="text" id="ssc_subject" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="text" id="ssc_board" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="number" id="ssc_year" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="number" id="ssc_result" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="text" id="ssc_grade" runat="server" class="form-control" readonly="readonly" /></td>
+                                        <td><input type="text" id="ssc_result" runat="server" class="form-control" readonly="readonly" /></td>
                                     </tr>
                                     <tr>
                                         <td>HSSC/Inter*</td>
                                         <td><input type="text" id="hssc_subject" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="text" id="hssc_board" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="number" id="hssc_year" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="number" id="hssc_result" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="text" id="hssc_grade" runat="server" class="form-control" readonly="readonly" /></td>
+                                        <td><input type="text" id="hssc_result" runat="server" class="form-control" readonly="readonly" /></td>
                                     </tr>
                                     <tr>
                                         <td>BS Degree*</td>
                                         <td><input type="text" id="bs_subject" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="text" id="bs_board" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="number" id="bs_year" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="number" id="bs_result" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="text" id="bs_grade" runat="server" class="form-control" readonly="readonly" /></td>
+                                        <td><input type="text" id="bs_result" runat="server" class="form-control" readonly="readonly" /></td>
                                     </tr>
                                     <tr>
                                         <td>MS/MPhil</td>
                                         <td><input type="text" id="ms_subject" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="text" id="ms_board" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="number" id="ms_year" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="number" id="ms_result" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="text" id="ms_grade" runat="server" class="form-control" readonly="readonly" /></td>
+                                        <td><input type="text" id="ms_result" runat="server" class="form-control" readonly="readonly" /></td>
                                     </tr>
                                     <tr>
                                         <td>PhD</td>
@@ -887,7 +850,6 @@
                                         <td><input type="text" id="phd_board" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="number" id="phd_year" runat="server" class="form-control" readonly="readonly" /></td>
                                         <td><input type="text" id="phd_result" runat="server" class="form-control" readonly="readonly" /></td>
-                                        <td><input type="text" id="phd_grade" runat="server" class="form-control" readonly="readonly" /></td>
                                     </tr>
                                 </tbody>
                             </table>

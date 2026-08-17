@@ -129,16 +129,7 @@ namespace WebApplication4
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl ssc_result;
-
-        /// <summary>
-        /// ssc_grade control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText ssc_grade;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText ssc_result;
 
         /// <summary>
         /// hssc_subject control.
@@ -174,16 +165,7 @@ namespace WebApplication4
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl hssc_result;
-
-        /// <summary>
-        /// hssc_grade control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText hssc_grade;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText hssc_result;
 
         /// <summary>
         /// bs_subject control.
@@ -219,16 +201,7 @@ namespace WebApplication4
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl bs_result;
-
-        /// <summary>
-        /// bs_grade control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText bs_grade;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText bs_result;
 
         /// <summary>
         /// ms_subject control.
@@ -264,16 +237,7 @@ namespace WebApplication4
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl ms_result;
-
-        /// <summary>
-        /// ms_grade control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText ms_grade;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText ms_result;
 
         /// <summary>
         /// phd_subject control.
@@ -310,15 +274,6 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText phd_result;
-
-        /// <summary>
-        /// phd_grade control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText phd_grade;
 
         /// <summary>
         /// txtHIndex control.

@@ -177,28 +177,24 @@ namespace WebApplication4
                         ssc_subject.Value = reader["SSC_Specialization"].ToString();
                         ssc_board.Value = reader["SSC_University"].ToString();
                         ssc_year.Value = reader["SSC_Year"].ToString();
-                        ssc_result.Value = reader["SSC_Percentage"].ToString();
-                        ssc_grade.Value = reader["SSC_Percentage"].ToString();
+                        ssc_result.Value = FormatPercentage(reader["SSC_Percentage"]);
 
                         hssc_subject.Value = reader["HSSC_Specialization"].ToString();
                         hssc_board.Value = reader["HSSC_University"].ToString();
                         hssc_year.Value = reader["HSSC_Year"].ToString();
-                        hssc_result.Value = reader["HSSC_Percentage"].ToString();
-                        hssc_grade.Value = reader["HSSC_Percentage"].ToString();
+                        hssc_result.Value = FormatPercentage(reader["HSSC_Percentage"]);
 
                         bs_subject.Value = reader["BS_Specialization"].ToString();
                         bs_board.Value = reader["BS_University"].ToString();
                         bs_year.Value = reader["BS_Year"].ToString();
-                        bs_result.Value = reader["BS_Percentage"].ToString();
-                        bs_grade.Value = reader["BS_Percentage"].ToString();
+                        bs_result.Value = FormatPercentage(reader["BS_Percentage"]);
 
                         if (reader["MS_Specialization"] != DBNull.Value)
                         {
                             ms_subject.Value = reader["MS_Specialization"].ToString();
                             ms_board.Value = reader["MS_University"].ToString();
                             ms_year.Value = reader["MS_Year"].ToString();
-                            ms_result.Value = reader["MS_Percentage"].ToString();
-                            ms_grade.Value = reader["MS_Percentage"].ToString();
+                            ms_result.Value = FormatPercentage(reader["MS_Percentage"]);
                         }
 
                         if (reader["PhD_Specialization"] != DBNull.Value)
@@ -206,8 +202,7 @@ namespace WebApplication4
                             phd_subject.Value = reader["PhD_Specialization"].ToString();
                             phd_board.Value = reader["PhD_University"].ToString();
                             phd_year.Value = reader["PhD_Year"].ToString();
-                            phd_result.Value = reader["PhD_Percentage"].ToString();
-                            phd_grade.Value = reader["PhD_Percentage"].ToString();
+                            phd_result.Value = FormatPercentage(reader["PhD_Percentage"]);
                         }
                     }
                     else
@@ -215,6 +210,25 @@ namespace WebApplication4
                         ssc_subject.Value = "No education found";
                     }
                 }
+            }
+        }
+
+        // ============================================
+        // FORMAT PERCENTAGE - Remove decimal places
+        // ============================================
+        private string FormatPercentage(object value)
+        {
+            if (value == null || value == DBNull.Value)
+                return "";
+
+            try
+            {
+                decimal percentage = Convert.ToDecimal(value);
+                return Math.Round(percentage, 0).ToString();
+            }
+            catch
+            {
+                return value.ToString();
             }
         }
 
@@ -384,12 +398,12 @@ namespace WebApplication4
                     cmd.ExecuteNonQuery();
                 }
 
-                lblMessage.Text = "✅ Application submitted successfully!";
+                lblMessage.Text = "Application submitted successfully!";
                 lblMessage.CssClass = "text-success";
 
                 // Disable submit button
                 btnSubmit.Enabled = false;
-                btnSubmit.Text = "✅ Already Submitted";
+                btnSubmit.Text = "Already Submitted";
                 btnSubmit.CssClass = "submit-btn submitted";
 
                 // Disable checkbox

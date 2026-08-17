@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 
 namespace WebApplication4
 {
@@ -198,6 +199,25 @@ namespace WebApplication4
         {
             string percentage = GetScorePercentage(score);
             return percentage + "%";
+        }
+
+        // ============================================
+        // GET TOTAL SCORE DISPLAY - No decimal places
+        // ============================================
+        public string GetTotalScoreDisplay(object score)
+        {
+            if (score == null)
+                return "0";
+
+            try
+            {
+                decimal value = Convert.ToDecimal(score);
+                return Math.Round(value, 0).ToString();
+            }
+            catch
+            {
+                return "0";
+            }
         }
 
         // ============================================
@@ -631,7 +651,18 @@ namespace WebApplication4
 
         protected void rptApplicantCards_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            // This is used for any additional data binding logic
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                var row = (ApplicationRow)e.Item.DataItem;
+
+                // Set progress bar width
+                var progressFill = (HtmlGenericControl)e.Item.FindControl("progressFill");
+                if (progressFill != null)
+                {
+                    string width = GetProgressWidth(row.GrandTotalScore);
+                    progressFill.Style["width"] = width;
+                }
+            }
         }
 
         // ============================================
