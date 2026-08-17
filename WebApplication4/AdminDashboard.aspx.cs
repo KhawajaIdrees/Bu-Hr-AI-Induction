@@ -142,7 +142,7 @@ namespace WebApplication4
         }
 
         // ============================================
-        // GET PROFILE IMAGE URL
+        // GET PROFILE IMAGE URL - FIXED to show user uploaded images
         // ============================================
         public string GetProfileImageUrl(object userId)
         {
@@ -152,6 +152,27 @@ namespace WebApplication4
             try
             {
                 int id = Convert.ToInt32(userId);
+
+                // Check if there's a PhotoPath in the Personal table
+                string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+                string query = "SELECT PhotoPath FROM Personal WHERE userId = @userId";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@userId", id);
+                    con.Open();
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                    {
+                        // Return the stored PhotoPath
+                        return result.ToString();
+                    }
+                }
+
+                // If no PhotoPath found, check the Images folder with Profile_{id} format
                 string imagePath = $"~/Images/Profile_{id}.jpg";
                 string physicalPath = Server.MapPath(imagePath);
 

@@ -235,7 +235,15 @@
             background: #f0f4ff;
             box-shadow: 0 2px 8px rgba(26, 58, 122, 0.1);
         }
-        .candidate-card .avatar {
+        .candidate-card .avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f8faff;
+            flex-shrink: 0;
+        }
+        .candidate-card .avatar-placeholder {
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -247,6 +255,7 @@
             font-weight: 700;
             font-size: 14px;
             flex-shrink: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
         .candidate-card .candidate-name {
             font-weight: 600;
@@ -301,8 +310,40 @@
         }
 
         /* ============================================
-           CANDIDATE HEADER
+           CANDIDATE HEADER WITH PROFILE IMAGE
         ============================================ */
+        .candidate-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .candidate-header .profile-image-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f8faff;
+            flex-shrink: 0;
+            border: 3px solid #e8ecf1;
+        }
+        .candidate-header .profile-placeholder-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #1a3a7a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 32px;
+            flex-shrink: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            border: 3px solid #e8ecf1;
+        }
+        .candidate-header .candidate-info {
+            flex: 1;
+        }
         .candidate-header .name {
             font-size: 1.5rem;
             font-weight: 800;
@@ -762,7 +803,12 @@
                 transform: scale(0.98);
                 background: #f8faff;
             }
-            .candidate-card .avatar {
+            .candidate-card .avatar-img {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .candidate-card .avatar-placeholder {
                 width: 40px;
                 height: 40px;
                 font-size: 16px;
@@ -817,6 +863,15 @@
             }
 
             /* Candidate header mobile */
+            .candidate-header .profile-image-large {
+                width: 60px;
+                height: 60px;
+            }
+            .candidate-header .profile-placeholder-large {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
             .candidate-header .name {
                 font-size: 20px;
                 font-weight: 800;
@@ -958,7 +1013,12 @@
                 margin-bottom: 8px;
                 min-height: 56px;
             }
-            .candidate-card .avatar {
+            .candidate-card .avatar-img {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+            .candidate-card .avatar-placeholder {
                 width: 34px;
                 height: 34px;
                 font-size: 13px;
@@ -982,6 +1042,15 @@
             }
             .detail-card {
                 padding: 12px 12px 50px 12px;
+            }
+            .candidate-header .profile-image-large {
+                width: 50px;
+                height: 50px;
+            }
+            .candidate-header .profile-placeholder-large {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
             }
             .candidate-header .name {
                 font-size: 18px;
@@ -1095,11 +1164,14 @@
                                     OnClick="btnCandidate_Click"
                                     CommandArgument='<%# Eval("Id") %>'>
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="avatar"><%# Eval("Initials") %></div>
+                                        <asp:Image ID="imgAvatar" runat="server" 
+                                            ImageUrl='<%# GetProfileImageUrl(Eval("Id")) %>'
+                                            CssClass="avatar-img"
+                                            AlternateText="Profile" />
                                         <div class="flex-grow-1" style="min-width:0;">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span class="candidate-name"><%# Eval("FullName") %></span>
-                                                <span class="score-badge"><%# Eval("TotalScore", "{0:F1}") %></span>
+                                                <span class="score-badge"><%# Eval("TotalScore", "{0:F0}") %></span>
                                             </div>
                                             <div class="candidate-email"><%# Eval("Email") %></div>
                                             <div class="mt-1">
@@ -1127,31 +1199,38 @@
                             </button>
 
                             <div class="candidate-header">
-                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                                    <div>
-                                        <div class="name"><asp:Label ID="lblFullName" runat="server" /></div>
-                                        <div class="position">
-                                            <asp:Label ID="lblPosition" runat="server" Text="Lecturer" />
-                                            <span class="permanent">PERMANENT</span>
+                                <!-- Profile Image Large -->
+                                <asp:Image ID="imgProfileLarge" runat="server" 
+                                    CssClass="profile-image-large"
+                                    AlternateText="Profile" />
+                                
+                                <div class="candidate-info">
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                                        <div>
+                                            <div class="name"><asp:Label ID="lblFullName" runat="server" /></div>
+                                            <div class="position">
+                                                <asp:Label ID="lblPosition" runat="server" Text="Lecturer" />
+                                                <span class="permanent">PERMANENT</span>
+                                            </div>
+                                            <div class="info-label">EMAIL ADDRESS</div>
+                                            <div class="info-value"><asp:Label ID="lblEmail" runat="server" /></div>
+                                            <div class="info-label">PHONE</div>
+                                            <div class="info-value"><asp:Label ID="lblPhone" runat="server" Text="Not provided" /></div>
+                                            <div class="info-label">APPLIED ON</div>
+                                            <div class="info-value"><asp:Label ID="lblSubmittedDate" runat="server" /></div>
                                         </div>
-                                        <div class="info-label">EMAIL ADDRESS</div>
-                                        <div class="info-value"><asp:Label ID="lblEmail" runat="server" /></div>
-                                        <div class="info-label">PHONE</div>
-                                        <div class="info-value"><asp:Label ID="lblPhone" runat="server" Text="Not provided" /></div>
-                                        <div class="info-label">APPLIED ON</div>
-                                        <div class="info-value"><asp:Label ID="lblSubmittedDate" runat="server" /></div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="total-score-label">Score Evaluation</div>
-                                        <div class="total-score"><asp:Label ID="lblTotal" runat="server" /> <span style="font-size:16px; font-weight:600; color:#94a3b8;">/ 100 PTS</span></div>
-                                        <div class="mt-2">
-                                            <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-dropdown" 
-                                                AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
-                                                <asp:ListItem Value="Pending">Pending Review</asp:ListItem>
-                                                <asp:ListItem Value="Shortlisted">Shortlisted</asp:ListItem>
-                                                <asp:ListItem Value="Rejected">Rejected</asp:ListItem>
-                                                <asp:ListItem Value="Hired">Hired</asp:ListItem>
-                                            </asp:DropDownList>
+                                        <div class="text-end">
+                                            <div class="total-score-label">Score Evaluation</div>
+                                            <div class="total-score"><asp:Label ID="lblTotal" runat="server" /> <span style="font-size:16px; font-weight:600; color:#94a3b8;">/ 100 PTS</span></div>
+                                            <div class="mt-2">
+                                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-dropdown" 
+                                                    AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
+                                                    <asp:ListItem Value="Pending">Pending Review</asp:ListItem>
+                                                    <asp:ListItem Value="Shortlisted">Shortlisted</asp:ListItem>
+                                                    <asp:ListItem Value="Rejected">Rejected</asp:ListItem>
+                                                    <asp:ListItem Value="Hired">Hired</asp:ListItem>
+                                                </asp:DropDownList>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1190,7 +1269,7 @@
                                     <div class="edu-item">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="edu-degree"><%# Eval("Degree") %></div>
-                                            <span class="edu-percentage"><%# Eval("Percentage", "{0:F1}") %>%</span>
+                                            <span class="edu-percentage"><%# Eval("Percentage", "{0:F0}") %>%</span>
                                         </div>
                                         <div class="edu-institute"><%# Eval("Institute") %></div>
                                         <div class="edu-year"><%# Eval("StatusText") %> <%# Eval("Year") %></div>

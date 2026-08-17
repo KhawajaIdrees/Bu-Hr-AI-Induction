@@ -105,6 +105,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Panel pnlDetails;
 
         /// <summary>
+        /// imgProfileLarge control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgProfileLarge;
+
+        /// <summary>
         /// lblFullName control.
         /// </summary>
         /// <remarks>

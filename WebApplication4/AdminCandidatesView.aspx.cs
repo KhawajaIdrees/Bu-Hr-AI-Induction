@@ -86,6 +86,58 @@ namespace WebApplication4
             }
         }
 
+        // ============================================
+        // GET PROFILE IMAGE URL - Shows user uploaded images
+        // ============================================
+        public string GetProfileImageUrl(object userId)
+        {
+            if (userId == null)
+                return "~/Images/default-avatar.png";
+
+            try
+            {
+                int id = Convert.ToInt32(userId);
+
+                // Check if there's a PhotoPath in the Personal table
+                string connectionString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+                string query = "SELECT PhotoPath FROM Personal WHERE userId = @userId";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@userId", id);
+                    con.Open();
+
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                    {
+                        // Return the stored PhotoPath from the database
+                        return result.ToString();
+                    }
+                }
+
+                // If no PhotoPath found, check the Images folder with Profile_{id} format
+                string imagePath = $"~/Images/Profile_{id}.jpg";
+                string physicalPath = Server.MapPath(imagePath);
+
+                if (System.IO.File.Exists(physicalPath))
+                    return imagePath;
+
+                imagePath = $"~/Images/Profile_{id}.png";
+                physicalPath = Server.MapPath(imagePath);
+
+                if (System.IO.File.Exists(physicalPath))
+                    return imagePath;
+
+                return "~/Images/default-avatar.png";
+            }
+            catch
+            {
+                return "~/Images/default-avatar.png";
+            }
+        }
+
         private List<CandidateRow> GetAllCandidates()
         {
             var candidates = new List<CandidateRow>();
@@ -262,16 +314,19 @@ namespace WebApplication4
             pnlDetails.Visible = true;
             pnlSelect.Visible = false;
 
+            // Set the profile image for the large view
+            imgProfileLarge.ImageUrl = GetProfileImageUrl(candidateId);
+
             // Candidate Header
             lblFullName.Text = candidate.FullName;
             lblPosition.Text = candidate.AppliedPosition;
             lblEmail.Text = candidate.Email;
             lblPhone.Text = candidate.Phone;
             lblSubmittedDate.Text = candidate.SubmittedDate.ToString("dd MMM yyyy");
-            lblTotal.Text = candidate.TotalScore.ToString("F2");
+            lblTotal.Text = candidate.TotalScore.ToString("F0");
 
             // Scores
-            lblAcademic.Text = candidate.AcademicScore.ToString("F2");
+            lblAcademic.Text = candidate.AcademicScore.ToString("F0");
             lblExperience.Text = candidate.ExperienceScore.ToString();
             lblResearch.Text = candidate.ResearchScore.ToString();
 
