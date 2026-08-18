@@ -17,6 +17,20 @@ namespace WebApplication4
         private int selectedCandidateId = 0;
         private int currentPageSize = 0; // 0 means show all
 
+        // Public property to expose selectedCandidateId to ASPX
+        public int SelectedCandidateId
+        {
+            get { return selectedCandidateId; }
+            set { selectedCandidateId = value; }
+        }
+
+        // Public property to expose currentTab to ASPX
+        public string CurrentTab
+        {
+            get { return currentTab; }
+            set { currentTab = value; }
+        }
+
         public class CandidateRow
         {
             public int Id { get; set; }

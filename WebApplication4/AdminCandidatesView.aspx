@@ -274,6 +274,11 @@
             object-fit: cover;
             background: #f8faff;
             flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .candidate-card .avatar-img:hover {
+            transform: scale(1.05);
         }
         .candidate-card .avatar-placeholder {
             width: 36px;
@@ -357,6 +362,12 @@
             background: #f8faff;
             flex-shrink: 0;
             border: 3px solid #e8ecf1;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .candidate-header .profile-image-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .candidate-header .profile-placeholder-large {
             width: 80px;
@@ -574,6 +585,156 @@
         ::-webkit-scrollbar-track { background: #f1f4f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* ============================================
+           PHOTO VIEWER MODAL
+        ============================================ */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+        .photo-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .photo-modal .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: zoomIn 0.3s ease;
+        }
+        .photo-modal .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            object-fit: contain;
+            background: #1a1a2e;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .photo-modal .modal-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+            z-index: 10000;
+            background: rgba(255,255,255,0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            line-height: 1;
+        }
+        .photo-modal .modal-close:hover {
+            transform: rotate(90deg);
+            color: #ff6b6b;
+            background: rgba(255,255,255,0.2);
+        }
+        .photo-modal .modal-close i {
+            font-size: 28px;
+        }
+        .photo-modal .modal-caption {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 24px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            max-width: 80%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .photo-modal .modal-caption i {
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile responsive for photo modal */
+        @media only screen and (max-width: 768px) {
+            .photo-modal .modal-close {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .photo-modal .modal-close i {
+                font-size: 20px;
+            }
+            .photo-modal .modal-content img {
+                max-height: 70vh;
+                border-radius: 8px;
+            }
+            .photo-modal .modal-caption {
+                bottom: 20px;
+                font-size: 13px;
+                padding: 8px 16px;
+                max-width: 90%;
+                white-space: normal;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .photo-modal .modal-close {
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            .photo-modal .modal-close i {
+                font-size: 16px;
+            }
+            .photo-modal .modal-content img {
+                max-height: 60vh;
+                border-radius: 6px;
+            }
+            .photo-modal .modal-caption {
+                bottom: 15px;
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+        }
 
         /* ============================================
            MOBILE HEADER
@@ -1114,6 +1275,21 @@
 <body>
     <form id="form1" runat="server">
 
+        <!-- ==========================================
+        PHOTO VIEWER MODAL
+        ========================================== -->
+        <div id="photoModal" class="photo-modal" onclick="closePhotoModal(event)">
+            <button type="button" class="modal-close" onclick="closePhotoModal(event)">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <div class="modal-content" onclick="event.stopPropagation();">
+                <img id="modalPhotoImage" src="#" alt="Profile Photo" />
+            </div>
+            <div class="modal-caption" id="modalPhotoCaption">
+                <i class="bi bi-person-circle"></i> <span id="modalPhotoName">Candidate</span>
+            </div>
+        </div>
+
         <!-- MOBILE HEADER -->
         <div id="mobileHeader" class="mobile-header">
             <button type="button" id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu">
@@ -1206,7 +1382,7 @@
                                     <div class="d-flex align-items-center gap-3">
                                         <asp:Image ID="imgAvatar" runat="server" 
                                             ImageUrl='<%# GetProfileImageUrl(Eval("Id")) %>'
-                                            CssClass="avatar-img"
+                                            CssClass="avatar-img photo-trigger"
                                             AlternateText="Profile" />
                                         <div class="flex-grow-1" style="min-width:0;">
                                             <div class="d-flex justify-content-between align-items-center">
@@ -1237,9 +1413,9 @@
                             </button>
 
                             <div class="candidate-header">
-                                <!-- Profile Image Large -->
+                                <!-- Profile Image Large - Clickable to open modal -->
                                 <asp:Image ID="imgProfileLarge" runat="server" 
-                                    CssClass="profile-image-large"
+                                    CssClass="profile-image-large photo-trigger"
                                     AlternateText="Profile" />
                                 
                                 <div class="candidate-info">
@@ -1370,7 +1546,87 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============================================
+        // PHOTO VIEWER MODAL
+        // ============================================
+        var photoModal = document.getElementById('photoModal');
+        var modalPhotoImage = document.getElementById('modalPhotoImage');
+        var modalPhotoName = document.getElementById('modalPhotoName');
+
+        function openPhotoModal(element) {
+            // Get the image source
+            var imgSrc = element.src;
+
+            // If the image is the default avatar, don't open the modal
+            if (imgSrc.includes('default-avatar.png')) {
+                return;
+            }
+
+            modalPhotoImage.src = imgSrc;
+
+            // Get candidate name from the page
+            var nameLabel = document.getElementById('lblFullName');
+            if (nameLabel && nameLabel.textContent) {
+                modalPhotoName.textContent = nameLabel.textContent;
+            } else {
+                // Try to get from the avatar's parent card
+                var card = element.closest('.candidate-card');
+                if (card) {
+                    var nameSpan = card.querySelector('.candidate-name');
+                    if (nameSpan) {
+                        modalPhotoName.textContent = nameSpan.textContent;
+                    }
+                }
+            }
+
+            photoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePhotoModal(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            photoModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && photoModal.classList.contains('active')) {
+                closePhotoModal(e);
+            }
+        });
+
+        // ============================================
+        // ATTACH CLICK EVENTS TO ALL CANDIDATE IMAGES
+        // ============================================
         document.addEventListener('DOMContentLoaded', function () {
+            // For all images with class 'photo-trigger'
+            document.querySelectorAll('.photo-trigger').forEach(function (img) {
+                img.addEventListener('click', function (e) {
+                    // Stop the click from bubbling up to parent elements
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    if (this.src && !this.src.includes('default-avatar.png')) {
+                        openPhotoModal(this);
+                    }
+                });
+            });
+
+            // If user clicks on the modal background, close it
+            photoModal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closePhotoModal(e);
+                }
+            });
+        });
+
+        // ============================================
+        // MOBILE NAVIGATION
+        // ============================================
+        (function () {
             var hamburgerBtn = document.getElementById('hamburgerBtn');
             var sidebar = document.getElementById('sidebar');
             var overlay = document.getElementById('mobileOverlay');
@@ -1392,7 +1648,9 @@
                     leftPanel.style.zIndex = '';
                     rightPanel.style.position = '';
                     rightPanel.style.zIndex = '';
-                    hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                    if (hamburgerBtn) {
+                        hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                    }
                     leftPanel.style.display = '';
                     rightPanel.style.display = '';
                 } else {
@@ -1425,7 +1683,9 @@
                 if (isMobile) {
                     sidebar.classList.remove('mobile-open');
                     overlay.classList.remove('active');
-                    hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                    if (hamburgerBtn) {
+                        hamburgerBtn.querySelector('i').className = 'bi bi-list';
+                    }
                 }
             }
 
@@ -1451,8 +1711,13 @@
                 }
             }
 
-            hamburgerBtn.addEventListener('click', toggleMobileMenu);
-            overlay.addEventListener('click', closeMobileMenu);
+            if (hamburgerBtn) {
+                hamburgerBtn.addEventListener('click', toggleMobileMenu);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeMobileMenu);
+            }
 
             document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
                 link.addEventListener('click', function () {
@@ -1471,6 +1736,10 @@
 
             document.querySelectorAll('.candidate-card').forEach(function (card) {
                 card.addEventListener('click', function (e) {
+                    // Check if the click was on the avatar image
+                    if (e.target.closest('.photo-trigger')) {
+                        return; // Don't navigate to details if clicking on avatar
+                    }
                     if (isMobile) {
                         setTimeout(function () {
                             var pnlDetails = document.querySelector('#pnlDetails');
@@ -1484,23 +1753,23 @@
 
             var toggleBtn = document.getElementById('toggleSidebarBtn');
             var content = document.getElementById('content');
-            var toggleIcon = toggleBtn.querySelector('i');
-
-            toggleBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                if (window.innerWidth > 768) {
-                    sidebar.classList.toggle('collapsed');
-                    content.classList.toggle('expanded');
-
-                    if (sidebar.classList.contains('collapsed')) {
-                        toggleIcon.className = 'bi bi-arrow-right-circle';
+            if (toggleBtn) {
+                var toggleIcon = toggleBtn.querySelector('i');
+                toggleBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (window.innerWidth > 768) {
+                        sidebar.classList.toggle('collapsed');
+                        content.classList.toggle('expanded');
+                        if (sidebar.classList.contains('collapsed')) {
+                            toggleIcon.className = 'bi bi-arrow-right-circle';
+                        } else {
+                            toggleIcon.className = 'bi bi-arrow-left-circle';
+                        }
                     } else {
-                        toggleIcon.className = 'bi bi-arrow-left-circle';
+                        toggleMobileMenu(e);
                     }
-                } else {
-                    toggleMobileMenu(e);
-                }
-            });
+                });
+            }
 
             var resizeTimer;
             window.addEventListener('resize', function () {
@@ -1525,7 +1794,7 @@
                     showDetailsView();
                 }
             }, 200);
-        });
+        })();
     </script>
 </body>
 </html>
