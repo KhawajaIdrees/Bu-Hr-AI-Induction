@@ -1161,6 +1161,23 @@
             }
         }
 
+        /* ============================================
+           TOTAL-SCORE-LABEL PADDING FIX
+        ============================================ */
+        /* For screens 361px to 768px - use 0 102px padding */
+        @media only screen and (min-width: 361px) and (max-width: 768px) {
+            .total-score-label {
+                padding: 0 102px !important;
+            }
+        }
+
+        /* For screens 320px to 360px - use 0 69px padding */
+        @media only screen and (min-width: 320px) and (max-width: 360px) {
+            .total-score-label {
+                padding: 0 69px !important;
+            }
+        }
+
         @media only screen and (max-width: 480px) {
             .mobile-header {
                 height: 48px;
