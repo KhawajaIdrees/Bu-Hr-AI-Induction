@@ -145,28 +145,64 @@
             font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        .create-job-btn {
-            padding: 8px 16px;
-            font-size: 15px;
-            white-space: nowrap;
+        /* ===========================
+                JOB BUTTONS CONTAINER - Next to Dashboard Title
+        =========================== */
+        .dashboard-header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        /* ===========================
-                JOB BUTTONS CONTAINER
-        =========================== */
+        .dashboard-header-wrapper .left-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-header-wrapper .left-section h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #0f172a;
+        }
+
+        .dashboard-header-wrapper .left-section p {
+            margin: 2px 0 0 0;
+            font-size: 14px;
+            color: #6c757d;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .dashboard-header-wrapper .right-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
         .job-buttons-container {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .job-buttons-container .btn {
             min-width: 180px;
             padding: 10px 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             border-radius: 10px;
             transition: all 0.3s ease;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
         }
 
         .job-buttons-container .btn-teaching {
@@ -1208,6 +1244,17 @@
                 font-size: 15px;
             }
 
+            /* Job buttons tablet */
+            .job-buttons-container .btn {
+                min-width: 160px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .dashboard-header-wrapper .left-section h1 {
+                font-size: 24px;
+            }
+
         }
 
         /* ===========================
@@ -1334,56 +1381,36 @@
                 min-width: auto;
 
             }
-            .dashboard-header {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                gap: 10px;
+
+            /* Dashboard header wrapper - stack on mobile */
+            .dashboard-header-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 15px;
             }
 
-            .dashboard-header h2 {
-                font-size: 26px;
-                margin: 0;
-                flex: 1;
-            }
-
-            .dashboard-header .btn {
-                width: auto !important;
-                min-width: auto !important;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 6px 12px;
-                font-size: 13px;
-                border-radius: 8px;
-                flex-shrink: 0;
-            }
-
-            .dashboard-header .btn i {
-                font-size: 13px;
-                margin-right: 4px;
-            }
-
-            .dashboard-title {
+            .dashboard-header-wrapper .left-section h1 {
                 font-size: 22px;
             }
 
-            .create-job-btn {
-                padding: 5px 10px !important;
-                font-size: 12px !important;
-                line-height: 1.2;
+            .dashboard-header-wrapper .right-section {
+                width: 100%;
             }
 
-            .create-job-btn i {
-                font-size: 12px;
-                margin-right: 3px !important;
+            .job-buttons-container {
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
             }
 
             .job-buttons-container .btn {
-                min-width: 140px !important;
-                padding: 8px 14px !important;
-                font-size: 12px !important;
+                min-width: 100% !important;
+                width: 100%;
+                padding: 10px 16px !important;
+                font-size: 13px !important;
+                justify-content: center;
+                white-space: normal;
             }
 
             .admin-box .text-end {
@@ -1467,6 +1494,24 @@
             .applicant-table .score-number {
                 font-size: 13px;
                 min-width: 24px;
+            }
+
+        }
+
+        /* Small phones (480px and below) */
+        @media (max-width: 480px) {
+
+            .job-buttons-container .btn {
+                font-size: 12px !important;
+                padding: 8px 12px !important;
+            }
+
+            .dashboard-header-wrapper .left-section h1 {
+                font-size: 18px;
+            }
+
+            .dashboard-header-wrapper .left-section p {
+                font-size: 12px;
             }
 
         }
@@ -1647,14 +1692,43 @@
 
                 <div class="container-fluid pt-2 pb-4 p-0">
 
-                    <!-- Page Title -->
-                    <div class="mb-4">
-                        <h1 class="fw-bold text-slate-900" style="font-size:28px; font-family:'Segoe UI', Arial, sans-serif;">
-                            System Dashboard
-                        </h1>
-                        <p class="text-muted" style="font-family:'Segoe UI', Arial, sans-serif; font-size:14px;">
-                            Overview of all candidate applications across all stages.
-                        </p>
+                    <!-- Dashboard Header with Buttons -->
+                    <div class="dashboard-header-wrapper">
+                        <div class="left-section">
+                            <h1 class="fw-bold text-slate-900" style="font-family:'Segoe UI', Arial, sans-serif;">
+                                System Dashboard
+                            </h1>
+                            <p class="text-muted" style="font-family:'Segoe UI', Arial, sans-serif; font-size:14px;">
+                                Overview of all candidate applications across all stages.
+                            </p>
+                        </div>
+                        <div class="right-section">
+                            <div class="job-buttons-container">
+                                <!-- Teaching Job Post Button -->
+                                <asp:HyperLink
+                                    ID="lnkCreateTeachingJob"
+                                    runat="server"
+                                    NavigateUrl="~/CreateJob.aspx"
+                                    CssClass="btn btn-teaching">
+
+                                    <i class="bi bi-plus-circle"></i>
+                                    Create Teaching Job Post
+
+                                </asp:HyperLink>
+
+                                <!-- Non-Teaching Job Post Button -->
+                                <asp:HyperLink
+                                    ID="lnkCreateNonTeachingJob"
+                                    runat="server"
+                                    NavigateUrl="~/NonCreateJob.aspx"
+                                    CssClass="btn btn-non-teaching">
+
+                                    <i class="bi bi-plus-circle"></i>
+                                    Create Non-Teaching Job Post
+
+                                </asp:HyperLink>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- ========================= -->

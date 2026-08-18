@@ -112,7 +112,6 @@
             text-align: center;
             font-size: 20px;
         }
-        /* Logout and Settings removed from sidebar */
         .logout {
             display: none;
         }
@@ -186,6 +185,7 @@
             gap: 4px;
             margin: 12px 0;
             flex-wrap: wrap;
+            align-items: center;
         }
         .left-panel .tab-btn {
             padding: 4px 14px;
@@ -207,6 +207,38 @@
             background: #1a3a7a;
             color: #ffffff;
             border-color: #1a3a7a;
+        }
+
+        /* ============================================
+           PAGE SIZE DROPDOWN
+        ============================================ */
+        .page-size-selector {
+            display: inline-block;
+            margin-left: auto;
+        }
+
+        .page-size-dropdown {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 30px;
+            min-width: 100px;
+            outline: none;
+        }
+
+        .page-size-dropdown:hover {
+            background: #f1f5f9;
+        }
+
+        .page-size-dropdown:focus {
+            border-color: #1a3a7a;
+            box-shadow: 0 0 0 3px rgba(26, 58, 122, 0.08);
         }
 
         /* ============================================
@@ -648,18 +680,15 @@
            MOBILE RESPONSIVE (768px and below)
         ============================================ */
         @media only screen and (max-width: 768px) {
-            /* Force mobile view */
             body {
                 overflow: hidden;
                 position: relative;
             }
 
-            /* Mobile header */
             .mobile-header {
                 display: flex;
             }
 
-            /* Hamburger button - positioned within header */
             .hamburger-btn {
                 display: flex !important;
                 position: relative;
@@ -681,7 +710,6 @@
                 flex-shrink: 0;
             }
 
-            /* Hide desktop sidebar on mobile */
             .sidebar {
                 transform: translateX(-100%);
                 width: 280px;
@@ -694,7 +722,6 @@
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
-            /* Override collapsed state on mobile */
             .sidebar.collapsed {
                 width: 280px;
             }
@@ -706,12 +733,10 @@
                 min-width: 42px;
             }
 
-            /* Hide desktop toggle button on mobile */
             .sidebar-header .toggle-btn {
                 display: none;
             }
 
-            /* Content takes full width */
             .content {
                 margin-left: 0 !important;
                 width: 100% !important;
@@ -723,7 +748,6 @@
                 width: 100% !important;
             }
 
-            /* Pipeline container - mobile stack */
             .pipeline-container {
                 flex-direction: column;
                 height: calc(100vh - 56px);
@@ -731,7 +755,6 @@
                 position: relative;
             }
 
-            /* LEFT PANEL - Candidate List (shown by default) */
             .left-panel {
                 width: 100% !important;
                 min-width: unset !important;
@@ -773,12 +796,28 @@
                 flex-shrink: 0;
                 padding-bottom: 8px;
                 border-bottom: 1px solid #eef2f6;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
             }
             .left-panel .tab-btn {
                 font-size: 11px;
                 padding: 5px 14px;
                 border-radius: 20px;
             }
+            
+            .page-size-selector {
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+            
+            .page-size-dropdown {
+                font-size: 10px;
+                padding: 3px 10px;
+                min-width: 80px;
+                height: 26px;
+            }
+            
             .left-panel .candidate-list-container {
                 flex: 1;
                 overflow-y: auto;
@@ -789,7 +828,6 @@
                 margin-bottom: 0;
             }
 
-            /* Candidate cards - bigger tap targets */
             .candidate-card {
                 padding: 14px 16px;
                 margin-bottom: 10px;
@@ -830,7 +868,6 @@
                 padding: 2px 12px;
             }
 
-            /* RIGHT PANEL - Candidate Details (hidden by default on mobile) */
             .right-panel {
                 display: none !important;
                 height: 100% !important;
@@ -856,13 +893,11 @@
                 margin-bottom: 10px;
             }
 
-            /* Back button on mobile - always visible in details view */
             .mobile-back-btn {
                 display: flex !important;
                 flex-shrink: 0;
             }
 
-            /* Candidate header mobile */
             .candidate-header .profile-image-large {
                 width: 60px;
                 height: 60px;
@@ -893,7 +928,6 @@
                 font-size: 12px;
             }
 
-            /* Score boxes mobile */
             .score-box {
                 padding: 12px 8px;
             }
@@ -907,14 +941,12 @@
                 font-size: 11px;
             }
 
-            /* Section headers mobile */
             .section-header {
                 font-size: 12px;
                 margin-bottom: 8px;
                 padding-bottom: 6px;
             }
 
-            /* Items mobile */
             .edu-item, .exp-item, .pub-item {
                 padding: 10px 14px;
                 margin-bottom: 6px;
@@ -949,7 +981,6 @@
                 font-size: 12px;
             }
 
-            /* Hide select placeholder on mobile */
             .select-placeholder {
                 min-height: 300px;
             }
@@ -963,14 +994,12 @@
                 font-size: 13px;
             }
             
-            /* Make sure dropdown works on mobile */
             .status-dropdown {
                 width: 100%;
                 max-width: 200px;
             }
         }
 
-        /* Small phones (480px and below) */
         @media only screen and (max-width: 480px) {
             .mobile-header {
                 height: 48px;
@@ -1005,6 +1034,14 @@
                 font-size: 9px;
                 padding: 4px 10px;
             }
+            
+            .page-size-dropdown {
+                font-size: 9px;
+                padding: 2px 8px;
+                min-width: 70px;
+                height: 24px;
+            }
+            
             .left-panel .candidate-list-container {
                 padding-bottom: 100px;
             }
@@ -1060,7 +1097,6 @@
             }
         }
 
-        /* Extra large tap targets for touch devices */
         @media (hover: none) and (pointer: coarse) {
             .candidate-card {
                 min-height: 64px;
@@ -1078,9 +1114,7 @@
 <body>
     <form id="form1" runat="server">
 
-        <!-- ==========================================
-        MOBILE HEADER
-        ========================================== -->
+        <!-- MOBILE HEADER -->
         <div id="mobileHeader" class="mobile-header">
             <button type="button" id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu">
                 <i class="bi bi-list"></i>
@@ -1091,9 +1125,7 @@
         <!-- Mobile Overlay -->
         <div id="mobileOverlay" class="mobile-overlay"></div>
 
-        <!-- ==========================================
-        SIDEBAR
-        ========================================== -->
+        <!-- SIDEBAR -->
         <div id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <button type="button" id="toggleSidebarBtn" class="toggle-btn">
@@ -1115,19 +1147,13 @@
                     </a>
                 </li>
             </ul>
-
-            <!-- Logout and Settings removed from sidebar -->
         </div>
 
-        <!-- ==========================================
-        CONTENT
-        ========================================== -->
+        <!-- CONTENT -->
         <div id="content" class="content">
             <div class="pipeline-container">
 
-                <!-- ==========================================
-                LEFT PANEL - Candidate List
-                ========================================== -->
+                <!-- LEFT PANEL - Candidate List -->
                 <div id="leftPanel" class="left-panel">
                     <!-- Search -->
                     <asp:TextBox ID="txtSearch" runat="server" CssClass="search-box" 
@@ -1147,6 +1173,20 @@
                             OnClick="btnTab_Click" CommandArgument="rejected">Rejected</asp:LinkButton>
                         <asp:LinkButton ID="btnHired" runat="server" CssClass="tab-btn" 
                             OnClick="btnTab_Click" CommandArgument="hired">Hired</asp:LinkButton>
+                        
+                        <!-- Page Size Dropdown -->
+                        <div class="page-size-selector">
+                            <asp:DropDownList ID="ddlPageSize" runat="server" 
+                                CssClass="page-size-dropdown" 
+                                AutoPostBack="true" 
+                                OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                                <asp:ListItem Value="10">Show 10</asp:ListItem>
+                                <asp:ListItem Value="20">Show 20</asp:ListItem>
+                                <asp:ListItem Value="50">Show 50</asp:ListItem>
+                                <asp:ListItem Value="100">Show 100</asp:ListItem>
+                                <asp:ListItem Value="all" Selected="True">Show All</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
                     </div>
 
                     <!-- Candidate List -->
@@ -1185,9 +1225,7 @@
                     </div>
                 </div>
 
-                <!-- ==========================================
-                RIGHT PANEL - Candidate Details
-                ========================================== -->
+                <!-- RIGHT PANEL - Candidate Details -->
                 <div id="rightPanel" class="right-panel">
                     <!-- Details View -->
                     <asp:Panel ID="pnlDetails" runat="server" Visible="false">
@@ -1332,9 +1370,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ============================================
-        // MOBILE NAVIGATION
-        // ============================================
         document.addEventListener('DOMContentLoaded', function () {
             var hamburgerBtn = document.getElementById('hamburgerBtn');
             var sidebar = document.getElementById('sidebar');
@@ -1347,7 +1382,6 @@
             function updateMobileState() {
                 isMobile = window.innerWidth <= 768;
                 if (!isMobile) {
-                    // Desktop: reset all mobile states
                     sidebar.classList.remove('mobile-open');
                     overlay.classList.remove('active');
                     overlay.style.display = 'none';
@@ -1358,23 +1392,17 @@
                     leftPanel.style.zIndex = '';
                     rightPanel.style.position = '';
                     rightPanel.style.zIndex = '';
-                    // Reset hamburger icon
                     hamburgerBtn.querySelector('i').className = 'bi bi-list';
-                    // Show both panels in desktop layout
                     leftPanel.style.display = '';
                     rightPanel.style.display = '';
                 } else {
-                    // Mobile: ensure overlay is hidden by default
                     overlay.style.display = 'block';
-                    // Show left panel, hide right panel by default
                     leftPanel.style.display = '';
                     rightPanel.style.display = '';
                     leftPanel.classList.remove('mobile-hidden');
                     rightPanel.classList.remove('mobile-show');
-                    // If details panel is visible on mobile, show it properly
                     var pnlDetails = document.querySelector('#pnlDetails');
                     if (pnlDetails && pnlDetails.style.display !== 'none') {
-                        // Details are loaded, show right panel
                         showDetailsView();
                     }
                 }
@@ -1407,9 +1435,7 @@
                 leftPanel.style.display = 'none';
                 rightPanel.classList.add('mobile-show');
                 rightPanel.style.display = 'block';
-                // Close sidebar if open
                 closeMobileMenu();
-                // Scroll to top of details
                 rightPanel.scrollTop = 0;
             }
 
@@ -1419,20 +1445,15 @@
                 leftPanel.style.display = '';
                 rightPanel.classList.remove('mobile-show');
                 rightPanel.style.display = '';
-                // Scroll to top of list
                 var listContainer = leftPanel.querySelector('.candidate-list-container');
                 if (listContainer) {
                     listContainer.scrollTop = 0;
                 }
             }
 
-            // Hamburger click
             hamburgerBtn.addEventListener('click', toggleMobileMenu);
-
-            // Overlay click to close
             overlay.addEventListener('click', closeMobileMenu);
 
-            // Close when a nav link is clicked
             document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
                 link.addEventListener('click', function () {
                     if (isMobile) {
@@ -1441,7 +1462,6 @@
                 });
             });
 
-            // Mobile back button
             if (mobileBackBtn) {
                 mobileBackBtn.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1449,16 +1469,10 @@
                 });
             }
 
-            // ============================================
-            // CANDIDATE CARD CLICK - Show Details on Mobile
-            // ============================================
-            // We need to intercept candidate clicks on mobile
             document.querySelectorAll('.candidate-card').forEach(function (card) {
                 card.addEventListener('click', function (e) {
                     if (isMobile) {
-                        // Allow the postback to happen, then show details
                         setTimeout(function () {
-                            // Check if details are now visible
                             var pnlDetails = document.querySelector('#pnlDetails');
                             if (pnlDetails && pnlDetails.style.display !== 'none') {
                                 showDetailsView();
@@ -1468,16 +1482,12 @@
                 });
             });
 
-            // ============================================
-            // SIDEBAR TOGGLE (Collapse/Expand) - Desktop only
-            // ============================================
             var toggleBtn = document.getElementById('toggleSidebarBtn');
             var content = document.getElementById('content');
             var toggleIcon = toggleBtn.querySelector('i');
 
             toggleBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
-                // Only work on desktop
                 if (window.innerWidth > 768) {
                     sidebar.classList.toggle('collapsed');
                     content.classList.toggle('expanded');
@@ -1488,14 +1498,10 @@
                         toggleIcon.className = 'bi bi-arrow-left-circle';
                     }
                 } else {
-                    // On mobile, this should toggle the menu
                     toggleMobileMenu(e);
                 }
             });
 
-            // ============================================
-            // WINDOW RESIZE HANDLER
-            // ============================================
             var resizeTimer;
             window.addEventListener('resize', function () {
                 clearTimeout(resizeTimer);
@@ -1504,12 +1510,8 @@
                 }, 300);
             });
 
-            // Initial setup
             updateMobileState();
 
-            // ============================================
-            // AUTO SCROLL TO SELECTED CANDIDATE ON MOBILE
-            // ============================================
             var selectedCard = document.querySelector('.candidate-card.active');
             if (selectedCard && window.innerWidth <= 768) {
                 setTimeout(function () {
@@ -1517,17 +1519,12 @@
                 }, 400);
             }
 
-            // ============================================
-            // Check if details should be shown on mobile load
-            // ============================================
             setTimeout(function () {
                 var pnlDetails = document.querySelector('#pnlDetails');
                 if (pnlDetails && pnlDetails.style.display !== 'none' && window.innerWidth <= 768) {
                     showDetailsView();
                 }
             }, 200);
-
-            console.log('Mobile navigation initialized');
         });
     </script>
 </body>
