@@ -77,7 +77,15 @@ namespace WebApplication4
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Check if user is logged in
             if (Session["UserID"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            // Check if user is Admin
+            if (Session["UserRole"] == null || Session["UserRole"].ToString() != "Admin")
             {
                 Response.Redirect("Login.aspx");
                 return;
@@ -122,6 +130,16 @@ namespace WebApplication4
                     }
                 }
             }
+        }
+
+        // ============================================
+        // LOGOUT METHOD
+        // ============================================
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("Login.aspx");
         }
 
         // ============================================

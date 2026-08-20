@@ -124,11 +124,22 @@ namespace WebApplication4
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Check if user is logged in
             if (Session["UserID"] == null)
             {
                 Response.Redirect("Login.aspx");
                 return;
             }
+
+            // Check if user is Admin
+            if (Session["UserRole"] == null || Session["UserRole"].ToString() != "Admin")
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            // Update last login
+            UpdateLastLogin();
 
             if (!IsPostBack)
             {
@@ -138,6 +149,79 @@ namespace WebApplication4
 
                 LoadDataFromDatabase();
                 BindAll();
+            }
+        }
+
+        // ============================================
+        // LOGOUT METHOD
+        // ============================================
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("Login.aspx");
+        }
+
+        // ============================================
+        // UPDATE LAST LOGIN - Track admin login
+        // ============================================
+        private void UpdateLastLogin()
+        {
+            try
+            {
+                int userId = Convert.ToInt32(Session["UserID"]);
+                string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+                // Ensure AdminUsers table exists
+                string createTableQuery = @"
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='AdminUsers' AND xtype='U')
+                    BEGIN
+                        CREATE TABLE AdminUsers (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            UserId INT NOT NULL,
+                            Role NVARCHAR(50) DEFAULT 'Admin',
+                            LastLogin DATETIME,
+                            CreatedDate DATETIME DEFAULT GETDATE(),
+                            IsActive BIT DEFAULT 1
+                        )
+                    END
+                    ELSE
+                    BEGIN
+                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('AdminUsers') AND name = 'LastLogin')
+                        BEGIN
+                            ALTER TABLE AdminUsers ADD LastLogin DATETIME
+                        END
+                    END";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Update last login
+                    string updateQuery = @"
+                        IF EXISTS (SELECT * FROM AdminUsers WHERE UserId = @UserId)
+                        BEGIN
+                            UPDATE AdminUsers SET LastLogin = GETDATE() WHERE UserId = @UserId
+                        END
+                        ELSE
+                        BEGIN
+                            INSERT INTO AdminUsers (UserId, LastLogin) VALUES (@UserId, GETDATE())
+                        END";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch
+            {
+                // Silent fail - don't break the page if tracking fails
             }
         }
 

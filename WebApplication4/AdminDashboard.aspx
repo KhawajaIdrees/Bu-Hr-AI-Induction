@@ -1625,19 +1625,21 @@
                         <span class="dropdown-arrow">▼</span>
                     </div>
 
-                    <!-- Dropdown Menu - Works on ALL screen sizes -->
-                    <div id="dropdownMenu" class="dropdown-menu-custom">
-                        <a href="#" class="dropdown-item" onclick="event.stopPropagation();">
-                            <i class="bi bi-person-circle"></i> My Profile
-                        </a>
-                        <a href="Settings.aspx" class="dropdown-item" onclick="event.stopPropagation();">
-                            <i class="bi bi-gear"></i> Settings
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="Login.aspx" class="dropdown-item logout-item" onclick="event.stopPropagation();">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </div>
+                   <div id="dropdownMenu" class="dropdown-menu-custom">
+    <a href="AdminProfile.aspx" class="dropdown-item" onclick="event.stopPropagation();">
+        <i class="bi bi-person-circle"></i> My Profile
+    </a>
+    <a href="AdminSettings.aspx" class="dropdown-item" onclick="event.stopPropagation();">
+        <i class="bi bi-gear"></i> Settings
+    </a>
+    <div class="dropdown-divider"></div>
+    <asp:LinkButton ID="lnkLogout" runat="server" 
+        CssClass="dropdown-item logout-item" 
+        OnClick="lnkLogout_Click"
+        OnClientClick="event.stopPropagation();">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </asp:LinkButton>
+</div>
 
                 </div>
 

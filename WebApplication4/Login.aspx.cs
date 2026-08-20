@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
@@ -15,14 +14,30 @@ namespace WebApplication4
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            // If already logged in, redirect based on role
+            if (Session["UserID"] != null)
+            {
+                if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
+                {
+                    Response.Redirect("AdminDashboard.aspx");
+                }
+                else
+                {
+                    Response.Redirect("Personal.aspx");
+                }
+            }
         }
 
         protected void Login_Click(object sender, EventArgs e)
         {
-
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text.Trim();
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                lblMessage.Text = "Please enter email and password.";
+                return;
+            }
 
             string query = @"SELECT id, email, password, Role
                  FROM Users
@@ -43,12 +58,17 @@ namespace WebApplication4
 
                 if (dr.Read())
                 {
-                    Session["UserID"] = dr["id"].ToString();
-                    Session["Role"] = dr["Role"].ToString();
+                    string userId = dr["id"].ToString();
+                    string role = dr["Role"].ToString();
 
-                    if (dr["Role"].ToString().Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                    // Store in session
+                    Session["UserID"] = userId;
+                    Session["UserRole"] = role;
+
+                    // Redirect based on role
+                    if (role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
                     {
-                        Response.Redirect("CalculateScore.aspx");
+                        Response.Redirect("AdminDashboard.aspx");
                     }
                     else
                     {
@@ -63,9 +83,5 @@ namespace WebApplication4
                 dr.Close();
             }
         }
-      
-        
-            
-        
     }
 }

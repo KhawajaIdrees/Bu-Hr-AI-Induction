@@ -108,6 +108,8 @@
   <ItemGroup>
     <Content Include="AdminCandidatesView.aspx" />
     <Content Include="AdminDashboard.aspx" />
+    <Content Include="AdminProfile.aspx" />
+    <Content Include="AdminSettings.aspx" />
     <Content Include="Apply.aspx" />
     <Content Include="CalculateScore.aspx" />
     <Content Include="CreateJob.aspx" />
@@ -218,6 +220,20 @@
     </Compile>
     <Compile Include="AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminProfile.aspx.cs">
+      <DependentUpon>AdminProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminProfile.aspx.designer.cs">
+      <DependentUpon>AdminProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminSettings.aspx.cs">
+      <DependentUpon>AdminSettings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminSettings.aspx.designer.cs">
+      <DependentUpon>AdminSettings.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\ReferenceModel.cs" />

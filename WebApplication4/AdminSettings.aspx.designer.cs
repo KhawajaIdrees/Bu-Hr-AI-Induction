@@ -11,7 +11,7 @@ namespace WebApplication4
 {
 
 
-    public partial class AdminDashboard
+    public partial class AdminSettings
     {
 
         /// <summary>
@@ -33,6 +33,24 @@ namespace WebApplication4
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
+        /// lblAdminName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdminName;
+
+        /// <summary>
+        /// lblAdminInitial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdminInitial;
+
+        /// <summary>
         /// lnkLogout control.
         /// </summary>
         /// <remarks>
@@ -42,183 +60,129 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.LinkButton lnkLogout;
 
         /// <summary>
-        /// lnkCreateTeachingJob control.
+        /// pnlMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCreateTeachingJob;
+        protected global::System.Web.UI.WebControls.Panel pnlMessage;
 
         /// <summary>
-        /// lnkCreateNonTeachingJob control.
+        /// lblMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCreateNonTeachingJob;
+        protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// rptStats control.
+        /// pnlError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptStats;
+        protected global::System.Web.UI.WebControls.Panel pnlError;
 
         /// <summary>
-        /// rptTabs control.
+        /// lblError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptTabs;
+        protected global::System.Web.UI.WebControls.Label lblError;
 
         /// <summary>
-        /// upnlMain control.
+        /// txtCurrentEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upnlMain;
+        protected global::System.Web.UI.WebControls.TextBox txtCurrentEmail;
 
         /// <summary>
-        /// pnlSort control.
+        /// txtNewEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSort;
+        protected global::System.Web.UI.WebControls.TextBox txtNewEmail;
 
         /// <summary>
-        /// txtSearch control.
+        /// txtConfirmEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.TextBox txtConfirmEmail;
 
         /// <summary>
-        /// btnSearch control.
+        /// btnChangeEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.WebControls.Button btnChangeEmail;
 
         /// <summary>
-        /// ddlSort control.
+        /// txtCurrentPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlSort;
+        protected global::System.Web.UI.WebControls.TextBox txtCurrentPassword;
 
         /// <summary>
-        /// pnlApplications control.
+        /// txtNewPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlApplications;
+        protected global::System.Web.UI.WebControls.TextBox txtNewPassword;
 
         /// <summary>
-        /// pnlApplicationsEmpty control.
+        /// txtConfirmPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlApplicationsEmpty;
+        protected global::System.Web.UI.WebControls.TextBox txtConfirmPassword;
 
         /// <summary>
-        /// rptApplicantCards control.
+        /// btnChangePassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptApplicantCards;
+        protected global::System.Web.UI.WebControls.Button btnChangePassword;
 
         /// <summary>
-        /// upnlIncomplete control.
+        /// txtLastLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upnlIncomplete;
+        protected global::System.Web.UI.WebControls.TextBox txtLastLogin;
 
         /// <summary>
-        /// pnlIncomplete control.
+        /// txtAccountStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlIncomplete;
-
-        /// <summary>
-        /// pnlIncompleteSort control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlIncompleteSort;
-
-        /// <summary>
-        /// txtIncompleteSearch control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtIncompleteSearch;
-
-        /// <summary>
-        /// btnIncompleteSearch control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnIncompleteSearch;
-
-        /// <summary>
-        /// ddlIncompleteSort control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlIncompleteSort;
-
-        /// <summary>
-        /// pnlIncompleteEmpty control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlIncompleteEmpty;
-
-        /// <summary>
-        /// rptIncompleteCards control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptIncompleteCards;
+        protected global::System.Web.UI.WebControls.TextBox txtAccountStatus;
     }
 }
