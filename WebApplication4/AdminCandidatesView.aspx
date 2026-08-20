@@ -822,117 +822,17 @@
         }
 
         /* ============================================
-           MOBILE HEADER
+           MOBILE & TABLET RESPONSIVE (0px - 965px)
+           Makes it behave like mobile view
         ============================================ */
-        .mobile-header {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 56px;
-            background: #ffffff;
-            z-index: 1000;
-            border-bottom: 1px solid #e2e8f0;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            width: 100%;
-        }
-        .mobile-header .mobile-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: 0.3px;
-            text-align: right;
-        }
-
-        .hamburger-btn {
-            display: none;
-            background: none !important;
-            border: none;
-            color: #1a3a7a;
-            font-size: 28px;
-            padding: 0;
-            cursor: pointer;
-            z-index: 1002;
-            transition: all 0.3s ease;
-            box-shadow: none !important;
-            width: 40px;
-            height: 40px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .hamburger-btn:hover {
-            transform: scale(1.05);
-        }
-        .hamburger-btn:active {
-            transform: scale(0.95);
-        }
-        .hamburger-btn i {
-            font-size: 28px;
-        }
-
-        .mobile-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        .mobile-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Mobile Back Button */
-        .mobile-back-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: #1a3a7a;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 8px 0 12px 0;
-            cursor: pointer;
-            transition: all 0.2s;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #eef2f6;
-        }
-        .mobile-back-btn i {
-            font-size: 20px;
-        }
-        .mobile-back-btn:hover {
-            color: #0f1f4a;
-        }
-        .mobile-back-btn:active {
-            transform: scale(0.97);
-        }
-
-        /* ============================================
-           MOBILE RESPONSIVE
-        ============================================ */
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: 965px) {
             body {
                 overflow: hidden;
                 position: relative;
             }
 
             .mobile-header {
-                display: flex;
+                display: flex !important;
             }
 
             .hamburger-btn {
@@ -1285,6 +1185,10 @@
                 font-size: 12px;
                 margin-bottom: 8px;
                 padding-bottom: 6px;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                word-break: break-word;
             }
 
             .edu-item, .exp-item, .pub-item {
@@ -1329,7 +1233,7 @@
             }
         }
 
-        /* Small phones (480px and below) */
+        /* Small phones (480px and below) - Extra adjustments */
         @media only screen and (max-width: 480px) {
             .mobile-header {
                 height: 48px;
@@ -1463,8 +1367,8 @@
             }
         }
 
-        /* Tablet */
-        @media only screen and (min-width: 769px) and (max-width: 1024px) {
+        /* Tablet (966px to 1024px) - Keep desktop layout but adjust sizes */
+        @media only screen and (min-width: 966px) and (max-width: 1024px) {
             .candidate-header .info-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 10px 25px;
@@ -1486,6 +1390,283 @@
                 padding: 6px 16px !important;
                 font-size: 12px !important;
             }
+        }
+        /* Fix for Download CV button and Publications heading in 965-1055px range */
+@media only screen and (min-width: 965px) and (max-width: 1055px) {
+    /* Fix Download CV button going outside container */
+    .candidate-header .info-item .info-value.d-flex {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .btn-download-cv {
+        font-size: 11px;
+        padding: 3px 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    /* Also ensure the CV status label doesn't overflow */
+    .candidate-header .info-item .info-value.d-flex .cv-status-available,
+    .candidate-header .info-item .info-value.d-flex .cv-status-unavailable {
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    
+    /* Fix Publications heading going outside container */
+    .section-header {
+        font-size: 12px;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word;
+    }
+    
+    .section-header i {
+        margin-right: 6px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+    
+    /* Ensure the info grid doesn't overflow */
+    .candidate-header .info-grid {
+        gap: 8px 15px;
+    }
+    
+    .candidate-header .info-item .info-value {
+        font-size: 13px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Prevent detail card overflow */
+    .detail-card {
+        padding: 20px 22px;
+        overflow: hidden;
+        max-width: 100%;
+    }
+    
+    /* Prevent candidate header overflow */
+    .candidate-header {
+        gap: 16px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .candidate-header .candidate-info {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .candidate-header .name {
+        font-size: 1.3rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+    }
+    
+    .candidate-header .position {
+        font-size: 13px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Fix publication items */
+    .pub-item {
+        padding: 10px 14px;
+        overflow: hidden;
+        max-width: 100%;
+    }
+    
+    .pub-item .pub-title {
+        font-size: 13px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+    }
+    
+    .pub-item .pub-journal {
+        font-size: 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    .pub-item .pub-category {
+        font-size: 9px;
+        padding: 1px 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .pub-item .d-flex {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    /* Fix education and experience items */
+    .edu-item, .exp-item {
+        padding: 10px 14px;
+        overflow: hidden;
+        max-width: 100%;
+    }
+    
+    .edu-item .edu-degree,
+    .exp-item .exp-title {
+        font-size: 13px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    .edu-item .edu-institute,
+    .exp-item .exp-org {
+        font-size: 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Score boxes stay contained */
+    .score-box {
+        padding: 12px 10px;
+    }
+    
+    .score-box .score-value {
+        font-size: 1.6rem;
+    }
+    
+    .score-box .score-label {
+        font-size: 10px;
+    }
+    
+    /* Row gap fix */
+    .row.g-3 {
+        --bs-gutter-y: 0.75rem;
+        --bs-gutter-x: 0.75rem;
+    }
+    
+    /* Fix total score text */
+    .candidate-header .total-score {
+        font-size: 24px;
+    }
+    
+    .candidate-header .total-score span {
+        font-size: 14px;
+    }
+    
+    /* Fix status dropdown */
+    .status-dropdown {
+        font-size: 12px;
+        padding: 5px 12px;
+        min-width: 140px;
+    }
+}
+
+        /* ============================================
+           MOBILE HEADER - Always hidden unless mobile/tablet
+        ============================================ */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: #ffffff;
+            z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            width: 100%;
+        }
+        .mobile-header .mobile-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 0.3px;
+            text-align: right;
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: none !important;
+            border: none;
+            color: #1a3a7a;
+            font-size: 28px;
+            padding: 0;
+            cursor: pointer;
+            z-index: 1002;
+            transition: all 0.3s ease;
+            box-shadow: none !important;
+            width: 40px;
+            height: 40px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .hamburger-btn:hover {
+            transform: scale(1.05);
+        }
+        .hamburger-btn:active {
+            transform: scale(0.95);
+        }
+        .hamburger-btn i {
+            font-size: 28px;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Mobile Back Button */
+        .mobile-back-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #1a3a7a;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 0 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .mobile-back-btn i {
+            font-size: 20px;
+        }
+        .mobile-back-btn:hover {
+            color: #0f1f4a;
+        }
+        .mobile-back-btn:active {
+            transform: scale(0.97);
         }
     </style>
 </head>
@@ -1874,10 +2055,10 @@
             var leftPanel = document.getElementById('leftPanel');
             var rightPanel = document.getElementById('rightPanel');
             var mobileBackBtn = document.getElementById('mobileBackBtn');
-            var isMobile = window.innerWidth <= 768;
+            var isMobile = window.innerWidth <= 965;
 
             function updateMobileState() {
-                isMobile = window.innerWidth <= 768;
+                isMobile = window.innerWidth <= 965;
                 if (!isMobile) {
                     sidebar.classList.remove('mobile-open');
                     overlay.classList.remove('active');
@@ -1998,7 +2179,7 @@
                 var toggleIcon = toggleBtn.querySelector('i');
                 toggleBtn.addEventListener('click', function (e) {
                     e.stopPropagation();
-                    if (window.innerWidth > 768) {
+                    if (window.innerWidth > 965) {
                         sidebar.classList.toggle('collapsed');
                         content.classList.toggle('expanded');
                         if (sidebar.classList.contains('collapsed')) {
@@ -2023,7 +2204,7 @@
             updateMobileState();
 
             var selectedCard = document.querySelector('.candidate-card.active');
-            if (selectedCard && window.innerWidth <= 768) {
+            if (selectedCard && window.innerWidth <= 965) {
                 setTimeout(function () {
                     selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 400);
@@ -2031,7 +2212,7 @@
 
             setTimeout(function () {
                 var pnlDetails = document.querySelector('#pnlDetails');
-                if (pnlDetails && pnlDetails.style.display !== 'none' && window.innerWidth <= 768) {
+                if (pnlDetails && pnlDetails.style.display !== 'none' && window.innerWidth <= 965) {
                     showDetailsView();
                 }
             }, 200);
