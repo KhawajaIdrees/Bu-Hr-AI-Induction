@@ -48,6 +48,7 @@ namespace WebApplication4
             public decimal AcademicScore { get; set; }
             public int ExperienceScore { get; set; }
             public int ResearchScore { get; set; }
+            public string CVPath { get; set; } // Added for CV download
         }
 
         public class EducationItem
@@ -140,6 +141,68 @@ namespace WebApplication4
             Session.Clear();
             Session.Abandon();
             Response.Redirect("Login.aspx");
+        }
+
+        // ============================================
+        // DOWNLOAD CV METHOD
+        // ============================================
+        protected void btnDownloadCV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string cvPath = ViewState["CurrentCVPath"]?.ToString();
+                string candidateName = ViewState["CurrentCandidateName"]?.ToString() ?? "Candidate";
+
+                if (string.IsNullOrEmpty(cvPath))
+                {
+                    // Try to get CV path from database
+                    int userId = selectedCandidateId;
+                    string query = "SELECT CVPath FROM Personal WHERE userId = @UserId";
+                    using (SqlConnection con = new SqlConnection(cs))
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        con.Open();
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            cvPath = result.ToString();
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(cvPath))
+                {
+                    Response.Write("<script>alert('No CV/Resume found for this candidate.');</script>");
+                    return;
+                }
+
+                string physicalPath = Server.MapPath(cvPath);
+                if (!System.IO.File.Exists(physicalPath))
+                {
+                    Response.Write("<script>alert('CV/Resume file not found on server.');</script>");
+                    return;
+                }
+
+                string fileName = System.IO.Path.GetFileName(cvPath);
+                string fileExtension = System.IO.Path.GetExtension(fileName).ToLower();
+                string mimeType = "application/pdf";
+
+                if (fileExtension == ".doc")
+                    mimeType = "application/msword";
+                else if (fileExtension == ".docx")
+                    mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+                Response.Clear();
+                Response.ContentType = mimeType;
+                Response.AddHeader("Content-Disposition", $"attachment; filename={candidateName}_CV{fileExtension}");
+                Response.TransmitFile(physicalPath);
+                Response.End();
+            }
+            catch (Exception ex)
+            {
+                Response.Write($"<script>alert('Error downloading CV: {ex.Message}');</script>");
+            }
         }
 
         // ============================================
@@ -241,6 +304,39 @@ namespace WebApplication4
             }
         }
 
+        // ============================================
+        // GET CV URL - Returns CV path or null
+        // ============================================
+        public string GetCVUrl(object userId)
+        {
+            if (userId == null)
+                return null;
+
+            try
+            {
+                int id = Convert.ToInt32(userId);
+                string query = "SELECT CVPath FROM Personal WHERE userId = @userId";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@userId", id);
+                    con.Open();
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && !string.IsNullOrEmpty(result.ToString()))
+                    {
+                        return result.ToString();
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private List<CandidateRow> GetAllCandidates()
         {
             var candidates = new List<CandidateRow>();
@@ -307,7 +403,8 @@ namespace WebApplication4
                         END AS EligibilityStatus,
                         ISNULL(e.TotalAcademicScore, 0) + ISNULL(es.TotalExperienceScore, 0) + ISNULL(rp.ResearchScore, 0) AS TotalScore,
                         'Lecturer' AS AppliedPosition,
-                        ISNULL(ja.Status, 'Pending') AS Status
+                        ISNULL(ja.Status, 'Pending') AS Status,
+                        p.CVPath
                     FROM Personal p
                     INNER JOIN Users u ON p.userId = u.id
                     LEFT JOIN Education e ON u.id = e.UserID
@@ -340,7 +437,8 @@ namespace WebApplication4
                         END AS EligibilityStatus,
                         ISNULL(e.TotalAcademicScore, 0) + ISNULL(es.TotalExperienceScore, 0) + ISNULL(rp.ResearchScore, 0) AS TotalScore,
                         'Lecturer' AS AppliedPosition,
-                        'Pending' AS Status
+                        'Pending' AS Status,
+                        p.CVPath
                     FROM Personal p
                     INNER JOIN Users u ON p.userId = u.id
                     LEFT JOIN Education e ON u.id = e.UserID
@@ -366,6 +464,7 @@ namespace WebApplication4
 
                         decimal totalScore = reader["TotalScore"] != DBNull.Value ? Convert.ToDecimal(reader["TotalScore"]) : 0;
                         string status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
+                        string cvPath = reader["CVPath"] != DBNull.Value ? reader["CVPath"].ToString() : null;
 
                         var candidate = new CandidateRow
                         {
@@ -383,7 +482,8 @@ namespace WebApplication4
                             EligibilityStatus = reader["EligibilityStatus"].ToString(),
                             AcademicScore = reader["AcademicScore"] != DBNull.Value ? Convert.ToDecimal(reader["AcademicScore"]) : 0,
                             ExperienceScore = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0,
-                            ResearchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0
+                            ResearchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0,
+                            CVPath = cvPath
                         };
                         candidates.Add(candidate);
                     }
@@ -505,6 +605,26 @@ namespace WebApplication4
 
             // Set the profile image for the large view
             imgProfileLarge.ImageUrl = GetProfileImageUrl(candidateId);
+
+            // Store CV path in ViewState for download
+            ViewState["CurrentCVPath"] = candidate.CVPath;
+            ViewState["CurrentCandidateName"] = candidate.FullName;
+
+            // Show/Hide download CV button
+            if (!string.IsNullOrEmpty(candidate.CVPath))
+            {
+                btnDownloadCV.Visible = true;
+                btnDownloadCV.Enabled = true;
+                lblCVStatus.Text = "✅ CV Available";
+                lblCVStatus.ForeColor = System.Drawing.Color.Green;
+            }
+            else
+            {
+                btnDownloadCV.Visible = false;
+                btnDownloadCV.Enabled = false;
+                lblCVStatus.Text = "❌ No CV Uploaded";
+                lblCVStatus.ForeColor = System.Drawing.Color.Red;
+            }
 
             // Candidate Header
             lblFullName.Text = candidate.FullName;

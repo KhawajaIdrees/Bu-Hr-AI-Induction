@@ -427,6 +427,106 @@
         }
 
         /* ============================================
+           CANDIDATE INFO GRID - Professional Layout (Desktop Only)
+        ============================================ */
+        .candidate-header .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 30px;
+            margin-top: 4px;
+        }
+
+        .candidate-header .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .candidate-header .info-item .info-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .candidate-header .info-item .info-label i {
+            font-size: 11px;
+        }
+
+        .candidate-header .info-item .info-value {
+            font-size: 14px;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        /* Download CV Button */
+        .btn-download-cv {
+            background: #1a3a7a;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .btn-download-cv:hover {
+            background: #2a5aaa;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
+            color: #ffffff;
+        }
+
+        .btn-download-cv:active {
+            transform: translateY(0);
+        }
+
+        /* Status Dropdown - Professional */
+        .status-dropdown {
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            min-width: 160px;
+            color: #0f172a;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .status-dropdown:hover {
+            border-color: #1a3a7a;
+        }
+
+        .status-dropdown:focus {
+            outline: none;
+            border-color: #1a3a7a;
+            box-shadow: 0 0 0 3px rgba(26, 58, 122, 0.08);
+        }
+
+        /* CV Status Label */
+        .cv-status-available {
+            color: #059669;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .cv-status-unavailable {
+            color: #dc3545;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* ============================================
            SECTION HEADERS
         ============================================ */
         .section-header {
@@ -539,21 +639,6 @@
             font-weight: 700;
             padding: 1px 10px;
             border-radius: 10px;
-        }
-
-        .status-dropdown {
-            border-radius: 8px;
-            padding: 6px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-            background: #ffffff;
-            min-width: 140px;
-        }
-        .status-dropdown:focus {
-            outline: none;
-            border-color: #1a3a7a;
-            box-shadow: 0 0 0 3px rgba(26, 58, 122, 0.08);
         }
 
         .select-placeholder {
@@ -838,7 +923,7 @@
         }
 
         /* ============================================
-           MOBILE RESPONSIVE (768px and below)
+           MOBILE RESPONSIVE
         ============================================ */
         @media only screen and (max-width: 768px) {
             body {
@@ -1059,34 +1144,128 @@
                 flex-shrink: 0;
             }
 
+            /* ============================================
+               CANDIDATE HEADER MOBILE - FIXED LAYOUT
+            ============================================ */
+            .candidate-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 12px;
+                width: 100%;
+            }
+            
             .candidate-header .profile-image-large {
-                width: 60px;
-                height: 60px;
+                width: 60px !important;
+                height: 60px !important;
             }
+            
             .candidate-header .profile-placeholder-large {
-                width: 60px;
-                height: 60px;
-                font-size: 24px;
+                width: 60px !important;
+                height: 60px !important;
+                font-size: 24px !important;
             }
+            
+            .candidate-header .candidate-info {
+                width: 100%;
+            }
+            
+            .candidate-header .candidate-info .d-flex {
+                flex-direction: column;
+                align-items: center !important;
+                width: 100%;
+            }
+            
             .candidate-header .name {
-                font-size: 20px;
-                font-weight: 800;
+                font-size: 20px !important;
+                text-align: center;
+                width: 100%;
             }
+            
             .candidate-header .position {
-                font-size: 14px;
+                font-size: 13px !important;
+                text-align: center;
+                width: 100%;
             }
-            .candidate-header .info-label {
-                font-size: 10px;
-                margin-top: 10px;
+            
+            .candidate-header .text-end {
+                text-align: center !important;
+                width: 100%;
+                margin-top: 4px;
             }
-            .candidate-header .info-value {
-                font-size: 14px;
-            }
+            
             .candidate-header .total-score {
-                font-size: 26px;
+                font-size: 24px !important;
+                text-align: center;
             }
+            
             .candidate-header .total-score-label {
+                font-size: 11px !important;
+                text-align: center;
+            }
+            
+            /* Info Grid - Single Column Centered on Mobile */
+            .candidate-header .info-grid {
+                display: block;
+                margin-top: 8px;
+                width: 100%;
+            }
+            
+            .candidate-header .info-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 10px;
+                width: 100%;
+                padding: 6px 0;
+                border-bottom: 1px solid #f0f2f5;
+            }
+            
+            .candidate-header .info-item:last-child {
+                border-bottom: none;
+            }
+            
+            .candidate-header .info-item .info-label {
+                font-size: 9px;
+                text-align: center;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .candidate-header .info-item .info-value {
+                font-size: 13px;
+                text-align: center;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .candidate-header .info-item .info-value.d-flex {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .candidate-header .total-score span {
+                font-size: 14px !important;
+            }
+
+            .btn-download-cv {
+                font-size: 11px;
+                padding: 3px 12px;
+            }
+
+            .status-dropdown {
                 font-size: 12px;
+                padding: 5px 12px;
+                min-width: 140px;
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
+                display: block;
+            }
+            
+            .candidate-header .mt-3 {
+                text-align: center;
+                width: 100%;
             }
 
             .score-box {
@@ -1132,12 +1311,6 @@
                 font-size: 11px;
             }
 
-            .status-dropdown {
-                font-size: 13px;
-                min-width: 120px;
-                padding: 6px 12px;
-            }
-
             .empty-message {
                 font-size: 12px;
             }
@@ -1154,30 +1327,9 @@
             .select-placeholder p {
                 font-size: 13px;
             }
-            
-            .status-dropdown {
-                width: 100%;
-                max-width: 200px;
-            }
         }
 
-        /* ============================================
-           TOTAL-SCORE-LABEL PADDING FIX
-        ============================================ */
-        /* For screens 361px to 768px - use 0 102px padding */
-        @media only screen and (min-width: 361px) and (max-width: 768px) {
-            .total-score-label {
-                padding: 0 102px !important;
-            }
-        }
-
-        /* For screens 320px to 360px - use 0 69px padding */
-        @media only screen and (min-width: 320px) and (max-width: 360px) {
-            .total-score-label {
-                padding: 0 69px !important;
-            }
-        }
-
+        /* Small phones (480px and below) */
         @media only screen and (max-width: 480px) {
             .mobile-header {
                 height: 48px;
@@ -1258,20 +1410,68 @@
             .detail-card {
                 padding: 12px 12px 50px 12px;
             }
+            
+            /* Candidate Header Mobile Small */
             .candidate-header .profile-image-large {
-                width: 50px;
-                height: 50px;
+                width: 50px !important;
+                height: 50px !important;
             }
             .candidate-header .profile-placeholder-large {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 20px !important;
             }
             .candidate-header .name {
-                font-size: 18px;
+                font-size: 17px !important;
             }
+            .candidate-header .position {
+                font-size: 12px !important;
+            }
+            .candidate-header .total-score {
+                font-size: 20px !important;
+            }
+            .candidate-header .info-item .info-label {
+                font-size: 8px;
+            }
+            .candidate-header .info-item .info-value {
+                font-size: 12px;
+            }
+
+            .btn-download-cv {
+                font-size: 10px;
+                padding: 2px 10px;
+            }
+
+            .status-dropdown {
+                font-size: 11px;
+                padding: 4px 10px;
+                min-width: 120px;
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .candidate-header .total-score-label {
+                font-size: 10px !important;
+            }
+
+            .candidate-header .total-score span {
+                font-size: 13px !important;
+            }
+            
             .score-box .score-value {
                 font-size: 1.3rem;
+            }
+        }
+
+        /* Tablet */
+        @media only screen and (min-width: 769px) and (max-width: 1024px) {
+            .candidate-header .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px 25px;
+            }
+            .candidate-header .profile-image-large {
+                width: 70px !important;
+                height: 70px !important;
             }
         }
 
@@ -1436,33 +1636,57 @@
                                     AlternateText="Profile" />
                                 
                                 <div class="candidate-info">
-                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                                    <!-- Name and Position Row -->
+                                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
                                         <div>
                                             <div class="name"><asp:Label ID="lblFullName" runat="server" /></div>
                                             <div class="position">
                                                 <asp:Label ID="lblPosition" runat="server" Text="Lecturer" />
                                                 <span class="permanent">PERMANENT</span>
                                             </div>
-                                            <div class="info-label">EMAIL ADDRESS</div>
-                                            <div class="info-value"><asp:Label ID="lblEmail" runat="server" /></div>
-                                            <div class="info-label">PHONE</div>
-                                            <div class="info-value"><asp:Label ID="lblPhone" runat="server" Text="Not provided" /></div>
-                                            <div class="info-label">APPLIED ON</div>
-                                            <div class="info-value"><asp:Label ID="lblSubmittedDate" runat="server" /></div>
                                         </div>
                                         <div class="text-end">
                                             <div class="total-score-label">Score Evaluation</div>
                                             <div class="total-score"><asp:Label ID="lblTotal" runat="server" /> <span style="font-size:16px; font-weight:600; color:#94a3b8;">/ 100 PTS</span></div>
-                                            <div class="mt-2">
-                                                <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-dropdown" 
-                                                    AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
-                                                    <asp:ListItem Value="Pending">Pending Review</asp:ListItem>
-                                                    <asp:ListItem Value="Shortlisted">Shortlisted</asp:ListItem>
-                                                    <asp:ListItem Value="Rejected">Rejected</asp:ListItem>
-                                                    <asp:ListItem Value="Hired">Hired</asp:ListItem>
-                                                </asp:DropDownList>
+                                        </div>
+                                    </div>
+
+                                    <!-- Info Grid - 2 Columns on Desktop, Stacked on Mobile -->
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <div class="info-label"><i class="bi bi-envelope"></i> EMAIL ADDRESS</div>
+                                            <div class="info-value"><asp:Label ID="lblEmail" runat="server" /></div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label"><i class="bi bi-telephone"></i> PHONE</div>
+                                            <div class="info-value"><asp:Label ID="lblPhone" runat="server" Text="Not provided" /></div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label"><i class="bi bi-calendar3"></i> APPLIED ON</div>
+                                            <div class="info-value"><asp:Label ID="lblSubmittedDate" runat="server" /></div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label"><i class="bi bi-file-earmark-text"></i> CV / RESUME</div>
+                                            <div class="info-value d-flex align-items-center gap-2 flex-wrap">
+                                                <asp:Label ID="lblCVStatus" runat="server" Text="Loading..." Font-Bold="true" />
+                                                <asp:Button ID="btnDownloadCV" runat="server" 
+                                                    Text="Download CV" 
+                                                    CssClass="btn btn-download-cv"
+                                                    OnClick="btnDownloadCV_Click"
+                                                    Visible="false" />
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <!-- Status Dropdown -->
+                                    <div class="mt-3">
+                                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-dropdown" 
+                                            AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
+                                            <asp:ListItem Value="Pending">Pending Review</asp:ListItem>
+                                            <asp:ListItem Value="Shortlisted">Shortlisted</asp:ListItem>
+                                            <asp:ListItem Value="Rejected">Rejected</asp:ListItem>
+                                            <asp:ListItem Value="Hired">Hired</asp:ListItem>
+                                        </asp:DropDownList>
                                     </div>
                                 </div>
                             </div>

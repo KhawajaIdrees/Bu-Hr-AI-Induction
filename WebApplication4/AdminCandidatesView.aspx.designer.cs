@@ -141,6 +141,15 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Label lblPosition;
 
         /// <summary>
+        /// lblTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotal;
+
+        /// <summary>
         /// lblEmail control.
         /// </summary>
         /// <remarks>
@@ -168,13 +177,22 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Label lblSubmittedDate;
 
         /// <summary>
-        /// lblTotal control.
+        /// lblCVStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotal;
+        protected global::System.Web.UI.WebControls.Label lblCVStatus;
+
+        /// <summary>
+        /// btnDownloadCV control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDownloadCV;
 
         /// <summary>
         /// ddlStatus control.
