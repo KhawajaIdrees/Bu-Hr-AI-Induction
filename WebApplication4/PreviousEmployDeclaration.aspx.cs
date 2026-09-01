@@ -13,6 +13,7 @@ namespace WebApplication4
     public partial class PreviousEmployment : System.Web.UI.Page
     {
         string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -21,7 +22,6 @@ namespace WebApplication4
             }
         }
 
-        // Load existing candidate data
         private void LoadCandidate()
         {
             if (Session["UserId"] == null)
@@ -29,6 +29,7 @@ namespace WebApplication4
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
+            // Load Previous Employment Data
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
@@ -36,30 +37,27 @@ namespace WebApplication4
                        campus,
                        dept,
                        designation,
-                       duration
+                       duration,
+                       ReasonForLeaving
                 FROM PrevEmpl
                 WHERE userId = @userId";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
-
                     con.Open();
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         if (dr.Read())
                         {
-                            bool hasWorked =
-                                dr["hasworked"] != DBNull.Value &&
-                                Convert.ToBoolean(dr["hasworked"]);
+                            bool hasWorked = dr["hasworked"] != DBNull.Value && Convert.ToBoolean(dr["hasworked"]);
 
                             if (hasWorked)
                             {
                                 rblPreviouslyWorked.SelectedValue = "Yes";
 
                                 string campus = dr["campus"].ToString();
-
                                 if (ddlCampus.Items.FindByValue(campus) != null)
                                 {
                                     ddlCampus.SelectedValue = campus;
@@ -72,6 +70,11 @@ namespace WebApplication4
                                 txtDepartment.Text = dr["dept"].ToString();
                                 txtDesignation.Text = dr["designation"].ToString();
                                 txtDuration.Text = dr["duration"].ToString();
+
+                                if (dr["ReasonForLeaving"] != DBNull.Value)
+                                {
+                                    txtReasonForLeaving.Text = dr["ReasonForLeaving"].ToString();
+                                }
                             }
                             else
                             {
@@ -81,7 +84,6 @@ namespace WebApplication4
                         }
                         else
                         {
-                            // No record found
                             rblPreviouslyWorked.SelectedValue = "No";
                             ClearFields();
                         }
@@ -89,13 +91,52 @@ namespace WebApplication4
                 }
             }
 
-            // NOTE: pnlPreviousEmploymentWrapper.Visible is intentionally NOT set here.
-            // It must always render to the DOM so the client-side
-            // togglePreviousEmploymentDetails() script can find and show/hide it.
-            // Do not reintroduce Visible = true/false on this control.
+            // Load Suspension/Termination Data
+            LoadSuspensionTerminationData(userId);
         }
 
-        // Insert or Update record
+        private void LoadSuspensionTerminationData(int userId)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    string query = @"
+                        SELECT HasSuspensionOrTermination, Details
+                        FROM SuspensionTerminationDeclaration
+                        WHERE UserId = @userId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+                        con.Open();
+
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                bool hasSuspension = dr["HasSuspensionOrTermination"] != DBNull.Value && Convert.ToBoolean(dr["HasSuspensionOrTermination"]);
+                                rblSuspensionTermination.SelectedValue = hasSuspension ? "Yes" : "No";
+
+                                if (hasSuspension && dr["Details"] != DBNull.Value)
+                                {
+                                    txtSuspensionDetails.Text = dr["Details"].ToString();
+                                }
+                            }
+                            else
+                            {
+                                rblSuspensionTermination.SelectedValue = "No";
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Table might not exist yet, silently continue
+            }
+        }
+
         private void SavePrevEmpl(int userId)
         {
             bool hasWorked = rblPreviouslyWorked.SelectedValue == "Yes";
@@ -111,15 +152,16 @@ namespace WebApplication4
                         dept        = @dept,
                         designation = @designation,
                         duration    = @duration,
+                        ReasonForLeaving = @ReasonForLeaving,
                         updatedDate = GETDATE()
                     WHERE userId = @userId
                 END
                 ELSE
                 BEGIN
                     INSERT INTO PrevEmpl
-                        (userId, hasworked, campus, dept, designation, duration)
+                        (userId, hasworked, campus, dept, designation, duration, ReasonForLeaving)
                     VALUES
-                        (@userId, @hasworked, @campus, @dept, @designation, @duration)
+                        (@userId, @hasworked, @campus, @dept, @designation, @duration, @ReasonForLeaving)
                 END";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -133,6 +175,8 @@ namespace WebApplication4
                         cmd.Parameters.Add("@dept", SqlDbType.VarChar, 100).Value = txtDepartment.Text.Trim();
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = txtDesignation.Text.Trim();
                         cmd.Parameters.Add("@duration", SqlDbType.VarChar, 100).Value = txtDuration.Text.Trim();
+                        cmd.Parameters.Add("@ReasonForLeaving", SqlDbType.NVarChar, 500).Value =
+                            string.IsNullOrEmpty(txtReasonForLeaving.Text.Trim()) ? DBNull.Value : (object)txtReasonForLeaving.Text.Trim();
                     }
                     else
                     {
@@ -140,11 +184,96 @@ namespace WebApplication4
                         cmd.Parameters.Add("@dept", SqlDbType.VarChar, 100).Value = DBNull.Value;
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = DBNull.Value;
                         cmd.Parameters.Add("@duration", SqlDbType.VarChar, 100).Value = DBNull.Value;
+                        cmd.Parameters.Add("@ReasonForLeaving", SqlDbType.NVarChar, 500).Value = DBNull.Value;
                     }
 
                     con.Open();
                     cmd.ExecuteNonQuery();
                 }
+            }
+        }
+
+        private void SaveSuspensionTermination(int userId)
+        {
+            bool hasSuspension = rblSuspensionTermination.SelectedValue == "Yes";
+
+            EnsureSuspensionTableExists();
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = @"
+                IF EXISTS (SELECT 1 FROM SuspensionTerminationDeclaration WHERE UserId = @userId)
+                BEGIN
+                    UPDATE SuspensionTerminationDeclaration
+                    SET HasSuspensionOrTermination = @HasSuspension,
+                        Details = @Details,
+                        UpdatedDate = GETDATE()
+                    WHERE UserId = @userId
+                END
+                ELSE
+                BEGIN
+                    INSERT INTO SuspensionTerminationDeclaration
+                        (UserId, HasSuspensionOrTermination, Details)
+                    VALUES
+                        (@userId, @HasSuspension, @Details)
+                END";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.Add("@userId", SqlDbType.Int).Value = userId;
+                    cmd.Parameters.Add("@HasSuspension", SqlDbType.Bit).Value = hasSuspension;
+
+                    if (hasSuspension)
+                    {
+                        cmd.Parameters.Add("@Details", SqlDbType.NVarChar).Value = txtSuspensionDetails.Text.Trim();
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("@Details", SqlDbType.NVarChar).Value = DBNull.Value;
+                    }
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void EnsureSuspensionTableExists()
+        {
+            try
+            {
+                string createTableQuery = @"
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SuspensionTerminationDeclaration' AND xtype='U')
+                    BEGIN
+                        CREATE TABLE SuspensionTerminationDeclaration (
+                            Id INT IDENTITY(1,1) PRIMARY KEY,
+                            UserId INT NOT NULL,
+                            HasSuspensionOrTermination BIT NOT NULL DEFAULT 0,
+                            Details NVARCHAR(MAX) NULL,
+                            CreatedDate DATETIME DEFAULT GETDATE(),
+                            UpdatedDate DATETIME NULL
+                        )
+                    END
+                    ELSE
+                    BEGIN
+                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'Details')
+                        BEGIN
+                            ALTER TABLE SuspensionTerminationDeclaration ADD Details NVARCHAR(MAX) NULL
+                        END
+                    END";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch
+            {
+                // Silent fail
             }
         }
 
@@ -154,33 +283,56 @@ namespace WebApplication4
             txtDepartment.Text = "";
             txtDesignation.Text = "";
             txtDuration.Text = "";
+            txtReasonForLeaving.Text = "";
+            txtSuspensionDetails.Text = "";
         }
 
         protected void BtnSubmit_Click(object sender, EventArgs e)
         {
             if (Session["UserId"] == null)
+            {
+                Response.Redirect("Login.aspx");
                 return;
+            }
+
+            // Check if Previous Employment radio is selected
             if (rblPreviouslyWorked.SelectedItem == null)
             {
-                lblMessage.Text = "Please select Yes or No.";
+                lblMessage.Text = "Please select Yes or No for previous employment.";
                 lblMessage.CssClass = "text-danger";
                 return;
             }
 
+            // Check if Suspension/Termination radio is selected - SERVER SIDE CHECK
+            if (string.IsNullOrEmpty(rblSuspensionTermination.SelectedValue))
+            {
+                lblSuspensionError.Visible = true;
+                lblMessage.Text = "Please select Yes or No for suspension/termination.";
+                lblMessage.CssClass = "text-danger";
+                return;
+            }
+            else
+            {
+                lblSuspensionError.Visible = false;
+            }
+
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // If user selected No, allow save and continue without filling details
+            // If user selected No for previous employment
             if (rblPreviouslyWorked.SelectedValue == "No")
             {
                 try
                 {
-                    // Save will insert/update with hasworked = 0 and NULL details
                     SavePrevEmpl(userId);
+                    SaveSuspensionTermination(userId);
 
-                    lblMessage.Text = "Previous employment declaration saved successfully.";
+                    lblMessage.Text = "Declaration saved successfully.";
                     lblMessage.CssClass = "text-success";
 
                     LoadCandidate();
+
+                    Response.Redirect("EmpRelDeclaration.aspx");
+                    return;
                 }
                 catch (Exception ex)
                 {
@@ -188,20 +340,42 @@ namespace WebApplication4
                     lblMessage.CssClass = "text-danger";
                     return;
                 }
+            }
 
-                Response.Redirect("EmpRelDeclaration.aspx");
+            // User selected Yes - validate all fields
+            if (!Page.IsValid)
+            {
+                lblMessage.Text = "Please complete all required fields.";
+                lblMessage.CssClass = "text-danger";
                 return;
             }
 
-            // From here on user selected Yes. Ensure validators passed
-            if (!Page.IsValid)
+            // SAFETY CHECK: Additional validation for required fields
+            if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
+                string.IsNullOrWhiteSpace(txtDesignation.Text) ||
+                string.IsNullOrWhiteSpace(txtDuration.Text) ||
+                string.IsNullOrWhiteSpace(ddlCampus.SelectedValue))
+            {
+                lblMessage.Text = "Please complete all required fields.";
+                lblMessage.CssClass = "text-danger";
                 return;
+            }
+
+            // Validate suspension details if Yes
+            if (rblSuspensionTermination.SelectedValue == "Yes" &&
+                string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
+            {
+                lblMessage.Text = "Please provide details for suspension/termination.";
+                lblMessage.CssClass = "text-danger";
+                return;
+            }
 
             try
             {
                 SavePrevEmpl(userId);
+                SaveSuspensionTermination(userId);
 
-                lblMessage.Text = "Previous employment declaration saved successfully.";
+                lblMessage.Text = "Declaration saved successfully.";
                 lblMessage.CssClass = "text-success";
 
                 LoadCandidate();
@@ -210,6 +384,7 @@ namespace WebApplication4
             {
                 lblMessage.Text = ex.Message;
                 lblMessage.CssClass = "text-danger";
+                return;
             }
 
             Response.Redirect("EmpRelDeclaration.aspx");

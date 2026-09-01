@@ -165,7 +165,6 @@ END";
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // If user selected No, allow saving/continuing without filling details
             if (rblHasRelative.SelectedValue == "No")
             {
                 try
@@ -189,7 +188,6 @@ END";
                 return;
             }
 
-            // From here on user selected Yes. Ensure validators passed
             if (!Page.IsValid)
                 return;
 
@@ -210,13 +208,6 @@ END";
 
             Response.Redirect("FriendDeclaration.aspx");
         }
-        
+
     }
 }
-
-
-
-
-
-
-

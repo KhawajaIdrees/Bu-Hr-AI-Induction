@@ -35,7 +35,6 @@
             margin-top: 5px;
         }
 
-        /* Main Form Card */
         .form-card {
             max-width: 1100px;
             margin: 30px auto 60px;
@@ -45,7 +44,6 @@
             box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
         }
 
-        /* Section Titles */
         .section-title {
             display: flex;
             align-items: center;
@@ -64,7 +62,6 @@
             font-size: 20px;
         }
 
-        /* Labels */
         .form-label {
             font-size: 15px;
             font-weight: 600;
@@ -77,7 +74,6 @@
             font-size: 15px;
         }
 
-        /* Input Fields */
         .form-control,
         .form-select {
             height: 48px;
@@ -94,17 +90,11 @@
             box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
         }
 
-        textarea.form-control {
-            min-height: 120px;
-        }
-
-        /* Placeholder text */
         .form-control::placeholder {
             font-size: 14px;
             color: #a3a9bd;
         }
 
-        /* Radio Buttons */
         .radio-group {
             font-size: 16px;
             margin-top: 10px;
@@ -131,7 +121,6 @@
             color: #44496b;
         }
 
-        /* Right Detail Panel */
         .relative-details {
             background: #f8faff;
             border: 1px solid #cddcff;
@@ -139,18 +128,15 @@
             border-radius: 12px;
         }
 
-        /* Column Divider */
         .col-divider {
             border-left: 2px solid #eef1f8;
         }
 
-        /* Validation Text */
         .text-danger {
             font-size: 13px;
             font-weight: 600;
         }
 
-        /* Buttons */
         .btn-bu-blue {
             background: #1a3a7a;
             color: white;
@@ -169,12 +155,10 @@
             box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
-        /* Field spacing */
         .mb-3 {
             margin-bottom: 24px !important;
         }
 
-        /* Responsive adjustment */
         @media(max-width:768px) {
             body {
                 font-size: 15px;
@@ -212,7 +196,6 @@
             margin-bottom: 15px;
         }
 
-        /* Card Header Blue */
         .card-header-blue {
             background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
             color: white;
@@ -258,24 +241,6 @@
                 padding: 15px;
             }
         }
-
-        .btn-bu-blue {
-            background: #1a3a7a;
-            color: white;
-            border: none;
-            font-size: 16px;
-            padding: 12px 40px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all .2s ease-in-out;
-        }
-
-        .btn-bu-blue:hover {
-            background: #2a5aaa;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
-        }
     </style>
 
 </head>
@@ -293,7 +258,7 @@
             <!-- Main Card -->
             <div class="card card-main">
                 <div class="card-header-blue">
-                    <h5><i class="bi bi-people-fill"></i> Employment Relationship Declaration</h5>
+                    <h5><i class="bi bi-people-fill"></i> Details of Near/Blood Relatives Associated with Bahria University</h5>
                 </div>
                 <div class="card-body">
 
@@ -523,13 +488,11 @@
             }
 
             wrapper.style.display = (selected === "Yes") ? "block" : "none";
-            // Toggle server validators for RelativeForm so "No" can postback
             setValidatorsEnabled('RelativeForm', selected === 'Yes');
         }
 
         window.onload = function () {
 
-            // Ensure validators are toggled even if the ASP.NET scripts load later
             function ensureToggle(attempt) {
                 attempt = attempt || 0;
                 toggleRelativeDetails();

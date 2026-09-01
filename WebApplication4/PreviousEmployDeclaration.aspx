@@ -35,7 +35,6 @@
             margin-top: 5px;
         }
 
-        /* Main Form Card */
         .form-card {
             max-width: 1100px;
             margin: 30px auto 60px;
@@ -45,7 +44,6 @@
             box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
         }
 
-        /* Section Titles */
         .section-title {
             display: flex;
             align-items: center;
@@ -64,7 +62,6 @@
             font-size: 20px;
         }
 
-        /* Labels */
         .form-label {
             font-size: 15px;
             font-weight: 600;
@@ -77,7 +74,6 @@
             font-size: 15px;
         }
 
-        /* Input Fields */
         .form-control,
         .form-select {
             height: 48px;
@@ -95,16 +91,14 @@
         }
 
         textarea.form-control {
-            min-height: 120px;
+            min-height: 100px;
         }
 
-        /* Placeholder text */
         .form-control::placeholder {
             font-size: 14px;
             color: #a3a9bd;
         }
 
-        /* Radio Buttons */
         .radio-group {
             font-size: 16px;
             margin-top: 10px;
@@ -131,7 +125,6 @@
             color: #44496b;
         }
 
-        /* Right Detail Panel */
         .relative-details {
             background: #f8faff;
             border: 1px solid #cddcff;
@@ -139,18 +132,15 @@
             border-radius: 12px;
         }
 
-        /* Column Divider */
         .col-divider {
             border-left: 2px solid #eef1f8;
         }
 
-        /* Validation Text */
         .text-danger {
             font-size: 13px;
             font-weight: 600;
         }
 
-        /* Buttons */
         .btn-bu-blue {
             background: #1a3a7a;
             color: white;
@@ -169,12 +159,10 @@
             box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
-        /* Field spacing */
         .mb-3 {
             margin-bottom: 24px !important;
         }
 
-        /* Responsive adjustment */
         @media(max-width:768px) {
             body {
                 font-size: 15px;
@@ -212,7 +200,6 @@
             margin-bottom: 15px;
         }
 
-        /* Card Header Blue */
         .card-header-blue {
             background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
             color: white;
@@ -241,6 +228,28 @@
         .card-body {
             padding: 25px 30px;
         }
+
+        .suspension-section {
+            background: #fff8f0;
+            border: 1px solid #f0dcc0;
+            padding: 28px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .suspension-section .section-subtitle {
+            color: #8a6d3b;
+        }
+
+        .divider-custom {
+            border-top: 2px dashed #eef1f8;
+            margin: 30px 0;
+        }
+
+        /* Hide validator by default */
+        .validator-hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -257,7 +266,7 @@
             <!-- Main Card -->
             <div class="card card-main">
                 <div class="card-header-blue">
-                    <h5><i class="bi bi-briefcase-fill"></i> Previous Employment at Bahria University</h5>
+                    <h5><i class="bi bi-briefcase-fill"></i> Details of Previous Employment or Association with Bahria University</h5>
                 </div>
                 <div class="card-body">
 
@@ -268,7 +277,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Have you previously worked at Bahria University?
+                                    Have you previously worked at or been associated with Bahria University?
                                     <span class="required-asterisk">*</span>
                                 </label>
 
@@ -400,6 +409,21 @@
                                         </asp:RequiredFieldValidator>
                                     </div>
 
+                                    <!-- NEW: Reason for Leaving BU -->
+                                    <div class="mb-3">
+                                        <label for="<%= txtReasonForLeaving.ClientID %>" class="form-label">
+                                            Reason for Leaving Bahria University
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtReasonForLeaving"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            TextMode="MultiLine"
+                                            Rows="3"
+                                            placeholder="Please provide reason for leaving (if applicable)" />
+                                    </div>
+
                                 </asp:Panel>
                             </div>
                         </div>
@@ -407,7 +431,78 @@
                     </div>
                     <!-- ============ END TWO COLUMN LAYOUT ============ -->
 
-                    <hr class="mt-2 mb-3" />
+                    <!-- ============ SUSPENSION / TERMINATION SECTION ============ -->
+                    <div class="divider-custom"></div>
+
+                    <div class="suspension-section">
+                        <div class="section-subtitle">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Suspension / Termination Declaration
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        Have you ever been suspended or terminated from Bahria University, any Higher Education Institution (HEI), or any other organization during your employment?
+                                        <span class="required-asterisk">*</span>
+                                    </label>
+
+                                    <div class="radio-group">
+                                        <asp:RadioButtonList
+                                            ID="rblSuspensionTermination"
+                                            runat="server"
+                                            RepeatDirection="Horizontal"
+                                            RepeatLayout="Flow">
+
+                                            <asp:ListItem Text="Yes" Value="Yes"></asp:ListItem>
+                                            <asp:ListItem Text="No" Value="No"></asp:ListItem>
+
+                                        </asp:RadioButtonList>
+                                    </div>
+
+                                    <!-- Label for error message - shown only on submit -->
+                                    <asp:Label ID="lblSuspensionError" runat="server" 
+                                        CssClass="text-danger d-block mt-1" 
+                                        Visible="false">
+                                        Please select Yes or No.
+                                    </asp:Label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="pnlSuspensionDetailsWrapper" runat="server" style="display:none;">
+                                    <div class="mb-3">
+                                        <label for="<%= txtSuspensionDetails.ClientID %>" class="form-label">
+                                            If yes, please provide details and the reasons thereof:
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtSuspensionDetails"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            TextMode="MultiLine"
+                                            Rows="4"
+                                            placeholder="Please provide detailed reasons for suspension or termination..." />
+
+                                        <asp:RequiredFieldValidator ID="rfvSuspensionDetails" runat="server"
+                                            ControlToValidate="txtSuspensionDetails"
+                                            ErrorMessage="Please provide details and reasons."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Dynamic"
+                                            ValidationGroup="DeclarationForm" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ END SUSPENSION / TERMINATION SECTION ============ -->
+
+                    <hr class="mt-4 mb-3" />
 
                     <div class="d-flex justify-content-end gap-2">
                         <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
@@ -427,10 +522,24 @@
 
     <script>
         (function () {
+            // Function to enable/disable validators in a group
+            function setValidatorsEnabled(group, enabled) {
+                if (typeof (Page_Validators) === 'undefined') return;
+                for (var i = 0; i < Page_Validators.length; i++) {
+                    var v = Page_Validators[i];
+                    if (v.validationGroup === group) {
+                        v.enabled = enabled;
+                        var span = document.getElementById(v.id);
+                        if (span) {
+                            span.style.display = enabled ? '' : 'none';
+                        }
+                    }
+                }
+            }
+
             function togglePreviousEmploymentDetails() {
                 var wrapper = document.getElementById('<%= pnlPreviousEmploymentWrapper.ClientID %>');
                 if (!wrapper) {
-                    console.error("pnlPreviousEmploymentWrapper not found in DOM");
                     return;
                 }
 
@@ -439,17 +548,46 @@
                 );
 
                 var selectedValue = checkedRadio ? checkedRadio.value : "";
-                console.log("Selected value:", selectedValue);
-
                 wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
+
+                // Enable/disable validators for DeclarationForm
+                setValidatorsEnabled('DeclarationForm', selectedValue === 'Yes');
+            }
+
+            function toggleSuspensionDetails() {
+                var wrapper = document.getElementById('<%= pnlSuspensionDetailsWrapper.ClientID %>');
+                if (!wrapper) {
+                    return;
+                }
+
+                var checkedRadio = document.querySelector(
+                    "input[name='<%= rblSuspensionTermination.UniqueID %>']:checked"
+                );
+
+                var selectedValue = checkedRadio ? checkedRadio.value : "";
+                wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
+
+                // Enable/disable the details validator
+                var validator = document.getElementById('<%= rfvSuspensionDetails.ClientID %>');
+                if (validator) {
+                    var isEnabled = (selectedValue === "Yes");
+                    validator.style.display = isEnabled ? '' : 'none';
+                    if (typeof (Page_Validators) !== 'undefined') {
+                        for (var i = 0; i < Page_Validators.length; i++) {
+                            if (Page_Validators[i].id === validator.id) {
+                                Page_Validators[i].enabled = isEnabled;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             document.addEventListener("DOMContentLoaded", function () {
-                // Use a resilient initializer in case ASP.NET validation scripts
-                // haven't finished loading yet.
                 function ensureToggle(attempt) {
                     attempt = attempt || 0;
                     togglePreviousEmploymentDetails();
+                    toggleSuspensionDetails();
                     if (typeof (Page_Validators) === 'undefined' && attempt < 10) {
                         setTimeout(function () { ensureToggle(attempt + 1); }, 100);
                     }
@@ -457,41 +595,21 @@
 
                 ensureToggle(0);
 
-                // Delegate from the form so this keeps working even if the
-                // radio inputs are re-rendered (e.g. inside an UpdatePanel)
+                // Delegate for Previous Employment radio
                 document.getElementById("form1").addEventListener("click", function (e) {
                     if (e.target && e.target.matches("input[type='radio'][name='<%= rblPreviouslyWorked.UniqueID %>']")) {
                         togglePreviousEmploymentDetails();
                     }
+                    if (e.target && e.target.matches("input[type='radio'][name='<%= rblSuspensionTermination.UniqueID %>']")) {
+                        toggleSuspensionDetails();
+                    }
                 });
             });
 
-            // expose globally in case you want to call it inline elsewhere
+            // Expose functions globally
             window.togglePreviousEmploymentDetails = togglePreviousEmploymentDetails;
-
-            // Enable/disable validators for DeclarationForm so selecting No will allow postback
-            function setValidatorsEnabled(group, enabled) {
-                if (typeof (Page_Validators) === 'undefined') return;
-                for (var i = 0; i < Page_Validators.length; i++) {
-                    var v = Page_Validators[i];
-                    if (v.validationGroup === group) {
-                        v.enabled = enabled;
-                        var span = document.getElementById(v.id);
-                        if (span) span.style.display = enabled ? '' : 'none';
-                    }
-                }
-            }
-
-            // Keep validator state in sync when toggling
-            (function () {
-                var original = togglePreviousEmploymentDetails;
-                togglePreviousEmploymentDetails = function () {
-                    original();
-                    var checked = document.querySelector("input[name='<%= rblPreviouslyWorked.UniqueID %>']:checked");
-                    var value = checked ? checked.value : '';
-                    setValidatorsEnabled('DeclarationForm', value === 'Yes');
-                };
-            })();
+            window.toggleSuspensionDetails = toggleSuspensionDetails;
+            window.setValidatorsEnabled = setValidatorsEnabled;
         })();
     </script>
 </body>

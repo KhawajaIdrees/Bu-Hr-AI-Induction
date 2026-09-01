@@ -132,6 +132,60 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDuration;
 
         /// <summary>
+        /// txtReasonForLeaving control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtReasonForLeaving;
+
+        /// <summary>
+        /// rblSuspensionTermination control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblSuspensionTermination;
+
+        /// <summary>
+        /// lblSuspensionError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSuspensionError;
+
+        /// <summary>
+        /// pnlSuspensionDetailsWrapper control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlSuspensionDetailsWrapper;
+
+        /// <summary>
+        /// txtSuspensionDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSuspensionDetails;
+
+        /// <summary>
+        /// rfvSuspensionDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSuspensionDetails;
+
+        /// <summary>
         /// btnSubmit control.
         /// </summary>
         /// <remarks>
