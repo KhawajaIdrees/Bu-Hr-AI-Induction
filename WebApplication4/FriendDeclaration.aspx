@@ -245,7 +245,7 @@
         <div class="container py-4">
 
             <div class="text-left mb-4 page-title">
-                <h4><i class="bi bi-person-hearts text-primary-custom me-2"></i>Declaration</h4>
+                <h4><i class="bi bi-person-hearts text-primary-custom me-2"></i>Additional Information</h4>
                 <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
