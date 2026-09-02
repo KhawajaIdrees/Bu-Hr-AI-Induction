@@ -132,13 +132,22 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDuration;
 
         /// <summary>
-        /// txtReasonForLeaving control.
+        /// ddlReasonForLeaving control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtReasonForLeaving;
+        protected global::System.Web.UI.WebControls.DropDownList ddlReasonForLeaving;
+
+        /// <summary>
+        /// rfvReasonForLeaving control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvReasonForLeaving;
 
         /// <summary>
         /// rblSuspensionTermination control.

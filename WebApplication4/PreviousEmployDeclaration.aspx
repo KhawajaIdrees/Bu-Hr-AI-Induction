@@ -127,7 +127,7 @@
 
         .relative-details {
             background: #f8faff;
-            border: 1px solid #cddcff;
+            border: 1px solid #e8edf5;
             padding: 28px;
             border-radius: 12px;
         }
@@ -229,26 +229,28 @@
             padding: 25px 30px;
         }
 
-        .suspension-section {
-            background: #fff8f0;
-            border: 1px solid #f0dcc0;
-            padding: 28px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-
-        .suspension-section .section-subtitle {
-            color: #8a6d3b;
-        }
-
         .divider-custom {
             border-top: 2px dashed #eef1f8;
             margin: 30px 0;
         }
 
-        /* Hide validator by default */
-        .validator-hidden {
-            display: none !important;
+        /* Suspension section - subtle background */
+        .suspension-box {
+            background: #fafbfc;
+            border: 1px solid #eef1f8;
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-top: 5px;
+        }
+
+        .suspension-box .form-label {
+            color: #1a2332;
+        }
+
+        .suspension-icon {
+            color: #dc3545;
+            font-size: 18px;
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -258,7 +260,7 @@
         <div class="container py-4">
 
             <div class="text-left mb-4 page-title">
-                <h4><i class="bi bi-briefcase-fill text-primary-custom me-2"></i>Declaration</h4>
+                <h4><i class="bi bi-briefcase-fill text-primary-custom me-2"></i>Additional Information</h4>
                 <h5>Bahria University HR Portal</h5>
                 <hr />
             </div>
@@ -409,19 +411,42 @@
                                         </asp:RequiredFieldValidator>
                                     </div>
 
-                                    <!-- NEW: Reason for Leaving BU -->
+                                    <!-- Reason for Leaving BU - Dropdown -->
                                     <div class="mb-3">
-                                        <label for="<%= txtReasonForLeaving.ClientID %>" class="form-label">
+                                        <label for="<%= ddlReasonForLeaving.ClientID %>" class="form-label">
                                             Reason for Leaving Bahria University
+                                            <span class="required-asterisk">*</span>
                                         </label>
 
-                                        <asp:TextBox
-                                            ID="txtReasonForLeaving"
+                                        <asp:DropDownList
+                                            ID="ddlReasonForLeaving"
                                             runat="server"
-                                            CssClass="form-control"
-                                            TextMode="MultiLine"
-                                            Rows="3"
-                                            placeholder="Please provide reason for leaving (if applicable)" />
+                                            CssClass="form-select">
+
+                                            <asp:ListItem Text="-- Select Reason --" Value=""></asp:ListItem>
+                                            <asp:ListItem Text="Better Career Opportunity" Value="Better Career Opportunity"></asp:ListItem>
+                                            <asp:ListItem Text="Better Compensation" Value="Better Compensation"></asp:ListItem>
+                                            <asp:ListItem Text="Career Advancement" Value="Career Advancement"></asp:ListItem>
+                                            <asp:ListItem Text="Personal Reasons" Value="Personal Reasons"></asp:ListItem>
+                                            <asp:ListItem Text="Relocation" Value="Relocation"></asp:ListItem>
+                                            <asp:ListItem Text="Work-Life Balance" Value="Work-Life Balance"></asp:ListItem>
+                                            <asp:ListItem Text="Higher Education" Value="Higher Education"></asp:ListItem>
+                                            <asp:ListItem Text="Health Issues" Value="Health Issues"></asp:ListItem>
+                                            <asp:ListItem Text="Work Environment" Value="Work Environment"></asp:ListItem>
+                                            <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
+
+                                        </asp:DropDownList>
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvReasonForLeaving"
+                                            runat="server"
+                                            ControlToValidate="ddlReasonForLeaving"
+                                            InitialValue=""
+                                            ErrorMessage="Please select a reason for leaving."
+                                            CssClass="text-danger d-block mt-1"
+                                            Display="Static"
+                                            ValidationGroup="DeclarationForm">
+                                        </asp:RequiredFieldValidator>
                                     </div>
 
                                 </asp:Panel>
@@ -434,72 +459,58 @@
                     <!-- ============ SUSPENSION / TERMINATION SECTION ============ -->
                     <div class="divider-custom"></div>
 
-                    <div class="suspension-section">
-                        <div class="section-subtitle">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            Suspension / Termination Declaration
-                        </div>
+                    <div class="suspension-box">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-exclamation-circle suspension-icon"></i>
+                                Have you ever been suspended or terminated from Bahria University, any Higher Education Institution (HEI), or any other organization during your employment?
+                                <span class="required-asterisk">*</span>
+                            </label>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">
-                                        Have you ever been suspended or terminated from Bahria University, any Higher Education Institution (HEI), or any other organization during your employment?
-                                        <span class="required-asterisk">*</span>
-                                    </label>
+                            <div class="radio-group">
+                                <asp:RadioButtonList
+                                    ID="rblSuspensionTermination"
+                                    runat="server"
+                                    RepeatDirection="Horizontal"
+                                    RepeatLayout="Flow">
 
-                                    <div class="radio-group">
-                                        <asp:RadioButtonList
-                                            ID="rblSuspensionTermination"
-                                            runat="server"
-                                            RepeatDirection="Horizontal"
-                                            RepeatLayout="Flow">
+                                    <asp:ListItem Text="Yes" Value="Yes"></asp:ListItem>
+                                    <asp:ListItem Text="No" Value="No"></asp:ListItem>
 
-                                            <asp:ListItem Text="Yes" Value="Yes"></asp:ListItem>
-                                            <asp:ListItem Text="No" Value="No"></asp:ListItem>
-
-                                        </asp:RadioButtonList>
-                                    </div>
-
-                                    <!-- Label for error message - shown only on submit -->
-                                    <asp:Label ID="lblSuspensionError" runat="server" 
-                                        CssClass="text-danger d-block mt-1" 
-                                        Visible="false">
-                                        Please select Yes or No.
-                                    </asp:Label>
-                                </div>
+                                </asp:RadioButtonList>
                             </div>
+
+                            <asp:Label ID="lblSuspensionError" runat="server" 
+                                CssClass="text-danger d-block mt-1" 
+                                Visible="false">
+                                Please select Yes or No.
+                            </asp:Label>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="pnlSuspensionDetailsWrapper" runat="server" style="display:none;">
-                                    <div class="mb-3">
-                                        <label for="<%= txtSuspensionDetails.ClientID %>" class="form-label">
-                                            If yes, please provide details and the reasons thereof:
-                                            <span class="required-asterisk">*</span>
-                                        </label>
+                        <div id="pnlSuspensionDetailsWrapper" runat="server" style="display:none;">
+                            <div class="mb-3">
+                                <label for="<%= txtSuspensionDetails.ClientID %>" class="form-label">
+                                    If yes, please provide details and the reasons thereof:
+                                    <span class="required-asterisk">*</span>
+                                </label>
 
-                                        <asp:TextBox
-                                            ID="txtSuspensionDetails"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            TextMode="MultiLine"
-                                            Rows="4"
-                                            placeholder="Please provide detailed reasons for suspension or termination..." />
+                                <asp:TextBox
+                                    ID="txtSuspensionDetails"
+                                    runat="server"
+                                    CssClass="form-control"
+                                    TextMode="MultiLine"
+                                    Rows="4"
+                                    placeholder="Please provide detailed reasons for suspension or termination..." />
 
-                                        <asp:RequiredFieldValidator ID="rfvSuspensionDetails" runat="server"
-                                            ControlToValidate="txtSuspensionDetails"
-                                            ErrorMessage="Please provide details and reasons."
-                                            CssClass="text-danger d-block mt-1"
-                                            Display="Dynamic"
-                                            ValidationGroup="DeclarationForm" />
-                                    </div>
-                                </div>
+                                <asp:RequiredFieldValidator ID="rfvSuspensionDetails" runat="server"
+                                    ControlToValidate="txtSuspensionDetails"
+                                    ErrorMessage="Please provide details and reasons."
+                                    CssClass="text-danger d-block mt-1"
+                                    Display="Dynamic"
+                                    ValidationGroup="DeclarationForm" />
                             </div>
                         </div>
                     </div>
-
                     <!-- ============ END SUSPENSION / TERMINATION SECTION ============ -->
 
                     <hr class="mt-4 mb-3" />

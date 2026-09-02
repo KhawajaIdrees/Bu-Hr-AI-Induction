@@ -71,9 +71,14 @@ namespace WebApplication4
                                 txtDesignation.Text = dr["designation"].ToString();
                                 txtDuration.Text = dr["duration"].ToString();
 
+                                // Load Reason for Leaving - Dropdown
                                 if (dr["ReasonForLeaving"] != DBNull.Value)
                                 {
-                                    txtReasonForLeaving.Text = dr["ReasonForLeaving"].ToString();
+                                    string reason = dr["ReasonForLeaving"].ToString();
+                                    if (ddlReasonForLeaving.Items.FindByValue(reason) != null)
+                                    {
+                                        ddlReasonForLeaving.SelectedValue = reason;
+                                    }
                                 }
                             }
                             else
@@ -175,8 +180,10 @@ namespace WebApplication4
                         cmd.Parameters.Add("@dept", SqlDbType.VarChar, 100).Value = txtDepartment.Text.Trim();
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = txtDesignation.Text.Trim();
                         cmd.Parameters.Add("@duration", SqlDbType.VarChar, 100).Value = txtDuration.Text.Trim();
+
+                        // Save Reason for Leaving from Dropdown
                         cmd.Parameters.Add("@ReasonForLeaving", SqlDbType.NVarChar, 500).Value =
-                            string.IsNullOrEmpty(txtReasonForLeaving.Text.Trim()) ? DBNull.Value : (object)txtReasonForLeaving.Text.Trim();
+                            string.IsNullOrEmpty(ddlReasonForLeaving.SelectedValue) ? DBNull.Value : (object)ddlReasonForLeaving.SelectedValue;
                     }
                     else
                     {
@@ -279,12 +286,31 @@ namespace WebApplication4
 
         private void ClearFields()
         {
-            ddlCampus.SelectedIndex = 0;
-            txtDepartment.Text = "";
-            txtDesignation.Text = "";
-            txtDuration.Text = "";
-            txtReasonForLeaving.Text = "";
-            txtSuspensionDetails.Text = "";
+            try
+            {
+                // Only reset controls if they exist (page is fully loaded)
+                if (ddlCampus != null && ddlCampus.Items.Count > 0)
+                    ddlCampus.SelectedIndex = 0;
+
+                if (txtDepartment != null)
+                    txtDepartment.Text = "";
+
+                if (txtDesignation != null)
+                    txtDesignation.Text = "";
+
+                if (txtDuration != null)
+                    txtDuration.Text = "";
+
+                if (ddlReasonForLeaving != null && ddlReasonForLeaving.Items.Count > 0)
+                    ddlReasonForLeaving.SelectedIndex = 0;
+
+                if (txtSuspensionDetails != null)
+                    txtSuspensionDetails.Text = "";
+            }
+            catch
+            {
+                // Silent fail - controls might not be fully initialized
+            }
         }
 
         protected void BtnSubmit_Click(object sender, EventArgs e)
@@ -317,6 +343,17 @@ namespace WebApplication4
             }
 
             int userId = Convert.ToInt32(Session["UserId"]);
+
+            // *** FIX: Disable suspension details validator if "No" is selected ***
+            if (rblSuspensionTermination.SelectedValue == "No")
+            {
+                rfvSuspensionDetails.Enabled = false;
+                rfvSuspensionDetails.IsValid = true;
+            }
+            else
+            {
+                rfvSuspensionDetails.Enabled = true;
+            }
 
             // If user selected No for previous employment
             if (rblPreviouslyWorked.SelectedValue == "No")
@@ -361,7 +398,7 @@ namespace WebApplication4
                 return;
             }
 
-            // Validate suspension details if Yes
+            // Validate suspension details ONLY if Yes is selected
             if (rblSuspensionTermination.SelectedValue == "Yes" &&
                 string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
             {
