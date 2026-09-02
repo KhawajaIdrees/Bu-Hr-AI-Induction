@@ -110,6 +110,7 @@
             margin-right: 8px;
             vertical-align: middle;
             cursor: pointer;
+            accent-color: #1a3a7a;
         }
 
         .radio-group input[type="radio"]:checked {
@@ -576,17 +577,23 @@
                 );
 
                 var selectedValue = checkedRadio ? checkedRadio.value : "";
+                
+                // Show/hide the details wrapper
                 wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
 
                 // Enable/disable the details validator
                 var validator = document.getElementById('<%= rfvSuspensionDetails.ClientID %>');
                 if (validator) {
                     var isEnabled = (selectedValue === "Yes");
+                    
+                    // Hide/show the validator
                     validator.style.display = isEnabled ? '' : 'none';
+                    
                     if (typeof (Page_Validators) !== 'undefined') {
                         for (var i = 0; i < Page_Validators.length; i++) {
                             if (Page_Validators[i].id === validator.id) {
                                 Page_Validators[i].enabled = isEnabled;
+                                Page_Validators[i].isvalid = true;
                                 break;
                             }
                         }

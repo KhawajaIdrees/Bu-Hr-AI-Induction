@@ -19,6 +19,24 @@ namespace WebApplication4
             if (!IsPostBack)
             {
                 LoadCandidate();
+                // Set initial validator state
+                SetSuspensionValidatorState();
+            }
+        }
+
+        private void SetSuspensionValidatorState()
+        {
+            // If "No" is selected or nothing is selected, disable the validator
+            if (rblSuspensionTermination.SelectedValue != "Yes")
+            {
+                rfvSuspensionDetails.Enabled = false;
+                rfvSuspensionDetails.IsValid = true;
+                rfvSuspensionDetails.Visible = false;
+            }
+            else
+            {
+                rfvSuspensionDetails.Enabled = true;
+                rfvSuspensionDetails.Visible = true;
             }
         }
 
@@ -140,6 +158,9 @@ namespace WebApplication4
             {
                 // Table might not exist yet, silently continue
             }
+
+            // After loading data, set validator state
+            SetSuspensionValidatorState();
         }
 
         private void SavePrevEmpl(int userId)
@@ -329,7 +350,7 @@ namespace WebApplication4
                 return;
             }
 
-            // Check if Suspension/Termination radio is selected - SERVER SIDE CHECK
+            // Check if Suspension/Termination radio is selected
             if (string.IsNullOrEmpty(rblSuspensionTermination.SelectedValue))
             {
                 lblSuspensionError.Visible = true;
@@ -344,15 +365,17 @@ namespace WebApplication4
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // *** FIX: Disable suspension details validator if "No" is selected ***
+            // Disable suspension details validator if "No" is selected
             if (rblSuspensionTermination.SelectedValue == "No")
             {
                 rfvSuspensionDetails.Enabled = false;
                 rfvSuspensionDetails.IsValid = true;
+                rfvSuspensionDetails.Visible = false;
             }
             else
             {
                 rfvSuspensionDetails.Enabled = true;
+                rfvSuspensionDetails.Visible = true;
             }
 
             // If user selected No for previous employment
@@ -366,8 +389,6 @@ namespace WebApplication4
                     lblMessage.Text = "Declaration saved successfully.";
                     lblMessage.CssClass = "text-success";
 
-                    LoadCandidate();
-
                     Response.Redirect("EmpRelDeclaration.aspx");
                     return;
                 }
@@ -379,7 +400,7 @@ namespace WebApplication4
                 }
             }
 
-            // User selected Yes - validate all fields
+            // User selected Yes for previous employment - validate all fields
             if (!Page.IsValid)
             {
                 lblMessage.Text = "Please complete all required fields.";
@@ -391,7 +412,8 @@ namespace WebApplication4
             if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
                 string.IsNullOrWhiteSpace(txtDesignation.Text) ||
                 string.IsNullOrWhiteSpace(txtDuration.Text) ||
-                string.IsNullOrWhiteSpace(ddlCampus.SelectedValue))
+                string.IsNullOrWhiteSpace(ddlCampus.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlReasonForLeaving.SelectedValue))
             {
                 lblMessage.Text = "Please complete all required fields.";
                 lblMessage.CssClass = "text-danger";
@@ -415,7 +437,7 @@ namespace WebApplication4
                 lblMessage.Text = "Declaration saved successfully.";
                 lblMessage.CssClass = "text-success";
 
-                LoadCandidate();
+                Response.Redirect("EmpRelDeclaration.aspx");
             }
             catch (Exception ex)
             {
@@ -423,8 +445,6 @@ namespace WebApplication4
                 lblMessage.CssClass = "text-danger";
                 return;
             }
-
-            Response.Redirect("EmpRelDeclaration.aspx");
         }
     }
 }

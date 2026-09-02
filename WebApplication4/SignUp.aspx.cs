@@ -13,16 +13,18 @@ namespace WebApplication4
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            // Clear any existing session when on signup page
+            if (!IsPostBack)
+            {
+                // Optional: Clear session to prevent auto-login issues
+                // Session.Clear();
+                // Session.Abandon();
+            }
         }
-        
-
-      
 
         protected void InsertUser(string email, string password)
         {
-
-            string role = "Candidate";   // or whatever role you want
+            string role = "Candidate";
 
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
@@ -41,7 +43,7 @@ namespace WebApplication4
 
                     if (count > 0)
                     {
-                       lblMessage.ForeColor = System.Drawing.Color.Red;
+                        lblMessage.ForeColor = System.Drawing.Color.Red;
                         lblMessage.Text = "Email already exists.";
                         return;
                     }
@@ -59,31 +61,29 @@ namespace WebApplication4
 
                             int userId = Convert.ToInt32(insertCmd.ExecuteScalar());
 
-                            Session["UserID"] = userId;
+                            // ❌ REMOVE THIS LINE - Don't set session on registration
+                            // Session["UserID"] = userId;
 
                             lblMessage.ForeColor = System.Drawing.Color.Green;
-                            lblMessage.Text = "User Registration successful.";
+                            lblMessage.Text = "✅ Registration successful! Redirecting to Login...";
 
+                            // ✅ Redirect to Login page after successful registration
+                            Response.Redirect("Login.aspx");
                         }
                     }
                 }
-
             }
         }
 
         protected void BtnRegister_Click(object sender, EventArgs e)
         {
-            string email = txtEmail.Text;
-
-            // Get Password value
-            string password = txtPassword.Text;
-
-            InsertUser(email,password);
+            // Validate page first
+            if (Page.IsValid)
+            {
+                string email = txtEmail.Text;
+                string password = txtPassword.Text;
+                InsertUser(email, password);
+            }
         }
-      
-
-
-
-
     }
 }

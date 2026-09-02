@@ -15,7 +15,7 @@ namespace WebApplication4
         protected void Page_Load(object sender, EventArgs e)
         {
             // If already logged in, redirect based on role
-            if (Session["UserID"] != null)
+            if (!IsPostBack && Session["UserID"] != null)
             {
                 if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
                 {
@@ -36,6 +36,7 @@ namespace WebApplication4
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 lblMessage.Text = "Please enter email and password.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
                 return;
             }
 
@@ -78,6 +79,7 @@ namespace WebApplication4
                 else
                 {
                     lblMessage.Text = "Invalid email or password.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
                 }
 
                 dr.Close();
