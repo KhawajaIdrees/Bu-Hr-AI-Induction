@@ -222,7 +222,7 @@
             width: 18px;
             height: 18px;
             cursor: pointer;
-            accent-color: #1a3a7a;
+            accent-color: #4D6BFE;
         }
 
         .radio-group label {
@@ -520,12 +520,11 @@
                     </div>
                 </div>
 
-                <!-- SECTION: Declaration -->
+                <!-- Previously Applied Section - No heading, just icon -->
                 <div class="form-section">
-                    <div class="section-title"><i class="bi bi-clipboard-check-fill"></i>Declaration</div>
-
                     <div class="form-group mb-0">
                         <label class="form-label">
+                            <i class="bi bi-question-circle-fill me-1" style="color: #1a3a7a;"></i>
                             Have you previously applied to Bahria University? <span class="required-asterisk">*</span>
                         </label>
 
