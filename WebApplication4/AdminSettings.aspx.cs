@@ -58,41 +58,26 @@ namespace WebApplication4
         {
             try
             {
-                string query = @"
-                    SELECT p.fname, p.lname
-                    FROM Users u
-                    LEFT JOIN Personal p ON u.id = p.userId
-                    WHERE u.id = @UserId";
-
+                string query = "SELECT FullName FROM Admins WHERE UserId = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
                     con.Open();
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
                     {
-                        if (reader.Read())
-                        {
-                            string firstName = reader["fname"]?.ToString() ?? "";
-                            string lastName = reader["lname"]?.ToString() ?? "";
-                            string fullName = (firstName + " " + lastName).Trim();
-
-                            if (string.IsNullOrEmpty(fullName))
-                            {
-                                fullName = "System Administrator";
-                            }
-
-                            lblAdminName.Text = fullName;
-                            // Always show "A" for Administrator
-                            lblAdminInitial.Text = "A";
-                        }
-                        else
-                        {
-                            lblAdminName.Text = "System Administrator";
-                            lblAdminInitial.Text = "A";
-                        }
+                        string fullName = result.ToString();
+                        if (string.IsNullOrEmpty(fullName))
+                            fullName = "System Administrator";
+                        lblAdminName.Text = fullName;
                     }
+                    else
+                    {
+                        lblAdminName.Text = "System Administrator";
+                    }
+                    lblAdminInitial.Text = "A";
                 }
             }
             catch
@@ -106,7 +91,7 @@ namespace WebApplication4
         {
             try
             {
-                string query = "SELECT email FROM Users WHERE id = @UserId";
+                string query = "SELECT Email FROM Admins WHERE UserId = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -117,6 +102,17 @@ namespace WebApplication4
                     if (result != null)
                     {
                         txtCurrentEmail.Text = result.ToString();
+                    }
+                    else
+                    {
+                        string fallbackQuery = "SELECT email FROM Users WHERE id = @UserId";
+                        using (SqlCommand fallbackCmd = new SqlCommand(fallbackQuery, con))
+                        {
+                            fallbackCmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                            object fallbackResult = fallbackCmd.ExecuteScalar();
+                            if (fallbackResult != null)
+                                txtCurrentEmail.Text = fallbackResult.ToString();
+                        }
                     }
                 }
             }
@@ -130,37 +126,7 @@ namespace WebApplication4
         {
             try
             {
-                // Ensure AdminUsers table exists
-                string createTableQuery = @"
-                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='AdminUsers' AND xtype='U')
-                    BEGIN
-                        CREATE TABLE AdminUsers (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            UserId INT NOT NULL,
-                            Role NVARCHAR(50) DEFAULT 'Admin',
-                            LastLogin DATETIME,
-                            CreatedDate DATETIME DEFAULT GETDATE(),
-                            IsActive BIT DEFAULT 1
-                        )
-                    END
-                    ELSE
-                    BEGIN
-                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('AdminUsers') AND name = 'LastLogin')
-                        BEGIN
-                            ALTER TABLE AdminUsers ADD LastLogin DATETIME
-                        END
-                    END";
-
-                using (SqlConnection con = new SqlConnection(cs))
-                {
-                    con.Open();
-                    using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
-                string query = "SELECT LastLogin FROM AdminUsers WHERE UserId = @UserId";
+                string query = "SELECT LastLogin FROM Admins WHERE UserId = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -204,9 +170,6 @@ namespace WebApplication4
             pnlError.Visible = false;
         }
 
-        // ============================================
-        // CHANGE EMAIL
-        // ============================================
         protected void btnChangeEmail_Click(object sender, EventArgs e)
         {
             ClearMessages();
@@ -228,8 +191,7 @@ namespace WebApplication4
                     return;
                 }
 
-                // Check if email already exists for another user
-                string checkQuery = "SELECT COUNT(*) FROM Users WHERE email = @Email AND id != @UserId";
+                string checkQuery = "SELECT COUNT(*) FROM Admins WHERE Email = @Email AND UserId != @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(checkQuery, con))
                 {
@@ -245,10 +207,19 @@ namespace WebApplication4
                     }
                 }
 
-                // Update email
-                string updateQuery = "UPDATE Users SET email = @Email WHERE id = @UserId";
+                string updateQuery = "UPDATE Admins SET Email = @Email WHERE UserId = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@Email", newEmail);
+                    cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                string updateUsersQuery = "UPDATE Users SET email = @Email WHERE id = @UserId";
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(updateUsersQuery, con))
                 {
                     cmd.Parameters.AddWithValue("@Email", newEmail);
                     cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
@@ -268,9 +239,6 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // CHANGE PASSWORD
-        // ============================================
         protected void btnChangePassword_Click(object sender, EventArgs e)
         {
             ClearMessages();
@@ -299,7 +267,6 @@ namespace WebApplication4
                     return;
                 }
 
-                // Verify current password
                 string verifyQuery = "SELECT password FROM Users WHERE id = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(verifyQuery, con))
@@ -315,7 +282,6 @@ namespace WebApplication4
                     }
                 }
 
-                // Update password
                 string updateQuery = "UPDATE Users SET password = @Password WHERE id = @UserId";
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(updateQuery, con))

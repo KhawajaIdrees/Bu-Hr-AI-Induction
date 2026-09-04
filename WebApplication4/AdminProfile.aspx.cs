@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -40,7 +39,7 @@ namespace WebApplication4
 
             if (!IsPostBack)
             {
-                LoadUserProfile();
+                LoadAdminProfile();
             }
         }
 
@@ -54,16 +53,14 @@ namespace WebApplication4
             Response.Redirect("Login.aspx");
         }
 
-        private void LoadUserProfile()
+        private void LoadAdminProfile()
         {
             try
             {
                 string query = @"
-                    SELECT u.id, u.email, 
-                           p.fname, p.lname, p.cellNumber, p.PhotoPath
-                    FROM Users u
-                    LEFT JOIN Personal p ON u.id = p.userId
-                    WHERE u.id = @UserId";
+                    SELECT Id, UserId, Email, FullName, Phone, ProfileImage, Role, LastLogin
+                    FROM Admins
+                    WHERE UserId = @UserId";
 
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -75,70 +72,137 @@ namespace WebApplication4
                     {
                         if (reader.Read())
                         {
-                            // Handle NULL values safely
-                            string firstName = reader["fname"]?.ToString() ?? "";
-                            string lastName = reader["lname"]?.ToString() ?? "";
-                            string fullName = (firstName + " " + lastName).Trim();
+                            string fullName = reader["FullName"]?.ToString() ?? "";
 
-                            // If fullName is empty, use "System Administrator" as fallback
                             if (string.IsNullOrEmpty(fullName))
                             {
                                 fullName = "System Administrator";
                             }
 
                             txtFullName.Text = fullName;
-                            txtEmail.Text = reader["email"]?.ToString() ?? "";
-                            txtPhone.Text = reader["cellNumber"]?.ToString() ?? "";
+                            txtEmail.Text = reader["Email"]?.ToString() ?? "";
+                            txtPhone.Text = reader["Phone"]?.ToString() ?? "";
+                            txtRole.Text = reader["Role"]?.ToString() ?? "Administrator";
 
-                            // Set profile image
-                            string photoPath = reader["PhotoPath"]?.ToString();
-                            if (!string.IsNullOrEmpty(photoPath))
+                            string profileImage = reader["ProfileImage"]?.ToString();
+                            if (!string.IsNullOrEmpty(profileImage))
                             {
-                                imgProfile.ImageUrl = photoPath;
+                                imgProfile.ImageUrl = profileImage;
                             }
                             else
                             {
-                                string imagePath = $"~/Images/Profile_{CurrentUserId}.jpg";
-                                string physicalPath = Server.MapPath(imagePath);
-                                if (System.IO.File.Exists(physicalPath))
-                                {
-                                    imgProfile.ImageUrl = imagePath;
-                                }
-                                else
-                                {
-                                    imagePath = $"~/Images/Profile_{CurrentUserId}.png";
-                                    physicalPath = Server.MapPath(imagePath);
-                                    if (System.IO.File.Exists(physicalPath))
-                                    {
-                                        imgProfile.ImageUrl = imagePath;
-                                    }
-                                    else
-                                    {
-                                        imgProfile.ImageUrl = "~/Images/default-avatar.png";
-                                    }
-                                }
+                                SetDefaultProfileImage();
                             }
 
-                            // Set admin initials - Always "A" for Administrator
                             lblAdminInitial.Text = "A";
-
                             lblAdminName.Text = fullName;
                         }
                         else
                         {
-                            lblAdminName.Text = "System Administrator";
-                            lblAdminInitial.Text = "A";
-                            ShowError("User profile not found.");
+                            // Create admin record
+                            CreateAdminRecord();
+                            LoadAdminProfile(); // Reload after creating
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                lblAdminName.Text = "System Administrator";
-                lblAdminInitial.Text = "A";
                 ShowError("Error loading profile: " + ex.Message);
+                SetDefaultProfile();
             }
+        }
+
+        private void CreateAdminRecord()
+        {
+            try
+            {
+                string email = GetUserEmail();
+                string insertQuery = @"
+                    INSERT INTO Admins (UserId, Email, FullName, Role, CreatedDate, IsActive)
+                    VALUES (@UserId, @Email, 'System Administrator', 'Admin', GETDATE(), 1)";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(insertQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error creating admin record: " + ex.Message);
+            }
+        }
+
+        private void SetDefaultProfile()
+        {
+            txtFullName.Text = "System Administrator";
+            txtEmail.Text = GetUserEmail();
+            txtPhone.Text = "";
+            txtRole.Text = "Administrator";
+            SetDefaultProfileImage();
+            lblAdminName.Text = "System Administrator";
+            lblAdminInitial.Text = "A";
+        }
+
+        private string GetUserEmail()
+        {
+            try
+            {
+                string query = "SELECT email FROM Users WHERE id = @UserId";
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                    con.Open();
+                    object result = cmd.ExecuteScalar();
+                    return result?.ToString() ?? "";
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        private void SetDefaultProfileImage()
+        {
+            string imagePath = $"~/Images/Admin_{CurrentUserId}.jpg";
+            string physicalPath = Server.MapPath(imagePath);
+            if (File.Exists(physicalPath))
+            {
+                imgProfile.ImageUrl = imagePath;
+                return;
+            }
+
+            imagePath = $"~/Images/Admin_{CurrentUserId}.png";
+            physicalPath = Server.MapPath(imagePath);
+            if (File.Exists(physicalPath))
+            {
+                imgProfile.ImageUrl = imagePath;
+                return;
+            }
+
+            imagePath = $"~/Images/Profile_{CurrentUserId}.jpg";
+            physicalPath = Server.MapPath(imagePath);
+            if (File.Exists(physicalPath))
+            {
+                imgProfile.ImageUrl = imagePath;
+                return;
+            }
+
+            imagePath = $"~/Images/Profile_{CurrentUserId}.png";
+            physicalPath = Server.MapPath(imagePath);
+            if (File.Exists(physicalPath))
+            {
+                imgProfile.ImageUrl = imagePath;
+                return;
+            }
+
+            imgProfile.ImageUrl = "~/Images/default-avatar.png";
         }
 
         private void ShowMessage(string message)
@@ -176,33 +240,52 @@ namespace WebApplication4
                     return;
                 }
 
-                string[] nameParts = fullName.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                string firstName = nameParts.Length > 0 ? nameParts[0] : "";
-                string lastName = nameParts.Length > 1 ? string.Join(" ", nameParts.Skip(1)) : "";
-
-                string query = @"
-                    UPDATE Personal 
-                    SET fname = @FirstName, 
-                        lname = @LastName, 
-                        cellNumber = @Phone
-                    WHERE userId = @UserId";
+                // Update the Admin record
+                string updateQuery = @"
+                    UPDATE Admins 
+                    SET FullName = @FullName,
+                        Phone = @Phone
+                    WHERE UserId = @UserId";
 
                 using (SqlConnection con = new SqlConnection(cs))
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                using (SqlCommand cmd = new SqlCommand(updateQuery, con))
                 {
-                    cmd.Parameters.AddWithValue("@FirstName", firstName);
-                    cmd.Parameters.AddWithValue("@LastName", lastName);
-                    cmd.Parameters.AddWithValue("@Phone", phone);
+                    cmd.Parameters.AddWithValue("@FullName", fullName);
+                    cmd.Parameters.AddWithValue("@Phone", string.IsNullOrEmpty(phone) ? "" : phone);
                     cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
                     con.Open();
-                    cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        // If no rows updated, try inserting
+                        string email = GetUserEmail();
+                        string insertQuery = @"
+                            INSERT INTO Admins (UserId, Email, FullName, Phone, Role, CreatedDate, IsActive)
+                            VALUES (@UserId, @Email, @FullName, @Phone, 'Admin', GETDATE(), 1)";
+
+                        using (SqlCommand insertCmd = new SqlCommand(insertQuery, con))
+                        {
+                            insertCmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                            insertCmd.Parameters.AddWithValue("@Email", email);
+                            insertCmd.Parameters.AddWithValue("@FullName", fullName);
+                            insertCmd.Parameters.AddWithValue("@Phone", string.IsNullOrEmpty(phone) ? "" : phone);
+                            insertCmd.ExecuteNonQuery();
+                        }
+                    }
                 }
 
+                // Update the header immediately
                 lblAdminName.Text = fullName;
-                // Keep initial as "A" for Administrator
                 lblAdminInitial.Text = "A";
 
-                ShowMessage("Profile updated successfully!");
+                ShowMessage($"Profile updated successfully! Name changed to: {fullName}");
+
+                // Reload the profile data to refresh all fields
+                LoadAdminProfile();
+
+                // Force a full page refresh
+                Response.Redirect(Request.RawUrl);
             }
             catch (Exception ex)
             {
@@ -216,53 +299,54 @@ namespace WebApplication4
 
             try
             {
-                if (fuProfileImage.HasFile)
-                {
-                    string extension = Path.GetExtension(fuProfileImage.FileName).ToLower();
-                    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
-                    {
-                        ShowError("Only JPG and PNG files are allowed.");
-                        return;
-                    }
-
-                    if (fuProfileImage.PostedFile.ContentLength > 2 * 1024 * 1024)
-                    {
-                        ShowError("File size must be less than 2MB.");
-                        return;
-                    }
-
-                    string folderPath = Server.MapPath("~/Images");
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-
-                    string fileName = $"Profile_{CurrentUserId}{extension}";
-                    string savePath = Path.Combine(folderPath, fileName);
-                    fuProfileImage.SaveAs(savePath);
-
-                    string photoPath = $"~/Images/{fileName}";
-                    string query = @"
-                        UPDATE Personal 
-                        SET PhotoPath = @PhotoPath
-                        WHERE userId = @UserId";
-
-                    using (SqlConnection con = new SqlConnection(cs))
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@PhotoPath", photoPath);
-                        cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    imgProfile.ImageUrl = photoPath + "?t=" + DateTime.Now.Ticks;
-                    ShowMessage("Profile picture updated successfully!");
-                }
-                else
+                if (!fuProfileImage.HasFile)
                 {
                     ShowError("Please select an image file to upload.");
+                    return;
                 }
+
+                string extension = Path.GetExtension(fuProfileImage.FileName).ToLower();
+                if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+                {
+                    ShowError("Only JPG and PNG files are allowed.");
+                    return;
+                }
+
+                if (fuProfileImage.PostedFile.ContentLength > 2 * 1024 * 1024)
+                {
+                    ShowError("File size must be less than 2MB.");
+                    return;
+                }
+
+                string folderPath = Server.MapPath("~/Images");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string fileName = $"Admin_{CurrentUserId}{extension}";
+                string savePath = Path.Combine(folderPath, fileName);
+                fuProfileImage.SaveAs(savePath);
+
+                string photoPath = $"~/Images/{fileName}";
+
+                string updateQuery = @"
+                    UPDATE Admins 
+                    SET ProfileImage = @ProfileImage
+                    WHERE UserId = @UserId";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@ProfileImage", photoPath);
+                    cmd.Parameters.AddWithValue("@UserId", CurrentUserId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                imgProfile.ImageUrl = photoPath + "?t=" + DateTime.Now.Ticks;
+                ShowMessage("Profile picture updated successfully!");
+                LoadAdminProfile();
             }
             catch (Exception ex)
             {

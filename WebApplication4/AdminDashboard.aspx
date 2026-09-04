@@ -286,8 +286,12 @@
             gap: 12px;
 
             position: relative;
-            cursor: pointer;
 
+        }
+        
+        /* Make text not clickable */
+        .admin-box .text-end {
+            cursor: default;
         }
 
         .profile-circle {
@@ -1602,13 +1606,13 @@
 
                 </button>
                 <p>|</p>
-                <div class="admin-box" onclick="toggleDropdown(event)">
+                <div class="admin-box">
 
-                    <div class="text-end">
+                    <div class="text-end" style="cursor: default;">
 
                         <div class="fw-semibold">
 
-                            System Administrator
+                            <asp:Label ID="lblAdminName" runat="server" Text="System Administrator" />
 
                         </div>
 
@@ -1620,7 +1624,7 @@
 
                     </div>
 
-                    <div class="profile-circle">
+                    <div class="profile-circle" onclick="toggleDropdown(event)">
                         A
                         <span class="dropdown-arrow">▼</span>
                     </div>

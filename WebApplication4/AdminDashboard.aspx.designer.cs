@@ -33,6 +33,15 @@ namespace WebApplication4
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
+        /// lblAdminName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdminName;
+
+        /// <summary>
         /// lnkLogout control.
         /// </summary>
         /// <remarks>

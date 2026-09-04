@@ -138,6 +138,9 @@ namespace WebApplication4
                 return;
             }
 
+            // Load admin name from Admins table - ALWAYS load it
+            LoadAdminName();
+
             // Update last login
             UpdateLastLogin();
 
@@ -149,6 +152,51 @@ namespace WebApplication4
 
                 LoadDataFromDatabase();
                 BindAll();
+            }
+        }
+
+        // ============================================
+        // LOAD ADMIN NAME FROM ADMINS TABLE
+        // ============================================
+        private void LoadAdminName()
+        {
+            try
+            {
+                int userId = Convert.ToInt32(Session["UserID"]);
+                string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+                string query = "SELECT FullName FROM Admins WHERE UserId = @UserId";
+
+                using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    con.Open();
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        string fullName = result.ToString();
+                        if (!string.IsNullOrEmpty(fullName))
+                        {
+                            lblAdminName.Text = fullName;
+                        }
+                        else
+                        {
+                            lblAdminName.Text = "System Administrator";
+                        }
+                    }
+                    else
+                    {
+                        lblAdminName.Text = "System Administrator";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                System.Diagnostics.Debug.WriteLine("Error loading admin name: " + ex.Message);
+                lblAdminName.Text = "System Administrator";
             }
         }
 
@@ -172,51 +220,18 @@ namespace WebApplication4
                 int userId = Convert.ToInt32(Session["UserID"]);
                 string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-                // Ensure AdminUsers table exists
-                string createTableQuery = @"
-                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='AdminUsers' AND xtype='U')
-                    BEGIN
-                        CREATE TABLE AdminUsers (
-                            Id INT IDENTITY(1,1) PRIMARY KEY,
-                            UserId INT NOT NULL,
-                            Role NVARCHAR(50) DEFAULT 'Admin',
-                            LastLogin DATETIME,
-                            CreatedDate DATETIME DEFAULT GETDATE(),
-                            IsActive BIT DEFAULT 1
-                        )
-                    END
-                    ELSE
-                    BEGIN
-                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('AdminUsers') AND name = 'LastLogin')
-                        BEGIN
-                            ALTER TABLE AdminUsers ADD LastLogin DATETIME
-                        END
-                    END";
+                // Update last login in Admins table
+                string updateQuery = @"
+                    UPDATE Admins 
+                    SET LastLogin = GETDATE() 
+                    WHERE UserId = @UserId";
 
                 using (SqlConnection con = new SqlConnection(cs))
+                using (SqlCommand cmd = new SqlCommand(updateQuery, con))
                 {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
                     con.Open();
-                    using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    // Update last login
-                    string updateQuery = @"
-                        IF EXISTS (SELECT * FROM AdminUsers WHERE UserId = @UserId)
-                        BEGIN
-                            UPDATE AdminUsers SET LastLogin = GETDATE() WHERE UserId = @UserId
-                        END
-                        ELSE
-                        BEGIN
-                            INSERT INTO AdminUsers (UserId, LastLogin) VALUES (@UserId, GETDATE())
-                        END";
-
-                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
-                    {
-                        cmd.Parameters.AddWithValue("@UserId", userId);
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch
