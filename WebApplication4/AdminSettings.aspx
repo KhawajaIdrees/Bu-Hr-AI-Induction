@@ -58,6 +58,13 @@
             justify-content: flex-end;
             min-width: 220px;
         }
+        /* Same as AdminDashboard - using p tag with font-size 40px */
+            .header-right p {
+                font-size: 40px;
+                margin: 0;
+                color: #000;
+                margin-bottom: 1rem;
+            }
         .header-icon {
             position: relative;
             border: none;
@@ -487,12 +494,22 @@
                         <asp:Label ID="lblAdminInitial" runat="server" Text="A" />
                         <span class="dropdown-arrow">▼</span>
                     </div>
-                   <asp:LinkButton ID="lnkLogout" runat="server" 
-    CssClass="dropdown-item logout-item" 
-    OnClick="lnkLogout_Click"
-    OnClientClick="event.stopPropagation();">
-    <i class="bi bi-box-arrow-right"></i> Logout
-</asp:LinkButton>
+                    
+                    <!-- DROPDOWN MENU -->
+                    <div id="dropdownMenu" class="dropdown-menu-custom">
+                        <asp:LinkButton ID="lnkProfile" runat="server" CssClass="dropdown-item" PostBackUrl="AdminProfile.aspx">
+                            <i class="bi bi-person-circle"></i> My Profile
+                        </asp:LinkButton>
+                        <asp:LinkButton ID="lnkSettings" runat="server" CssClass="dropdown-item" PostBackUrl="AdminSettings.aspx">
+                            <i class="bi bi-gear"></i> Settings
+                        </asp:LinkButton>
+                        <div class="dropdown-divider"></div>
+                        <asp:LinkButton ID="lnkLogout" runat="server" 
+                            CssClass="dropdown-item logout-item" 
+                            OnClick="lnkLogout_Click">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </asp:LinkButton>
+                    </div>
                 </div>
             </div>
         </header>

@@ -58,6 +58,12 @@
             justify-content: flex-end;
             min-width: 220px;
         }
+            .header-right p {
+                font-size: 40px;
+                margin: 0;
+                color: #000;
+                margin-bottom: 1rem;
+            }
         .header-icon {
             position: relative;
             border: none;
@@ -83,6 +89,10 @@
             gap: 12px;
             position: relative;
             cursor: pointer;
+        }
+        /* Make only the profile circle clickable, not the text */
+        .admin-box .text-end {
+            cursor: default;
         }
         .profile-circle {
             width: 42px;
@@ -503,32 +513,34 @@
                     <span class="notification-dot"></span>
                 </button>
                 <p>|</p>
-                <div class="admin-box" onclick="toggleDropdown(event)">
-                    <div class="text-end">
+                <div class="admin-box">
+                    <!-- Text is NOT clickable - cursor: default -->
+                    <div class="text-end" style="cursor: default;">
                         <div class="fw-semibold">
-                            <asp:Label ID="lblAdminName" runat="server" Text="Administrator" />
+                            <asp:Label ID="lblAdminName" runat="server" Text="System Administrator" />
                         </div>
                         <small class="text-muted">ADMIN</small>
                     </div>
-                    <div class="profile-circle">
+                    <!-- Only the profile circle is clickable -->
+                    <div class="profile-circle" onclick="toggleDropdown(event)">
                         <asp:Label ID="lblAdminInitial" runat="server" Text="A" />
                         <span class="dropdown-arrow">▼</span>
                     </div>
-                   <div id="dropdownMenu" class="dropdown-menu-custom">
-    <a href="AdminProfile.aspx" class="dropdown-item" onclick="event.stopPropagation();">
-        <i class="bi bi-person-circle"></i> My Profile
-    </a>
-    <a href="AdminSettings.aspx" class="dropdown-item" onclick="event.stopPropagation();">
-        <i class="bi bi-gear"></i> Settings
-    </a>
-    <div class="dropdown-divider"></div>
-    <asp:LinkButton ID="lnkLogout" runat="server" 
-        CssClass="dropdown-item logout-item" 
-        OnClick="lnkLogout_Click"
-        OnClientClick="event.stopPropagation();">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </asp:LinkButton>
-</div>
+                    <div id="dropdownMenu" class="dropdown-menu-custom">
+                        <a href="AdminProfile.aspx" class="dropdown-item" onclick="event.stopPropagation();">
+                            <i class="bi bi-person-circle"></i> My Profile
+                        </a>
+                        <a href="AdminSettings.aspx" class="dropdown-item" onclick="event.stopPropagation();">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <asp:LinkButton ID="lnkLogout" runat="server" 
+                            CssClass="dropdown-item logout-item" 
+                            OnClick="lnkLogout_Click"
+                            OnClientClick="event.stopPropagation();">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </asp:LinkButton>
+                    </div>
                 </div>
             </div>
         </header>

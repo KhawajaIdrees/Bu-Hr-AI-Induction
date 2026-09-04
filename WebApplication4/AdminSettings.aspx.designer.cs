@@ -51,6 +51,24 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.Label lblAdminInitial;
 
         /// <summary>
+        /// lnkProfile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkProfile;
+
+        /// <summary>
+        /// lnkSettings control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkSettings;
+
+        /// <summary>
         /// lnkLogout control.
         /// </summary>
         /// <remarks>

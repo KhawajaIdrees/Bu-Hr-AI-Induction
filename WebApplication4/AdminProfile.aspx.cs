@@ -80,10 +80,10 @@ namespace WebApplication4
                             string lastName = reader["lname"]?.ToString() ?? "";
                             string fullName = (firstName + " " + lastName).Trim();
 
-                            // If fullName is empty, use "Administrator" as fallback
+                            // If fullName is empty, use "System Administrator" as fallback
                             if (string.IsNullOrEmpty(fullName))
                             {
-                                fullName = "Administrator";
+                                fullName = "System Administrator";
                             }
 
                             txtFullName.Text = fullName;
@@ -119,32 +119,15 @@ namespace WebApplication4
                                 }
                             }
 
-                            // Set admin initials - FIXED: handle null/empty safely
-                            if (!string.IsNullOrEmpty(fullName))
-                            {
-                                string[] parts = fullName.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (parts.Length >= 2)
-                                {
-                                    lblAdminInitial.Text = (parts[0][0] + parts[parts.Length - 1][0]).ToString().ToUpper();
-                                }
-                                else if (parts.Length == 1 && parts[0].Length > 0)
-                                {
-                                    lblAdminInitial.Text = parts[0][0].ToString().ToUpper();
-                                }
-                                else
-                                {
-                                    lblAdminInitial.Text = "A";
-                                }
-                            }
-                            else
-                            {
-                                lblAdminInitial.Text = "A";
-                            }
+                            // Set admin initials - Always "A" for Administrator
+                            lblAdminInitial.Text = "A";
 
                             lblAdminName.Text = fullName;
                         }
                         else
                         {
+                            lblAdminName.Text = "System Administrator";
+                            lblAdminInitial.Text = "A";
                             ShowError("User profile not found.");
                         }
                     }
@@ -152,6 +135,8 @@ namespace WebApplication4
             }
             catch (Exception ex)
             {
+                lblAdminName.Text = "System Administrator";
+                lblAdminInitial.Text = "A";
                 ShowError("Error loading profile: " + ex.Message);
             }
         }
@@ -214,19 +199,8 @@ namespace WebApplication4
                 }
 
                 lblAdminName.Text = fullName;
-
-                if (!string.IsNullOrEmpty(fullName))
-                {
-                    string[] parts = fullName.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length >= 2)
-                    {
-                        lblAdminInitial.Text = (parts[0][0] + parts[parts.Length - 1][0]).ToString().ToUpper();
-                    }
-                    else if (parts.Length == 1 && parts[0].Length > 0)
-                    {
-                        lblAdminInitial.Text = parts[0][0].ToString().ToUpper();
-                    }
-                }
+                // Keep initial as "A" for Administrator
+                lblAdminInitial.Text = "A";
 
                 ShowMessage("Profile updated successfully!");
             }
