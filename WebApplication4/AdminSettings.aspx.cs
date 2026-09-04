@@ -80,38 +80,25 @@ namespace WebApplication4
 
                             if (string.IsNullOrEmpty(fullName))
                             {
-                                fullName = "Administrator";
+                                fullName = "System Administrator";
                             }
 
                             lblAdminName.Text = fullName;
-
-                            if (!string.IsNullOrEmpty(fullName))
-                            {
-                                string[] parts = fullName.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (parts.Length >= 2)
-                                {
-                                    lblAdminInitial.Text = (parts[0][0] + parts[parts.Length - 1][0]).ToString().ToUpper();
-                                }
-                                else if (parts.Length == 1 && parts[0].Length > 0)
-                                {
-                                    lblAdminInitial.Text = parts[0][0].ToString().ToUpper();
-                                }
-                                else
-                                {
-                                    lblAdminInitial.Text = "A";
-                                }
-                            }
-                            else
-                            {
-                                lblAdminInitial.Text = "A";
-                            }
+                            // Always show "A" for Administrator
+                            lblAdminInitial.Text = "A";
+                        }
+                        else
+                        {
+                            lblAdminName.Text = "System Administrator";
+                            lblAdminInitial.Text = "A";
                         }
                     }
                 }
             }
             catch
             {
-                // Silent fail
+                lblAdminName.Text = "System Administrator";
+                lblAdminInitial.Text = "A";
             }
         }
 

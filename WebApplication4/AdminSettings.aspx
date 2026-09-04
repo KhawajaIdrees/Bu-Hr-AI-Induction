@@ -89,7 +89,10 @@
             align-items: center;
             gap: 12px;
             position: relative;
-            cursor: pointer;
+        }
+        /* Make only the profile circle clickable, not the text */
+        .admin-box .text-end {
+            cursor: default;
         }
         .profile-circle {
             width: 42px;
@@ -483,14 +486,14 @@
                     <span class="notification-dot"></span>
                 </button>
                 <p>|</p>
-                <div class="admin-box" onclick="toggleDropdown(event)">
-                    <div class="text-end">
+                <div class="admin-box">
+                    <div class="text-end" style="cursor: default;">
                         <div class="fw-semibold">
-                            <asp:Label ID="lblAdminName" runat="server" Text="Administrator" />
+                            <asp:Label ID="lblAdminName" runat="server" Text="System Administrator" />
                         </div>
                         <small class="text-muted">ADMIN</small>
                     </div>
-                    <div class="profile-circle">
+                    <div class="profile-circle" onclick="toggleDropdown(event)">
                         <asp:Label ID="lblAdminInitial" runat="server" Text="A" />
                         <span class="dropdown-arrow">▼</span>
                     </div>
