@@ -156,6 +156,7 @@ END";
         {
             if (Session["UserId"] == null)
                 return;
+
             if (rblHasRelative.SelectedItem == null)
             {
                 lblMessage.Text = "Please select Yes or No.";
@@ -184,7 +185,7 @@ END";
                     return;
                 }
 
-                Response.Redirect("FriendDeclaration.aspx");
+                Response.Redirect("Experience.aspx");
                 return;
             }
 
@@ -206,8 +207,7 @@ END";
                 lblMessage.CssClass = "text-danger";
             }
 
-            Response.Redirect("FriendDeclaration.aspx");
+            Response.Redirect("Experience.aspx");
         }
-
     }
 }
