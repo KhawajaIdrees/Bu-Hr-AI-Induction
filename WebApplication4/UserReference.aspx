@@ -9,7 +9,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
@@ -20,15 +19,8 @@
             font-size: 17px;
         }
 
-        .page-title h4 {
-            color: #1a3a7a;
-            font-weight: 700;
-        }
-
-        .page-title h5 {
-            color: #6c757d;
-        }
-
+        .page-title h4 { color: #1a3a7a; font-weight: 700; }
+        .page-title h5 { color: #6c757d; }
         .page-title hr {
             border-top: 3px solid #1a3a7a;
             opacity: 0.2;
@@ -57,13 +49,9 @@
             font-size: 20px;
         }
 
-        .card-header-blue i {
-            margin-right: 10px;
-        }
+        .card-header-blue i { margin-right: 10px; }
 
-        .card-body {
-            padding: 25px 30px;
-        }
+        .card-body { padding: 25px 30px; }
 
         .form-label {
             font-size: 15px;
@@ -88,14 +76,7 @@
             box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
         }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .required-star {
-            color: #dc3545;
-            font-weight: 700;
-        }
+        .form-group { margin-bottom: 24px; }
 
         .btn-add {
             background: #1a3a7a;
@@ -116,8 +97,8 @@
         }
 
         .btn-save {
-            background: #1a3a7a;
-            color: white;
+            background: #1a3a7a !important;
+            color: white !important;
             border-radius: 8px;
             padding: 14px 55px;
             font-size: 17px;
@@ -127,8 +108,8 @@
         }
 
         .btn-save:hover {
-            background: #2a5aaa;
-            color: white;
+            background: #2a5aaa !important;
+            color: white !important;
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
@@ -169,14 +150,6 @@
             box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
         }
 
-        .btn-delete:focus {
-            box-shadow: none;
-        }
-
-        .btn-edit:focus {
-            box-shadow: none;
-        }
-
         .reference-card {
             border: 1px solid #eef1f8;
             border-radius: 12px;
@@ -209,51 +182,8 @@
             font-weight: 600;
         }
 
-        .text-danger {
-            font-size: 13px;
-        }
-
-        .text-success {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .text-primary-custom {
-            color: #1a3a7a;
-        }
-
-        .text-muted {
-            color: #6c757d !important;
-        }
-
-        .mt-4 {
-            margin-top: 1.5rem;
-        }
-        .mt-5 {
-            margin-top: 2rem;
-        }
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-        .me-1 {
-            margin-right: 0.25rem;
-        }
-        .me-2 {
-            margin-right: 0.5rem;
-        }
-        .me-3 {
-            margin-right: 1rem;
-        }
-        .ms-3 {
-            margin-left: 1rem;
-        }
-        .py-4 {
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-        .fw-semibold {
-            font-weight: 600;
-        }
+        .text-primary-custom { color: #1a3a7a; }
+        .text-muted { color: #6c757d !important; }
 
         .btn-save-wrapper {
             text-align: center;
@@ -266,114 +196,29 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
-
-            .form-label {
-                font-size: 14px;
-            }
-
-            .form-control {
-                font-size: 14px;
-                height: 44px;
-            }
-
-            .btn-add,
-            .btn-save {
-                width: 100%;
-            }
-
-            .btn-edit,
-            .btn-delete {
-                padding: 4px 10px;
-                font-size: 12px;
-            }
-
-            .page-title h4 {
-                font-size: 20px;
-            }
-
-            .page-title h5 {
-                font-size: 14px;
-            }
-
-            .container {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-
-            .reference-card {
-                padding: 15px 16px;
-            }
-
-            .reference-card .ref-title {
-                font-size: 15px;
-            }
-
-            .reference-card .ref-detail {
-                font-size: 13px;
-            }
+            body { font-size: 15px; }
+            .card-body { padding: 15px; }
+            .form-label { font-size: 14px; }
+            .form-control { font-size: 14px; height: 44px; }
+            .btn-add, .btn-save { width: 100%; }
+            .btn-edit, .btn-delete { padding: 4px 10px; font-size: 12px; }
+            .container { padding-left: 10px; padding-right: 10px; }
+            .reference-card { padding: 15px 16px; }
         }
 
         @media (max-width: 480px) {
-            .form-control {
-                height: 40px;
-                font-size: 13px;
-            }
-
-            .card-header-blue {
-                padding: 14px 18px;
-            }
-
-            .card-header-blue h5 {
-                font-size: 16px;
-            }
-
-            .btn-add {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
-
-            .btn-save {
-                font-size: 15px;
-                padding: 12px 20px;
-            }
-
-            .reference-card {
-                padding: 12px 14px;
-            }
-
-            .reference-card .ref-title {
-                font-size: 14px;
-            }
-
-            .reference-card .ref-detail {
-                font-size: 12px;
-            }
-
-            .page-title h4 {
-                font-size: 17px;
-            }
-
-            .page-title h5 {
-                font-size: 12px;
-            }
-
-            .container {
-                padding-left: 6px;
-                padding-right: 6px;
-            }
+            .form-control { height: 40px; font-size: 13px; }
+            .card-header-blue { padding: 14px 18px; }
+            .card-header-blue h5 { font-size: 16px; }
+            .btn-add { font-size: 14px; padding: 10px 20px; }
+            .btn-save { font-size: 15px; padding: 12px 20px; }
+            .reference-card { padding: 12px 14px; }
         }
     </style>
 </head>
 
 <body>
-    <form id="form1" runat="server">
+    <form id="form1" runat="server" defaultbutton="btnSaveContinue">
         <div class="container py-4">
 
             <!-- Page Title -->
@@ -384,11 +229,11 @@
             </div>
 
             <!-- ============================================================ -->
-            <!-- SECTION 1: REFERENCES (Add Form + List Together) -->
+            <!-- SECTION 1: REFERENCES (Optional) -->
             <!-- ============================================================ -->
             <div class="card card-main">
                 <div class="card-header-blue">
-                    <h5><i class="bi bi-person-plus-fill"></i> Add Reference</h5>
+                    <h5><i class="bi bi-person-plus-fill"></i> Add Reference (Optional)</h5>
                 </div>
                 <div class="card-body">
 
@@ -399,77 +244,62 @@
                     <div class="row">
                         <!-- Reference Name -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Reference Name <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Reference Name</label>
                             <asp:TextBox ID="txtReferenceName" runat="server" CssClass="form-control" />
                         </div>
 
                         <!-- Relationship -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Relationship <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Relationship</label>
                             <asp:TextBox ID="txtRelationship" runat="server" CssClass="form-control" />
                         </div>
 
                         <!-- Organization -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Organization / Company <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Organization / Company</label>
                             <asp:TextBox ID="txtOrganization" runat="server" CssClass="form-control" />
                         </div>
 
                         <!-- Job Title -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Job Title <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Job Title</label>
                             <asp:TextBox ID="txtJobTitle" runat="server" CssClass="form-control" />
                         </div>
 
                         <!-- Email -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Email Address <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Email Address</label>
                             <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" />
                         </div>
 
                         <!-- Phone -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Phone Number <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Phone Number</label>
                             <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" MaxLength="20" oninput="validatePhone(this)" />
                         </div>
 
                         <!-- Address -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Work Address
-                            </label>
+                            <label class="form-label">Work Address</label>
                             <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control" />
                         </div>
 
                         <!-- Years Known -->
                         <div class="col-md-6 form-group">
-                            <label class="form-label">
-                                Years Known <span class="required-star">*</span>
-                            </label>
+                            <label class="form-label">Years Known</label>
                             <asp:TextBox ID="txtYearsKnown" runat="server" TextMode="Number" CssClass="form-control" />
                         </div>
 
                         <!-- Add Button -->
                         <div class="col-12 text-end mt-2">
-                            <asp:Button ID="btnAddReference" runat="server" Text="Add Reference" CssClass="btn btn-add" OnClick="btnAddReference_Click" />
+                            <asp:Button ID="btnAddReference" runat="server" Text="Add Reference"
+                                CssClass="btn btn-add"
+                                OnClick="btnAddReference_Click"
+                                CausesValidation="false" />
                         </div>
                     </div>
 
-                    <!-- ========================================================== -->
-                    <!-- REFERENCES LIST (Inside the same container) -->
-                    <!-- ========================================================== -->
+                    <!-- REFERENCES LIST -->
                     <div class="section-divider"></div>
 
                     <div class="mt-3">
@@ -488,13 +318,15 @@
                                             <asp:LinkButton ID="btnEdit" runat="server"
                                                 CssClass="btn btn-edit me-1"
                                                 CommandName="EditReference"
-                                                CommandArgument='<%# Container.ItemIndex %>'>
+                                                CommandArgument='<%# Container.ItemIndex %>'
+                                                CausesValidation="false">
                                                 <i class="bi bi-pencil-square me-1"></i>Edit
                                             </asp:LinkButton>
                                             <asp:LinkButton ID="btnDelete" runat="server"
                                                 CssClass="btn btn-delete"
                                                 CommandName="DeleteReference"
                                                 CommandArgument='<%# Container.ItemIndex %>'
+                                                CausesValidation="false"
                                                 OnClientClick="return confirm('Delete this reference?');">
                                                 <i class="bi bi-trash me-1"></i>Delete
                                             </asp:LinkButton>
@@ -535,7 +367,7 @@
             </div>
 
             <!-- ============================================================ -->
-            <!-- SECTION 2: CV UPLOAD (Separate Container) -->
+            <!-- SECTION 2: CV UPLOAD -->
             <!-- ============================================================ -->
             <div class="card card-main">
                 <div class="card-header-blue">
@@ -544,7 +376,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">
-                            Upload Resume <span class="required-star">*</span>
+                            Upload Resume <span style="color:#dc3545;font-weight:700;">*</span>
                         </label>
                         <asp:FileUpload ID="fuResume" runat="server" CssClass="form-control" />
                         <div class="text-muted mt-2" style="font-size: 14px;">
@@ -556,11 +388,12 @@
                 </div>
             </div>
 
-            <!-- ============================================================ -->
-            <!-- SAVE & CONTINUE BUTTON (Outside Both Containers) -->
-            <!-- ============================================================ -->
+            <!-- SAVE & CONTINUE BUTTON -->
             <div class="btn-save-wrapper">
-                <asp:Button ID="btnSaveContinue" runat="server" Text="Save and Continue" CssClass="btn btn-save" OnClick="btnSaveContinue_Click" />
+                <asp:Button ID="btnSaveContinue" runat="server" Text="Save and Continue"
+                    CssClass="btn btn-save"
+                    OnClick="btnSaveContinue_Click"
+                    CausesValidation="false" />
             </div>
 
         </div>

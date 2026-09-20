@@ -117,6 +117,21 @@ namespace WebApplication4
 
         protected void btnAddReference_Click(object sender, EventArgs e)
         {
+            // If nothing is filled in, just show a gentle message
+            if (string.IsNullOrWhiteSpace(txtReferenceName.Text) &&
+                string.IsNullOrWhiteSpace(txtRelationship.Text) &&
+                string.IsNullOrWhiteSpace(txtOrganization.Text) &&
+                string.IsNullOrWhiteSpace(txtJobTitle.Text) &&
+                string.IsNullOrWhiteSpace(txtEmail.Text) &&
+                string.IsNullOrWhiteSpace(txtPhone.Text) &&
+                string.IsNullOrWhiteSpace(txtAddress.Text) &&
+                string.IsNullOrWhiteSpace(txtYearsKnown.Text))
+            {
+                ShowMessage("Please fill in the reference details before adding.");
+                return;
+            }
+
+            // If user has started filling, require all fields
             if (!ValidateForm())
             {
                 ShowMessage("Please fill all required fields.");
@@ -138,7 +153,7 @@ namespace WebApplication4
 
                 References = list;
                 EditIndex = -1;
-                btnAddReference.Text = "+ Add";
+                btnAddReference.Text = "Add Reference";
                 SaveReferencesToDatabase(list);
             }
             else
@@ -259,7 +274,7 @@ namespace WebApplication4
                 list.RemoveAt(index);
                 References = list;
                 EditIndex = -1;
-                btnAddReference.Text = "+ Add";
+                btnAddReference.Text = "Add Reference";
                 btnAddReference.Enabled = true;
                 ClearForm();
                 SaveReferencesToDatabase(list);
@@ -268,18 +283,14 @@ namespace WebApplication4
                 if (References.Count == 0)
                 {
                     btnAddReference.Enabled = true;
-                    btnAddReference.Text = "+ Add";
+                    btnAddReference.Text = "Add Reference";
                 }
             }
         }
 
         protected void btnSaveContinue_Click(object sender, EventArgs e)
         {
-            if (References.Count == 0)
-            {
-                ShowMessage("Please add at least one reference.");
-                return;
-            }
+            // References are optional - user can continue without adding any
 
             if (!fuResume.HasFile)
             {
@@ -296,7 +307,6 @@ namespace WebApplication4
                 return;
             }
 
-            // UPDATED: Maximum file size changed to 15 MB
             if (fuResume.PostedFile.ContentLength > (15 * 1024 * 1024))
             {
                 ShowMessage("Maximum file size allowed is 15 MB.");
@@ -315,7 +325,13 @@ namespace WebApplication4
                 string filePath = System.IO.Path.Combine(uploadFolder, fileName);
 
                 fuResume.SaveAs(filePath);
-                SaveReferencesToDatabase(References);
+
+                // Only save references if any were added
+                if (References.Count > 0)
+                {
+                    SaveReferencesToDatabase(References);
+                }
+
                 SaveCVToDatabase("~/Uploads/Resumes/" + fileName);
 
                 Response.Redirect("ApplicationSummary.aspx");
