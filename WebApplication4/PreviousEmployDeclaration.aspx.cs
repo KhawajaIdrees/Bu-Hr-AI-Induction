@@ -19,26 +19,17 @@ namespace WebApplication4
             if (!IsPostBack)
             {
                 LoadCandidate();
-                // Set initial validator state
-                SetSuspensionValidatorState();
             }
-        }
 
-        private void SetSuspensionValidatorState()
-        {
-            bool isYes = (rblSuspensionTermination.SelectedValue == "Yes");
-
-            rfvSuspensionOrg.Enabled = isYes;
-            rfvSuspensionOrg.IsValid = true;
-            rfvSuspensionOrg.Visible = isYes;
-
-            rfvSuspensionDesignation.Enabled = isYes;
-            rfvSuspensionDesignation.IsValid = true;
-            rfvSuspensionDesignation.Visible = isYes;
-
-            rfvSuspensionDetails.Enabled = isYes;
-            rfvSuspensionDetails.IsValid = true;
-            rfvSuspensionDetails.Visible = isYes;
+            try
+            {
+                if (rblSuspensionTermination != null && pnlSuspensionDetailsWrapper != null)
+                {
+                    pnlSuspensionDetailsWrapper.Style["display"] =
+                        (rblSuspensionTermination.SelectedValue == "Yes") ? "block" : "none";
+                }
+            }
+            catch { }
         }
 
         private void LoadCandidate()
@@ -48,16 +39,10 @@ namespace WebApplication4
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // Load Previous Employment Data
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
-                SELECT hasworked,
-                       campus,
-                       dept,
-                       designation,
-                       duration,
-                       ReasonForLeaving
+                SELECT hasworked, campus, dept, designation, duration, ReasonForLeaving
                 FROM PrevEmpl
                 WHERE userId = @userId";
 
@@ -78,26 +63,19 @@ namespace WebApplication4
 
                                 string campus = dr["campus"].ToString();
                                 if (ddlCampus.Items.FindByValue(campus) != null)
-                                {
                                     ddlCampus.SelectedValue = campus;
-                                }
                                 else
-                                {
                                     ddlCampus.SelectedIndex = 0;
-                                }
 
                                 txtDepartment.Text = dr["dept"].ToString();
                                 txtDesignation.Text = dr["designation"].ToString();
                                 txtDuration.Text = dr["duration"].ToString();
 
-                                // Load Reason for Leaving - Dropdown
                                 if (dr["ReasonForLeaving"] != DBNull.Value)
                                 {
                                     string reason = dr["ReasonForLeaving"].ToString();
                                     if (ddlReasonForLeaving.Items.FindByValue(reason) != null)
-                                    {
                                         ddlReasonForLeaving.SelectedValue = reason;
-                                    }
                                 }
                             }
                             else
@@ -115,7 +93,6 @@ namespace WebApplication4
                 }
             }
 
-            // Load Suspension/Termination Data
             LoadSuspensionTerminationData(userId);
         }
 
@@ -162,13 +139,7 @@ namespace WebApplication4
                     }
                 }
             }
-            catch
-            {
-                // Table might not exist yet, silently continue
-            }
-
-            // After loading data, set validator state
-            SetSuspensionValidatorState();
+            catch { }
         }
 
         private void SavePrevEmpl(int userId)
@@ -181,13 +152,9 @@ namespace WebApplication4
                 IF EXISTS (SELECT 1 FROM PrevEmpl WHERE userId = @userId)
                 BEGIN
                     UPDATE PrevEmpl
-                    SET hasworked   = @hasworked,
-                        campus      = @campus,
-                        dept        = @dept,
-                        designation = @designation,
-                        duration    = @duration,
-                        ReasonForLeaving = @ReasonForLeaving,
-                        updatedDate = GETDATE()
+                    SET hasworked = @hasworked, campus = @campus, dept = @dept,
+                        designation = @designation, duration = @duration,
+                        ReasonForLeaving = @ReasonForLeaving, updatedDate = GETDATE()
                     WHERE userId = @userId
                 END
                 ELSE
@@ -209,7 +176,6 @@ namespace WebApplication4
                         cmd.Parameters.Add("@dept", SqlDbType.VarChar, 100).Value = txtDepartment.Text.Trim();
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = txtDesignation.Text.Trim();
                         cmd.Parameters.Add("@duration", SqlDbType.VarChar, 100).Value = txtDuration.Text.Trim();
-
                         cmd.Parameters.Add("@ReasonForLeaving", SqlDbType.NVarChar, 500).Value =
                             string.IsNullOrEmpty(ddlReasonForLeaving.SelectedValue) ? DBNull.Value : (object)ddlReasonForLeaving.SelectedValue;
                     }
@@ -300,68 +266,39 @@ namespace WebApplication4
                     ELSE
                     BEGIN
                         IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'Details')
-                        BEGIN
                             ALTER TABLE SuspensionTerminationDeclaration ADD Details NVARCHAR(MAX) NULL
-                        END
 
                         IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'OrganizationName')
-                        BEGIN
                             ALTER TABLE SuspensionTerminationDeclaration ADD OrganizationName NVARCHAR(200) NULL
-                        END
 
                         IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'Designation')
-                        BEGIN
                             ALTER TABLE SuspensionTerminationDeclaration ADD Designation NVARCHAR(100) NULL
-                        END
                     END";
 
                 using (SqlConnection con = new SqlConnection(cs))
                 {
                     con.Open();
                     using (SqlCommand cmd = new SqlCommand(createTableQuery, con))
-                    {
                         cmd.ExecuteNonQuery();
-                    }
                 }
             }
-            catch
-            {
-                // Silent fail
-            }
+            catch { }
         }
 
         private void ClearFields()
         {
             try
             {
-                if (ddlCampus != null && ddlCampus.Items.Count > 0)
-                    ddlCampus.SelectedIndex = 0;
-
-                if (txtDepartment != null)
-                    txtDepartment.Text = "";
-
-                if (txtDesignation != null)
-                    txtDesignation.Text = "";
-
-                if (txtDuration != null)
-                    txtDuration.Text = "";
-
-                if (ddlReasonForLeaving != null && ddlReasonForLeaving.Items.Count > 0)
-                    ddlReasonForLeaving.SelectedIndex = 0;
-
-                if (txtSuspensionOrg != null)
-                    txtSuspensionOrg.Text = "";
-
-                if (txtSuspensionDesignation != null)
-                    txtSuspensionDesignation.Text = "";
-
-                if (txtSuspensionDetails != null)
-                    txtSuspensionDetails.Text = "";
+                if (ddlCampus != null && ddlCampus.Items.Count > 0) ddlCampus.SelectedIndex = 0;
+                if (txtDepartment != null) txtDepartment.Text = "";
+                if (txtDesignation != null) txtDesignation.Text = "";
+                if (txtDuration != null) txtDuration.Text = "";
+                if (ddlReasonForLeaving != null && ddlReasonForLeaving.Items.Count > 0) ddlReasonForLeaving.SelectedIndex = 0;
+                if (txtSuspensionOrg != null) txtSuspensionOrg.Text = "";
+                if (txtSuspensionDesignation != null) txtSuspensionDesignation.Text = "";
+                if (txtSuspensionDetails != null) txtSuspensionDetails.Text = "";
             }
-            catch
-            {
-                // Silent fail
-            }
+            catch { }
         }
 
         protected void BtnSubmit_Click(object sender, EventArgs e)
@@ -372,100 +309,56 @@ namespace WebApplication4
                 return;
             }
 
-            // Check if Previous Employment radio is selected
+            lblMessage.Text = "";
+            lblSuspensionError.Visible = false;
+
             if (rblPreviouslyWorked.SelectedItem == null)
             {
-                lblMessage.Text = "Please select Yes or No for previous employment.";
-                lblMessage.CssClass = "text-danger";
+                ShowBottomError("Please select Yes or No for previous employment.");
                 return;
             }
 
-            // Check if Suspension/Termination radio is selected
             if (string.IsNullOrEmpty(rblSuspensionTermination.SelectedValue))
             {
                 lblSuspensionError.Visible = true;
-                lblMessage.Text = "Please select Yes or No for suspension/termination.";
-                lblMessage.CssClass = "text-danger";
+                ShowBottomError("Please select Yes or No for suspension/termination.");
                 return;
-            }
-            else
-            {
-                lblSuspensionError.Visible = false;
             }
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // ============ SUSPENSION FIELDS VALIDATION (RED MESSAGES) ============
+            // Suspension validation (server-side backup)
             if (rblSuspensionTermination.SelectedValue == "Yes")
             {
-                bool hasError = false;
-                string errorMsg = "";
-
                 if (string.IsNullOrWhiteSpace(txtSuspensionOrg.Text))
                 {
-                    errorMsg = "Please enter organization name.";
-                    hasError = true;
+                    ShowBottomError("Please enter organization name.");
+                    return;
                 }
-                else if (string.IsNullOrWhiteSpace(txtSuspensionDesignation.Text))
+                if (string.IsNullOrWhiteSpace(txtSuspensionDesignation.Text))
                 {
-                    errorMsg = "Please enter designation.";
-                    hasError = true;
+                    ShowBottomError("Please enter designation.");
+                    return;
                 }
-                else if (string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
+                if (string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
                 {
-                    errorMsg = "Please provide details and reasons for suspension/termination.";
-                    hasError = true;
-                }
-
-                if (hasError)
-                {
-                    lblMessage.Text = errorMsg;
-                    lblMessage.CssClass = "text-danger";
-                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    ShowBottomError("Please provide details and reasons.");
                     return;
                 }
             }
 
-            // If user selected No for previous employment
-            if (rblPreviouslyWorked.SelectedValue == "No")
+            // Previous employment validation
+            if (rblPreviouslyWorked.SelectedValue == "Yes")
             {
-                try
+                if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
+                    string.IsNullOrWhiteSpace(txtDesignation.Text) ||
+                    string.IsNullOrWhiteSpace(txtDuration.Text) ||
+                    string.IsNullOrWhiteSpace(ddlCampus.SelectedValue) ||
+                    string.IsNullOrWhiteSpace(ddlReasonForLeaving.SelectedValue))
                 {
-                    SavePrevEmpl(userId);
-                    SaveSuspensionTermination(userId);
-
-                    lblMessage.Text = "Declaration saved successfully.";
-                    lblMessage.CssClass = "text-success";
-
-                    Response.Redirect("EmpRelDeclaration.aspx");
+                    ShowBottomError("Please complete all required fields for previous employment.");
                     return;
                 }
-                catch (Exception ex)
-                {
-                    lblMessage.Text = ex.Message;
-                    lblMessage.CssClass = "text-danger";
-                    return;
-                }
-            }
-
-            // User selected Yes for previous employment - validate all fields
-            if (!Page.IsValid)
-            {
-                lblMessage.Text = "Please complete all required fields.";
-                lblMessage.CssClass = "text-danger";
-                return;
-            }
-
-            // SAFETY CHECK: Additional validation for previous employment fields
-            if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
-                string.IsNullOrWhiteSpace(txtDesignation.Text) ||
-                string.IsNullOrWhiteSpace(txtDuration.Text) ||
-                string.IsNullOrWhiteSpace(ddlCampus.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlReasonForLeaving.SelectedValue))
-            {
-                lblMessage.Text = "Please complete all required fields for previous employment.";
-                lblMessage.CssClass = "text-danger";
-                return;
             }
 
             try
@@ -474,16 +367,22 @@ namespace WebApplication4
                 SaveSuspensionTermination(userId);
 
                 lblMessage.Text = "Declaration saved successfully.";
-                lblMessage.CssClass = "text-success";
+                lblMessage.CssClass = "text-success d-block mt-3";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
 
                 Response.Redirect("EmpRelDeclaration.aspx");
             }
             catch (Exception ex)
             {
-                lblMessage.Text = ex.Message;
-                lblMessage.CssClass = "text-danger";
-                return;
+                ShowBottomError(ex.Message);
             }
+        }
+
+        private void ShowBottomError(string message)
+        {
+            lblMessage.Text = message;
+            lblMessage.CssClass = "text-danger d-block mt-3";
+            lblMessage.ForeColor = System.Drawing.Color.Red;
         }
     }
 }

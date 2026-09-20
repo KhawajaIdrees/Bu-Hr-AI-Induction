@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Previous Employment at Bahria University</title>
 
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
@@ -19,15 +18,8 @@
             font-size: 17px;
         }
 
-        .page-title h4 {
-            color: #1a3a7a;
-            font-weight: 700;
-        }
-
-        .page-title h5 {
-            color: #6c757d;
-        }
-
+        .page-title h4 { color: #1a3a7a; font-weight: 700; }
+        .page-title h5 { color: #6c757d; }
         .page-title hr {
             border-top: 3px solid #1a3a7a;
             opacity: 0.2;
@@ -58,9 +50,7 @@
             letter-spacing: .4px;
         }
 
-        .section-title i {
-            font-size: 20px;
-        }
+        .section-title i { font-size: 20px; }
 
         .form-label {
             font-size: 15px;
@@ -69,10 +59,7 @@
             margin-bottom: 8px;
         }
 
-        .required-asterisk {
-            color: #dc3545;
-            font-size: 15px;
-        }
+        .required-asterisk { color: #dc3545; font-size: 15px; }
 
         .form-control,
         .form-select {
@@ -90,9 +77,7 @@
             box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
         }
 
-        textarea.form-control {
-            min-height: 100px;
-        }
+        textarea.form-control { min-height: 100px; }
 
         .form-control::placeholder {
             font-size: 14px;
@@ -133,9 +118,7 @@
             border-radius: 12px;
         }
 
-        .col-divider {
-            border-left: 2px solid #eef1f8;
-        }
+        .col-divider { border-left: 2px solid #eef1f8; }
 
         .text-danger {
             font-size: 13px;
@@ -161,38 +144,14 @@
             box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
         }
 
-        .mb-3 {
-            margin-bottom: 24px !important;
-        }
+        .mb-3 { margin-bottom: 24px !important; }
 
         @media(max-width:768px) {
-            body {
-                font-size: 15px;
-            }
-            .form-card {
-                padding: 25px;
-            }
-            .section-title {
-                font-size: 17px;
-            }
-            .form-label {
-                font-size: 14px;
-            }
-            .form-control,
-            .form-select {
-                font-size: 14px;
-                height: 44px;
-            }
-        }
-
-        .text-bu-blue {
-            color: #1a3a7a !important;
-        }
-
-        .bg-bu-blue {
-            background-color: #1a3a7a !important;
-            color: #ffffff;
-            border-color: #1a3a7a;
+            body { font-size: 15px; }
+            .form-card { padding: 25px; }
+            .section-title { font-size: 17px; }
+            .form-label { font-size: 14px; }
+            .form-control, .form-select { font-size: 14px; height: 44px; }
         }
 
         .section-subtitle {
@@ -216,9 +175,7 @@
             font-size: 20px;
         }
 
-        .card-header-blue i {
-            margin-right: 10px;
-        }
+        .card-header-blue i { margin-right: 10px; }
 
         .card-main {
             border-radius: 16px;
@@ -227,9 +184,7 @@
             overflow: hidden;
         }
 
-        .card-body {
-            padding: 25px 30px;
-        }
+        .card-body { padding: 25px 30px; }
 
         .divider-custom {
             border-top: 2px dashed #eef1f8;
@@ -244,14 +199,21 @@
             margin-top: 5px;
         }
 
-        .suspension-box .form-label {
-            color: #1a2332;
-        }
+        .suspension-box .form-label { color: #1a2332; }
 
         .suspension-icon {
             color: #dc3545;
             font-size: 18px;
             margin-right: 8px;
+        }
+
+        /* Red inline error text under fields */
+        .field-error {
+            color: #dc3545;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            margin-top: 6px;
         }
     </style>
 </head>
@@ -266,17 +228,14 @@
                 <hr />
             </div>
 
-            <!-- Main Card -->
             <div class="card card-main">
                 <div class="card-header-blue">
                     <h5><i class="bi bi-briefcase-fill"></i> Details of Previous Employment or Association with Bahria University</h5>
                 </div>
                 <div class="card-body">
 
-                    <!-- ============ LEFT / RIGHT TWO COLUMN LAYOUT ============ -->
                     <div class="row">
 
-                        <!-- LEFT COLUMN -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">
@@ -307,7 +266,6 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT COLUMN -->
                         <div class="col-md-6 col-divider ps-md-4">
                             <div id="pnlPreviousEmploymentWrapper" runat="server">
                                 <div class="section-subtitle">If Yes, please provide:</div>
@@ -319,111 +277,68 @@
                                             Campus
                                             <span class="required-asterisk">*</span>
                                         </label>
-                                        <asp:DropDownList
-                                            ID="ddlCampus"
-                                            runat="server"
-                                            CssClass="form-select">
-
+                                        <asp:DropDownList ID="ddlCampus" runat="server" CssClass="form-select">
                                             <asp:ListItem Text="-- Select Campus --" Value=""></asp:ListItem>
                                             <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
                                             <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
                                             <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
-
                                         </asp:DropDownList>
 
-                                        <asp:RequiredFieldValidator
-                                            ID="rfvCampus"
-                                            runat="server"
-                                            ControlToValidate="ddlCampus"
-                                            InitialValue=""
+                                        <asp:RequiredFieldValidator ID="rfvCampus" runat="server"
+                                            ControlToValidate="ddlCampus" InitialValue=""
                                             ErrorMessage="Please select a campus."
-                                            CssClass="text-danger"
-                                            Display="Static"
-                                            ValidationGroup="DeclarationForm">
-                                        </asp:RequiredFieldValidator>
+                                            CssClass="text-danger" Display="Static"
+                                            ValidationGroup="DeclarationForm" />
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="<%= txtDepartment.ClientID %>" class="form-label">
-                                            Department
-                                            <span class="required-asterisk">*</span>
+                                            Department <span class="required-asterisk">*</span>
                                         </label>
 
-                                        <asp:TextBox
-                                            ID="txtDepartment"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            placeholder="Enter department" />
+                                        <asp:TextBox ID="txtDepartment" runat="server" CssClass="form-control" placeholder="Enter department" />
 
-                                        <asp:RequiredFieldValidator
-                                            ID="rfvDepartment"
-                                            runat="server"
+                                        <asp:RequiredFieldValidator ID="rfvDepartment" runat="server"
                                             ControlToValidate="txtDepartment"
                                             ErrorMessage="Please enter the department."
-                                            CssClass="text-danger d-block mt-1"
-                                            Display="Static"
-                                            ValidationGroup="DeclarationForm">
-                                        </asp:RequiredFieldValidator>
+                                            CssClass="text-danger d-block mt-1" Display="Static"
+                                            ValidationGroup="DeclarationForm" />
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="<%= txtDesignation.ClientID %>" class="form-label">
-                                            Designation
-                                            <span class="required-asterisk">*</span>
+                                            Designation <span class="required-asterisk">*</span>
                                         </label>
 
-                                        <asp:TextBox
-                                            ID="txtDesignation"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            placeholder="Enter designation" />
+                                        <asp:TextBox ID="txtDesignation" runat="server" CssClass="form-control" placeholder="Enter designation" />
 
-                                        <asp:RequiredFieldValidator
-                                            ID="rfvDesignation"
-                                            runat="server"
+                                        <asp:RequiredFieldValidator ID="rfvDesignation" runat="server"
                                             ControlToValidate="txtDesignation"
                                             ErrorMessage="Please enter the designation."
-                                            CssClass="text-danger d-block mt-1"
-                                            Display="Static"
-                                            ValidationGroup="DeclarationForm">
-                                        </asp:RequiredFieldValidator>
+                                            CssClass="text-danger d-block mt-1" Display="Static"
+                                            ValidationGroup="DeclarationForm" />
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="<%= txtDuration.ClientID %>" class="form-label">
-                                            Duration
-                                            <span class="required-asterisk">*</span>
+                                            Duration <span class="required-asterisk">*</span>
                                         </label>
 
-                                        <asp:TextBox
-                                            ID="txtDuration"
-                                            runat="server"
-                                            CssClass="form-control"
-                                            placeholder="e.g. Jan 2021 - Dec 2023" />
+                                        <asp:TextBox ID="txtDuration" runat="server" CssClass="form-control" placeholder="e.g. Jan 2021 - Dec 2023" />
 
-                                        <asp:RequiredFieldValidator
-                                            ID="rfvDuration"
-                                            runat="server"
+                                        <asp:RequiredFieldValidator ID="rfvDuration" runat="server"
                                             ControlToValidate="txtDuration"
                                             ErrorMessage="Please enter the duration."
-                                            CssClass="text-danger d-block mt-1"
-                                            Display="Static"
-                                            ValidationGroup="DeclarationForm">
-                                        </asp:RequiredFieldValidator>
+                                            CssClass="text-danger d-block mt-1" Display="Static"
+                                            ValidationGroup="DeclarationForm" />
                                     </div>
 
-                                    <!-- Reason for Leaving BU - Dropdown -->
                                     <div class="mb-3">
                                         <label for="<%= ddlReasonForLeaving.ClientID %>" class="form-label">
-                                            Reason for Leaving Bahria University
-                                            <span class="required-asterisk">*</span>
+                                            Reason for Leaving Bahria University <span class="required-asterisk">*</span>
                                         </label>
 
-                                        <asp:DropDownList
-                                            ID="ddlReasonForLeaving"
-                                            runat="server"
-                                            CssClass="form-select">
-
+                                        <asp:DropDownList ID="ddlReasonForLeaving" runat="server" CssClass="form-select">
                                             <asp:ListItem Text="-- Select Reason --" Value=""></asp:ListItem>
                                             <asp:ListItem Text="Better Career Opportunity" Value="Better Career Opportunity"></asp:ListItem>
                                             <asp:ListItem Text="Better Compensation" Value="Better Compensation"></asp:ListItem>
@@ -435,19 +350,13 @@
                                             <asp:ListItem Text="Health Issues" Value="Health Issues"></asp:ListItem>
                                             <asp:ListItem Text="Work Environment" Value="Work Environment"></asp:ListItem>
                                             <asp:ListItem Text="Other" Value="Other"></asp:ListItem>
-
                                         </asp:DropDownList>
 
-                                        <asp:RequiredFieldValidator
-                                            ID="rfvReasonForLeaving"
-                                            runat="server"
-                                            ControlToValidate="ddlReasonForLeaving"
-                                            InitialValue=""
+                                        <asp:RequiredFieldValidator ID="rfvReasonForLeaving" runat="server"
+                                            ControlToValidate="ddlReasonForLeaving" InitialValue=""
                                             ErrorMessage="Please select a reason for leaving."
-                                            CssClass="text-danger d-block mt-1"
-                                            Display="Static"
-                                            ValidationGroup="DeclarationForm">
-                                        </asp:RequiredFieldValidator>
+                                            CssClass="text-danger d-block mt-1" Display="Static"
+                                            ValidationGroup="DeclarationForm" />
                                     </div>
 
                                 </asp:Panel>
@@ -455,9 +364,7 @@
                         </div>
 
                     </div>
-                    <!-- ============ END TWO COLUMN LAYOUT ============ -->
 
-                    <!-- ============ SUSPENSION / TERMINATION SECTION ============ -->
                     <div class="divider-custom"></div>
 
                     <div class="suspension-box">
@@ -493,42 +400,22 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="<%= txtSuspensionOrg.ClientID %>" class="form-label">
-                                        Organization Name
-                                        <span class="required-asterisk">*</span>
+                                        Organization Name <span class="required-asterisk">*</span>
                                     </label>
 
-                                    <asp:TextBox
-                                        ID="txtSuspensionOrg"
-                                        runat="server"
-                                        CssClass="form-control"
-                                        placeholder="Enter organization name" />
+                                    <asp:TextBox ID="txtSuspensionOrg" runat="server" CssClass="form-control" placeholder="Enter organization name" />
 
-                                    <asp:RequiredFieldValidator ID="rfvSuspensionOrg" runat="server"
-                                        ControlToValidate="txtSuspensionOrg"
-                                        ErrorMessage="Please enter organization name."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Dynamic"
-                                        ValidationGroup="DeclarationForm" />
+                                    <span id="errSuspensionOrg" class="field-error">Please enter organization name.</span>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="<%= txtSuspensionDesignation.ClientID %>" class="form-label">
-                                        Designation
-                                        <span class="required-asterisk">*</span>
+                                        Designation <span class="required-asterisk">*</span>
                                     </label>
 
-                                    <asp:TextBox
-                                        ID="txtSuspensionDesignation"
-                                        runat="server"
-                                        CssClass="form-control"
-                                        placeholder="Enter designation" />
+                                    <asp:TextBox ID="txtSuspensionDesignation" runat="server" CssClass="form-control" placeholder="Enter designation" />
 
-                                    <asp:RequiredFieldValidator ID="rfvSuspensionDesignation" runat="server"
-                                        ControlToValidate="txtSuspensionDesignation"
-                                        ErrorMessage="Please enter designation."
-                                        CssClass="text-danger d-block mt-1"
-                                        Display="Dynamic"
-                                        ValidationGroup="DeclarationForm" />
+                                    <span id="errSuspensionDesignation" class="field-error">Please enter designation.</span>
                                 </div>
                             </div>
 
@@ -538,30 +425,23 @@
                                     <span class="required-asterisk">*</span>
                                 </label>
 
-                                <asp:TextBox
-                                    ID="txtSuspensionDetails"
-                                    runat="server"
-                                    CssClass="form-control"
-                                    TextMode="MultiLine"
-                                    Rows="4"
+                                <asp:TextBox ID="txtSuspensionDetails" runat="server" CssClass="form-control"
+                                    TextMode="MultiLine" Rows="4"
                                     placeholder="Please provide detailed reasons for suspension or termination..." />
 
-                                <asp:RequiredFieldValidator ID="rfvSuspensionDetails" runat="server"
-                                    ControlToValidate="txtSuspensionDetails"
-                                    ErrorMessage="Please provide details and reasons."
-                                    CssClass="text-danger d-block mt-1"
-                                    Display="Dynamic"
-                                    ValidationGroup="DeclarationForm" />
+                                <span id="errSuspensionDetails" class="field-error">Please provide details and reasons.</span>
                             </div>
 
                         </div>
                     </div>
-                    <!-- ============ END SUSPENSION / TERMINATION SECTION ============ -->
 
                     <hr class="mt-4 mb-3" />
 
                     <div class="d-flex justify-content-end gap-2">
-                        <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm" OnClick="BtnSubmit_Click" />
+                        <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue"
+                            CssClass="btn btn-bu-blue" ValidationGroup="DeclarationForm"
+                            OnClientClick="return validateSuspensionFields();"
+                            OnClick="BtnSubmit_Click" />
                     </div>
 
                     <asp:Label ID="lblMessage" runat="server" CssClass="d-block mt-3"></asp:Label>
@@ -573,7 +453,6 @@
 
     </form>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -594,9 +473,7 @@
 
             function togglePreviousEmploymentDetails() {
                 var wrapper = document.getElementById('<%= pnlPreviousEmploymentWrapper.ClientID %>');
-                if (!wrapper) {
-                    return;
-                }
+                if (!wrapper) return;
 
                 var checkedRadio = document.querySelector(
                     "input[name='<%= rblPreviouslyWorked.UniqueID %>']:checked"
@@ -610,42 +487,73 @@
 
             function toggleSuspensionDetails() {
                 var wrapper = document.getElementById('<%= pnlSuspensionDetailsWrapper.ClientID %>');
-                if (!wrapper) {
-                    return;
-                }
+                if (!wrapper) return;
 
                 var checkedRadio = document.querySelector(
                     "input[name='<%= rblSuspensionTermination.UniqueID %>']:checked"
                 );
 
                 var selectedValue = checkedRadio ? checkedRadio.value : "";
-
                 wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
 
-                var validatorIds = [
-                    '<%= rfvSuspensionOrg.ClientID %>',
-                    '<%= rfvSuspensionDesignation.ClientID %>',
-                    '<%= rfvSuspensionDetails.ClientID %>'
-                ];
+                // Hide inline errors
+                hideAllInlineErrors();
 
-                var isEnabled = (selectedValue === "Yes");
+                // Clear bottom message
+                var lblMsg = document.getElementById('<%= lblMessage.ClientID %>');
+                if (lblMsg) lblMsg.innerHTML = '';
+            }
 
-                if (typeof (Page_Validators) !== 'undefined') {
-                    for (var j = 0; j < validatorIds.length; j++) {
-                        var validator = document.getElementById(validatorIds[j]);
-                        if (validator) {
-                            validator.style.display = isEnabled ? '' : 'none';
-
-                            for (var i = 0; i < Page_Validators.length; i++) {
-                                if (Page_Validators[i].id === validator.id) {
-                                    Page_Validators[i].enabled = isEnabled;
-                                    Page_Validators[i].isvalid = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+            function hideAllInlineErrors() {
+                var ids = ['errSuspensionOrg', 'errSuspensionDesignation', 'errSuspensionDetails'];
+                for (var i = 0; i < ids.length; i++) {
+                    var el = document.getElementById(ids[i]);
+                    if (el) el.style.display = 'none';
                 }
+            }
+
+            function showInlineError(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'block';
+            }
+
+            // Called on click of Submit button (client-side)
+            function validateSuspensionFields() {
+                hideAllInlineErrors();
+
+                // Only validate if suspension radio = Yes
+                var rblSusp = document.querySelector(
+                    "input[name='<%= rblSuspensionTermination.UniqueID %>']:checked"
+                );
+                var suspValue = rblSusp ? rblSusp.value : "";
+
+                if (suspValue !== "Yes") {
+                    return true; // No client-side error, let server handle rest
+                }
+
+                var org = document.getElementById('<%= txtSuspensionOrg.ClientID %>');
+                var desig = document.getElementById('<%= txtSuspensionDesignation.ClientID %>');
+                var det = document.getElementById('<%= txtSuspensionDetails.ClientID %>');
+
+                var hasError = false;
+
+                if (!org || org.value.trim() === "") {
+                    showInlineError('errSuspensionOrg');
+                    hasError = true;
+                }
+                if (!desig || desig.value.trim() === "") {
+                    showInlineError('errSuspensionDesignation');
+                    hasError = true;
+                }
+                if (!det || det.value.trim() === "") {
+                    showInlineError('errSuspensionDetails');
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    return false; // Block postback
+                }
+                return true;
             }
 
             document.addEventListener("DOMContentLoaded", function () {
@@ -673,6 +581,7 @@
             window.togglePreviousEmploymentDetails = togglePreviousEmploymentDetails;
             window.toggleSuspensionDetails = toggleSuspensionDetails;
             window.setValidatorsEnabled = setValidatorsEnabled;
+            window.validateSuspensionFields = validateSuspensionFields;
         })();
     </script>
 </body>
