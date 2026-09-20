@@ -34,6 +34,7 @@ namespace WebApplication4
                 string query = @"SELECT hasrelative,
                                 name,
                                 relationship,
+                                campus,
                                 dept,
                                 designation
                          FROM EmpRelDeclaration
@@ -66,6 +67,7 @@ namespace WebApplication4
                                 else
                                     ddlRelationship.SelectedIndex = 0;
 
+                                txtCampus.Text = dr["campus"] == DBNull.Value ? "" : dr["campus"].ToString();
                                 txtDepartment.Text = dr["dept"].ToString();
                                 txtDesignation.Text = dr["designation"].ToString();
                             }
@@ -95,6 +97,7 @@ BEGIN
     SET hasrelative=@hasrelative,
         name=@name,
         relationship=@relationship,
+        campus=@campus,
         dept=@dept,
         designation=@designation
     WHERE userId=@userId
@@ -102,9 +105,9 @@ END
 ELSE
 BEGIN
     INSERT INTO EmpRelDeclaration
-    (userId,hasrelative,name,relationship,dept,designation)
+    (userId,hasrelative,name,relationship,campus,dept,designation)
     VALUES
-    (@userId,@hasrelative,@name,@relationship,@dept,@designation)
+    (@userId,@hasrelative,@name,@relationship,@campus,@dept,@designation)
 END";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -119,6 +122,7 @@ END";
                     else
                         cmd.Parameters.Add("@relationship", SqlDbType.VarChar, 100).Value = ddlRelationship.SelectedValue;
 
+                    cmd.Parameters.Add("@campus", SqlDbType.VarChar, 100).Value = txtCampus.Text.Trim();
                     cmd.Parameters.Add("@dept", SqlDbType.VarChar, 100).Value = txtDepartment.Text.Trim();
                     cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = txtDesignation.Text.Trim();
 
@@ -148,6 +152,7 @@ END";
         {
             txtName.Text = "";
             ddlRelationship.SelectedIndex = 0;
+            txtCampus.Text = "";
             txtDepartment.Text = "";
             txtDesignation.Text = "";
         }

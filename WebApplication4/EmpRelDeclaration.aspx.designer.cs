@@ -96,6 +96,24 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRelationship;
 
         /// <summary>
+        /// txtCampus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCampus;
+
+        /// <summary>
+        /// rfvCampus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCampus;
+
+        /// <summary>
         /// txtDepartment control.
         /// </summary>
         /// <remarks>

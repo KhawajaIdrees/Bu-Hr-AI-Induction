@@ -19,15 +19,8 @@
             font-size: 17px;
         }
 
-        .page-title h4 {
-            color: #1a3a7a;
-            font-weight: 700;
-        }
-
-        .page-title h5 {
-            color: #6c757d;
-        }
-
+        .page-title h4 { color: #1a3a7a; font-weight: 700; }
+        .page-title h5 { color: #6c757d; }
         .page-title hr {
             border-top: 3px solid #1a3a7a;
             opacity: 0.2;
@@ -56,13 +49,9 @@
             font-size: 20px;
         }
 
-        .card-header-blue i {
-            margin-right: 10px;
-        }
+        .card-header-blue i { margin-right: 10px; }
 
-        .card-body {
-            padding: 25px 30px;
-        }
+        .card-body { padding: 25px 30px; }
 
         .sub-section-title {
             font-size: 15px;
@@ -76,9 +65,7 @@
             margin-bottom: 18px;
         }
 
-        .sub-section-title:first-child {
-            margin-top: 0;
-        }
+        .sub-section-title:first-child { margin-top: 0; }
 
         .form-label {
             font-size: 15px;
@@ -87,10 +74,7 @@
             margin-bottom: 6px;
         }
 
-        .required-asterisk {
-            color: #dc3545;
-            font-size: 15px;
-        }
+        .required-asterisk { color: #dc3545; font-size: 15px; }
 
         .form-control,
         .form-select {
@@ -114,9 +98,7 @@
             outline: none;
         }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
+        .form-group { margin-bottom: 24px; }
 
         .btn-save {
             background: #1a3a7a;
@@ -154,9 +136,7 @@
             box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
         }
 
-        .text-danger {
-            font-size: 13px;
-        }
+        .text-danger { font-size: 13px; }
 
         .table th {
             background-color: #e8edf5;
@@ -177,9 +157,7 @@
             text-align: center;
         }
 
-        .table-hover tbody tr:hover {
-            background-color: #f8faff;
-        }
+        .table-hover tbody tr:hover { background-color: #f8faff; }
 
         .empty-row {
             text-align: center;
@@ -187,14 +165,10 @@
             padding: 30px 0;
         }
 
-        .table-responsive-wrap {
-            overflow-x: auto;
-        }
+        .table-responsive-wrap { overflow-x: auto; }
 
         .form-group .form-control,
-        .form-group .form-select {
-            width: 100%;
-        }
+        .form-group .form-select { width: 100%; }
 
         .form-card {
             max-width: 1100px;
@@ -211,9 +185,7 @@
             border-bottom: 1px solid #eef1f8;
         }
 
-        .form-section:last-of-type {
-            border-bottom: none;
-        }
+        .form-section:last-of-type { border-bottom: none; }
 
         .section-title {
             display: flex;
@@ -227,32 +199,14 @@
             letter-spacing: .4px;
         }
 
-        .section-title i {
-            font-size: 20px;
-        }
+        .section-title i { font-size: 20px; }
 
         @media(max-width:768px) {
-            body {
-                font-size: 15px;
-            }
-
-            .form-section {
-                padding: 24px 22px;
-            }
-
-            .form-label {
-                font-size: 14px;
-            }
-
-            .form-control,
-            .form-select {
-                font-size: 14px;
-                height: 44px;
-            }
-
-            .card-body {
-                padding: 15px;
-            }
+            body { font-size: 15px; }
+            .form-section { padding: 24px 22px; }
+            .form-label { font-size: 14px; }
+            .form-control, .form-select { font-size: 14px; height: 44px; }
+            .card-body { padding: 15px; }
         }
     </style>
 </head>
@@ -261,7 +215,6 @@
 
         <div class="container py-4">
 
-            <!-- Page Title -->
             <div class="text-left mb-4 page-title">
                 <h4><i class="bi bi-journal-text text-primary-custom me-2"></i>Research Publications</h4>
                 <h5>Bahria University HR Portal</h5>
@@ -275,7 +228,6 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- Total Research Publications -->
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label for="<%= txtTotalPublications.ClientID %>" class="form-label">
@@ -292,7 +244,6 @@
                         </div>
                     </div>
 
-                    <!-- Number of MS/M.Phil/PhD Produced (for PhD Candidates) -->
                     <div class="sub-section-title">Number of MS/M.Phil/PhD Produced (for PhD Candidates)</div>
 
                     <div class="row">
@@ -311,7 +262,6 @@
                         </div>
                     </div>
 
-                    <!-- Funded Projects -->
                     <div class="sub-section-title">Number of National/International Funded Projects</div>
 
                     <div class="row">
@@ -330,7 +280,6 @@
                         </div>
                     </div>
 
-                    <!-- Consultancy Amount -->
                     <div class="sub-section-title">Consultancy Details</div>
 
                     <div class="row">
@@ -351,9 +300,9 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- Publication Type -->
+                    <!-- Publication Type / Category / Status / Author Type -->
                     <div class="row">
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-3 form-group">
                             <label for="<%= ddlPublicationType.ClientID %>" class="form-label">
                                 Publication Type <span class="required-asterisk">*</span>
                             </label>
@@ -369,8 +318,7 @@
                             </asp:DropDownList>
                         </div>
 
-                        <!-- Category of Publication -->
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-3 form-group">
                             <label for="<%= ddlCategory.ClientID %>" class="form-label">
                                 Categories of Publication <span class="required-asterisk">*</span>
                             </label>
@@ -383,8 +331,7 @@
                             </asp:DropDownList>
                         </div>
 
-                        <!-- Publication Status -->
-                        <div class="col-md-4 form-group">
+                        <div class="col-md-3 form-group">
                             <label for="<%= ddlPublicationStatus.ClientID %>" class="form-label">
                                 Publication Status <span class="required-asterisk">*</span>
                             </label>
@@ -395,6 +342,20 @@
                                 <asp:ListItem Value="Submitted">Submitted</asp:ListItem>
                                 <asp:ListItem Value="Under Review">Under Review</asp:ListItem>
                             </asp:DropDownList>
+                        </div>
+
+                        <!-- NEW: Author Type -->
+                        <div class="col-md-3 form-group">
+                            <label for="<%= ddlAuthorType.ClientID %>" class="form-label">
+                                Author Type <span class="required-asterisk">*</span>
+                            </label>
+                           <asp:DropDownList ID="ddlAuthorType" runat="server" CssClass="form-select">
+    <asp:ListItem Value="">-- Select Author Type --</asp:ListItem>
+    <asp:ListItem Value="First Author">First Author</asp:ListItem>
+    <asp:ListItem Value="Second Author">Second Author</asp:ListItem>
+    <asp:ListItem Value="Corresponding Author">Corresponding Author</asp:ListItem>
+    <asp:ListItem Value="Others">Others</asp:ListItem>
+</asp:DropDownList>
                         </div>
                     </div>
 
@@ -472,6 +433,7 @@
                                 <asp:BoundField DataField="PublicationType" HeaderText="Type" />
                                 <asp:BoundField DataField="Category" HeaderText="Category" />
                                 <asp:BoundField DataField="Status" HeaderText="Status" />
+                                <asp:BoundField DataField="AuthorType" HeaderText="Author Type" />
                                 <asp:BoundField DataField="ArticleTitle" HeaderText="Article Title" />
                                 <asp:BoundField DataField="Authors" HeaderText="Authors" />
                                 <asp:BoundField DataField="JournalName" HeaderText="Journal/Conference" />
@@ -496,7 +458,6 @@
 
     </form>
 
-    <!-- JavaScript to control spinner behavior - stops at 0 -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var numberInputs = document.querySelectorAll('input[type="number"]');
@@ -505,18 +466,14 @@
                 input.addEventListener('input', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
                 input.addEventListener('change', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
@@ -525,9 +482,7 @@
                         this.value = '';
                     } else {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
@@ -552,7 +507,6 @@
         });
     </script>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

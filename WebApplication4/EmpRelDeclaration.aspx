@@ -381,11 +381,36 @@
 
                                     </div>
 
+                                    <!-- Campus -->
+                                    <div class="mb-3">
+
+                                        <label class="form-label">
+                                            Campus
+                                            <span class="required-asterisk">*</span>
+                                        </label>
+
+                                        <asp:TextBox
+                                            ID="txtCampus"
+                                            runat="server"
+                                            CssClass="form-control"
+                                            placeholder="Enter campus" />
+
+                                        <asp:RequiredFieldValidator
+                                            ID="rfvCampus"
+                                            runat="server"
+                                            ControlToValidate="txtCampus"
+                                            ErrorMessage="Please enter campus."
+                                            CssClass="text-danger"
+                                            Display="Static"
+                                            ValidationGroup="RelativeForm" />
+
+                                    </div>
+
                                     <!-- Department -->
                                     <div class="mb-3">
 
                                         <label class="form-label">
-                                            Department / Campus
+                                            Department
                                             <span class="required-asterisk">*</span>
                                         </label>
 
@@ -393,7 +418,7 @@
                                             ID="txtDepartment"
                                             runat="server"
                                             CssClass="form-control"
-                                            placeholder="Enter department/campus" />
+                                            placeholder="Enter department" />
 
                                         <asp:RequiredFieldValidator
                                             ID="rfvDepartment"

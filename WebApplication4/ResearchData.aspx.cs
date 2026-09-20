@@ -46,19 +46,12 @@ namespace WebApplication4
                 {
                     if (dr.Read())
                     {
-                        // Research Summary
                         try { txtTotalPublications.Text = dr["TotalPublications"].ToString(); } catch { txtTotalPublications.Text = "0"; }
                         try { txtHECPublications.Text = dr["HECPublications"].ToString(); } catch { txtHECPublications.Text = "0"; }
-
-                        // MS/M.Phil Produced - Use correct column name MS_MPhil_Students
                         try { txtMSMPhilStudents.Text = dr["MS_MPhil_Students"].ToString(); } catch { txtMSMPhilStudents.Text = "0"; }
                         try { txtPhDStudents.Text = dr["PhDStudents"].ToString(); } catch { txtPhDStudents.Text = "0"; }
-
-                        // Funded Projects
                         try { txtPIProjects.Text = dr["PIProjects"].ToString(); } catch { txtPIProjects.Text = "0"; }
                         try { txtCoPIProjects.Text = dr["CoPIProjects"].ToString(); } catch { txtCoPIProjects.Text = "0"; }
-
-                        // Consultancy
                         try { txtConsultancyAmount.Text = dr["ConsultancyAmount"].ToString(); } catch { txtConsultancyAmount.Text = ""; }
                     }
                     else
@@ -78,11 +71,13 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
+            // ============ AUTHOR TYPE INCLUDED IN SELECT ============
             string query = @"SELECT 
                                 id as PublicationID,
                                 PublicationType,
                                 Category,
                                 Status,
+                                AuthorType,
                                 ArticleTitle,
                                 Authors,
                                 JournalName,
@@ -121,9 +116,6 @@ namespace WebApplication4
             }
         }
 
-        // =========================================
-        // LOAD RESEARCH SCORE
-        // =========================================
         private void LoadResearchScore()
         {
             int userID = Convert.ToInt32(Session["UserID"]);
@@ -149,9 +141,6 @@ namespace WebApplication4
             }
         }
 
-        // =========================================
-        // CALCULATE RESEARCH SCORE
-        // =========================================
         private int CalculateResearchScore()
         {
             int wCount = 0;
@@ -159,7 +148,6 @@ namespace WebApplication4
             int yCount = 0;
             int fundedProjects = 0;
 
-            // Get counts from ResearchProfile
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
@@ -189,19 +177,14 @@ namespace WebApplication4
                 }
             }
 
-            // Calculate score: (W × 5) + (X × 3) + (Y × 1) + (Funded Projects × 5)
             int researchScore = (wCount * 5) + (xCount * 3) + (yCount * 1) + (fundedProjects * 5);
 
-            // Cap at 25 marks
             if (researchScore > 25)
                 researchScore = 25;
 
             return researchScore;
         }
 
-        // =========================================
-        // SAVE RESEARCH SCORE TO DATABASE
-        // =========================================
         private void SaveResearchScore(int userId, int researchScore)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -222,9 +205,6 @@ namespace WebApplication4
             }
         }
 
-        // =========================================
-        // UPDATE W, X, Y COUNTS FROM PUBLICATIONS
-        // =========================================
         private void UpdatePublicationCounts(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -276,14 +256,10 @@ namespace WebApplication4
             }
         }
 
-        // =========================================
-        // UPDATE EXPERIENCE SCORE FROM RESEARCH PROFILE
-        // =========================================
         private void UpdateExperienceScore(int userId)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            // Get MS and PhD students from ResearchProfile
             int msStudents = 0, phdStudents = 0;
             string query = "SELECT ISNULL(MS_MPhil_Students, 0), ISNULL(PhDStudents, 0) FROM ResearchProfile WHERE user_id = @UserID";
 
@@ -302,10 +278,8 @@ namespace WebApplication4
                 }
             }
 
-            // Calculate Research Supervision Score (MS: 1 each, PhD: 2 each)
             int researchSupervisionScore = (msStudents * 1) + (phdStudents * 2);
 
-            // Get current ExperienceScore from ExperienceScores table
             int experienceScore = 0;
             string expQuery = "SELECT ISNULL(ExperienceScore, 0) FROM ExperienceScores WHERE UserID = @UserID";
             using (SqlConnection con = new SqlConnection(cs))
@@ -318,13 +292,10 @@ namespace WebApplication4
                     experienceScore = Convert.ToInt32(result);
             }
 
-            // Total Experience Score
             int totalExperienceScore = experienceScore + researchSupervisionScore;
 
-            // Cap at 25
             if (totalExperienceScore > 25) totalExperienceScore = 25;
 
-            // Update ExperienceScores table
             string updateQuery = @"
                 UPDATE ExperienceScores 
                 SET ResearchScore = @ResearchScore, 
@@ -352,6 +323,7 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
+            // ============ AUTHOR TYPE INCLUDED IN INSERT ============
             string query = @"
 INSERT INTO Publications
 (
@@ -359,6 +331,7 @@ INSERT INTO Publications
     PublicationType,
     Category,
     Status,
+    AuthorType,
     ArticleTitle,
     Authors,
     JournalName,
@@ -372,6 +345,7 @@ VALUES
     @PublicationType,
     @Category,
     @Status,
+    @AuthorType,
     @ArticleTitle,
     @Authors,
     @JournalName,
@@ -387,6 +361,7 @@ VALUES
                 cmd.Parameters.Add("@PublicationType", SqlDbType.NVarChar).Value = ddlPublicationType.SelectedValue;
                 cmd.Parameters.Add("@Category", SqlDbType.NVarChar).Value = ddlCategory.SelectedValue;
                 cmd.Parameters.Add("@Status", SqlDbType.NVarChar).Value = ddlPublicationStatus.SelectedValue;
+                cmd.Parameters.Add("@AuthorType", SqlDbType.NVarChar).Value = ddlAuthorType.SelectedValue;
                 cmd.Parameters.Add("@ArticleTitle", SqlDbType.NVarChar).Value = txtArticleTitle.Text.Trim();
                 cmd.Parameters.Add("@Authors", SqlDbType.NVarChar).Value = txtAuthors.Text.Trim();
                 cmd.Parameters.Add("@JournalName", SqlDbType.NVarChar).Value = txtJournalName.Text.Trim();
@@ -401,14 +376,11 @@ VALUES
                 cmd.ExecuteNonQuery();
             }
 
-            // Update W, X, Y counts after adding publication
             UpdatePublicationCounts(userID);
 
-            // Recalculate and save research score
             int researchScore = CalculateResearchScore();
             SaveResearchScore(userID, researchScore);
 
-            // UPDATE EXPERIENCE SCORE
             UpdateExperienceScore(userID);
         }
 
@@ -423,7 +395,6 @@ VALUES
 
             try
             {
-                // Check if profile exists
                 string checkQuery = "SELECT COUNT(*) FROM ResearchProfile WHERE user_id = @userID";
                 int exists = 0;
 
@@ -507,7 +478,6 @@ VALUES
                         cmd.Parameters.Add("@ConsultancyAmount", SqlDbType.NVarChar).Value =
                             string.IsNullOrWhiteSpace(txtConsultancyAmount.Text) ? (object)DBNull.Value : txtConsultancyAmount.Text.Trim();
 
-                        // Save Total Funded Projects (PI + Co-PI)
                         int piProjects = string.IsNullOrWhiteSpace(txtPIProjects.Text) ? 0 : Convert.ToInt32(txtPIProjects.Text.Trim());
                         int coPiProjects = string.IsNullOrWhiteSpace(txtCoPIProjects.Text) ? 0 : Convert.ToInt32(txtCoPIProjects.Text.Trim());
                         cmd.Parameters.Add("@TotalFundedProjects", SqlDbType.Int).Value = piProjects + coPiProjects;
@@ -516,11 +486,9 @@ VALUES
                     }
                 }
 
-                // Recalculate and save research score
                 int researchScore = CalculateResearchScore();
                 SaveResearchScore(userID, researchScore);
 
-                // UPDATE EXPERIENCE SCORE
                 UpdateExperienceScore(userID);
             }
             catch (Exception ex)
@@ -537,7 +505,6 @@ VALUES
                 return;
             }
 
-            // Validate required fields
             if (string.IsNullOrEmpty(ddlPublicationType.SelectedValue))
             {
                 lblMessage.Text = "Please select Publication Type.";
@@ -555,6 +522,14 @@ VALUES
             if (string.IsNullOrEmpty(ddlPublicationStatus.SelectedValue))
             {
                 lblMessage.Text = "Please select Publication Status.";
+                lblMessage.CssClass = "ms-3 text-danger";
+                return;
+            }
+
+            // ============ AUTHOR TYPE VALIDATION ============
+            if (string.IsNullOrEmpty(ddlAuthorType.SelectedValue))
+            {
+                lblMessage.Text = "Please select Author Type.";
                 lblMessage.CssClass = "ms-3 text-danger";
                 return;
             }
@@ -626,6 +601,8 @@ VALUES
             ddlPublicationType.SelectedIndex = 0;
             ddlCategory.SelectedIndex = 0;
             ddlPublicationStatus.SelectedIndex = 0;
+            // ============ CLEAR AUTHOR TYPE ============
+            ddlAuthorType.SelectedIndex = 0;
             txtArticleTitle.Text = string.Empty;
             txtAuthors.Text = string.Empty;
             txtJournalName.Text = string.Empty;
@@ -664,14 +641,11 @@ VALUES
                         cmd.ExecuteNonQuery();
                     }
 
-                    // Update counts after deletion
                     UpdatePublicationCounts(userID);
 
-                    // Recalculate and save research score
                     int researchScore = CalculateResearchScore();
                     SaveResearchScore(userID, researchScore);
 
-                    // UPDATE EXPERIENCE SCORE
                     UpdateExperienceScore(userID);
 
                     LoadPublications();
@@ -694,11 +668,9 @@ VALUES
                 int userID = Convert.ToInt32(Session["UserID"]);
                 SaveResearchProfile();
 
-                // Recalculate and save research score
                 int researchScore = CalculateResearchScore();
                 SaveResearchScore(userID, researchScore);
 
-                // UPDATE EXPERIENCE SCORE
                 UpdateExperienceScore(userID);
 
                 Response.Redirect("Education.aspx");
