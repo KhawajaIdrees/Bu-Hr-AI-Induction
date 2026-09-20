@@ -177,6 +177,42 @@ namespace WebApplication4
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlSuspensionDetailsWrapper;
 
         /// <summary>
+        /// txtSuspensionOrg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSuspensionOrg;
+
+        /// <summary>
+        /// rfvSuspensionOrg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSuspensionOrg;
+
+        /// <summary>
+        /// txtSuspensionDesignation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSuspensionDesignation;
+
+        /// <summary>
+        /// rfvSuspensionDesignation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSuspensionDesignation;
+
+        /// <summary>
         /// txtSuspensionDetails control.
         /// </summary>
         /// <remarks>

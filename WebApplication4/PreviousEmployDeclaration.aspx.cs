@@ -26,18 +26,19 @@ namespace WebApplication4
 
         private void SetSuspensionValidatorState()
         {
-            // If "No" is selected or nothing is selected, disable the validator
-            if (rblSuspensionTermination.SelectedValue != "Yes")
-            {
-                rfvSuspensionDetails.Enabled = false;
-                rfvSuspensionDetails.IsValid = true;
-                rfvSuspensionDetails.Visible = false;
-            }
-            else
-            {
-                rfvSuspensionDetails.Enabled = true;
-                rfvSuspensionDetails.Visible = true;
-            }
+            bool isYes = (rblSuspensionTermination.SelectedValue == "Yes");
+
+            rfvSuspensionOrg.Enabled = isYes;
+            rfvSuspensionOrg.IsValid = true;
+            rfvSuspensionOrg.Visible = isYes;
+
+            rfvSuspensionDesignation.Enabled = isYes;
+            rfvSuspensionDesignation.IsValid = true;
+            rfvSuspensionDesignation.Visible = isYes;
+
+            rfvSuspensionDetails.Enabled = isYes;
+            rfvSuspensionDetails.IsValid = true;
+            rfvSuspensionDetails.Visible = isYes;
         }
 
         private void LoadCandidate()
@@ -125,7 +126,7 @@ namespace WebApplication4
                 using (SqlConnection con = new SqlConnection(cs))
                 {
                     string query = @"
-                        SELECT HasSuspensionOrTermination, Details
+                        SELECT HasSuspensionOrTermination, OrganizationName, Designation, Details
                         FROM SuspensionTerminationDeclaration
                         WHERE UserId = @userId";
 
@@ -141,9 +142,16 @@ namespace WebApplication4
                                 bool hasSuspension = dr["HasSuspensionOrTermination"] != DBNull.Value && Convert.ToBoolean(dr["HasSuspensionOrTermination"]);
                                 rblSuspensionTermination.SelectedValue = hasSuspension ? "Yes" : "No";
 
-                                if (hasSuspension && dr["Details"] != DBNull.Value)
+                                if (hasSuspension)
                                 {
-                                    txtSuspensionDetails.Text = dr["Details"].ToString();
+                                    if (dr["OrganizationName"] != DBNull.Value)
+                                        txtSuspensionOrg.Text = dr["OrganizationName"].ToString();
+
+                                    if (dr["Designation"] != DBNull.Value)
+                                        txtSuspensionDesignation.Text = dr["Designation"].ToString();
+
+                                    if (dr["Details"] != DBNull.Value)
+                                        txtSuspensionDetails.Text = dr["Details"].ToString();
                                 }
                             }
                             else
@@ -202,7 +210,6 @@ namespace WebApplication4
                         cmd.Parameters.Add("@designation", SqlDbType.VarChar, 100).Value = txtDesignation.Text.Trim();
                         cmd.Parameters.Add("@duration", SqlDbType.VarChar, 100).Value = txtDuration.Text.Trim();
 
-                        // Save Reason for Leaving from Dropdown
                         cmd.Parameters.Add("@ReasonForLeaving", SqlDbType.NVarChar, 500).Value =
                             string.IsNullOrEmpty(ddlReasonForLeaving.SelectedValue) ? DBNull.Value : (object)ddlReasonForLeaving.SelectedValue;
                     }
@@ -234,6 +241,8 @@ namespace WebApplication4
                 BEGIN
                     UPDATE SuspensionTerminationDeclaration
                     SET HasSuspensionOrTermination = @HasSuspension,
+                        OrganizationName = @OrganizationName,
+                        Designation = @Designation,
                         Details = @Details,
                         UpdatedDate = GETDATE()
                     WHERE UserId = @userId
@@ -241,9 +250,9 @@ namespace WebApplication4
                 ELSE
                 BEGIN
                     INSERT INTO SuspensionTerminationDeclaration
-                        (UserId, HasSuspensionOrTermination, Details)
+                        (UserId, HasSuspensionOrTermination, OrganizationName, Designation, Details)
                     VALUES
-                        (@userId, @HasSuspension, @Details)
+                        (@userId, @HasSuspension, @OrganizationName, @Designation, @Details)
                 END";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -253,10 +262,14 @@ namespace WebApplication4
 
                     if (hasSuspension)
                     {
+                        cmd.Parameters.Add("@OrganizationName", SqlDbType.NVarChar, 200).Value = txtSuspensionOrg.Text.Trim();
+                        cmd.Parameters.Add("@Designation", SqlDbType.NVarChar, 100).Value = txtSuspensionDesignation.Text.Trim();
                         cmd.Parameters.Add("@Details", SqlDbType.NVarChar).Value = txtSuspensionDetails.Text.Trim();
                     }
                     else
                     {
+                        cmd.Parameters.Add("@OrganizationName", SqlDbType.NVarChar, 200).Value = DBNull.Value;
+                        cmd.Parameters.Add("@Designation", SqlDbType.NVarChar, 100).Value = DBNull.Value;
                         cmd.Parameters.Add("@Details", SqlDbType.NVarChar).Value = DBNull.Value;
                     }
 
@@ -277,6 +290,8 @@ namespace WebApplication4
                             Id INT IDENTITY(1,1) PRIMARY KEY,
                             UserId INT NOT NULL,
                             HasSuspensionOrTermination BIT NOT NULL DEFAULT 0,
+                            OrganizationName NVARCHAR(200) NULL,
+                            Designation NVARCHAR(100) NULL,
                             Details NVARCHAR(MAX) NULL,
                             CreatedDate DATETIME DEFAULT GETDATE(),
                             UpdatedDate DATETIME NULL
@@ -287,6 +302,16 @@ namespace WebApplication4
                         IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'Details')
                         BEGIN
                             ALTER TABLE SuspensionTerminationDeclaration ADD Details NVARCHAR(MAX) NULL
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'OrganizationName')
+                        BEGIN
+                            ALTER TABLE SuspensionTerminationDeclaration ADD OrganizationName NVARCHAR(200) NULL
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SuspensionTerminationDeclaration') AND name = 'Designation')
+                        BEGIN
+                            ALTER TABLE SuspensionTerminationDeclaration ADD Designation NVARCHAR(100) NULL
                         END
                     END";
 
@@ -309,7 +334,6 @@ namespace WebApplication4
         {
             try
             {
-                // Only reset controls if they exist (page is fully loaded)
                 if (ddlCampus != null && ddlCampus.Items.Count > 0)
                     ddlCampus.SelectedIndex = 0;
 
@@ -325,12 +349,18 @@ namespace WebApplication4
                 if (ddlReasonForLeaving != null && ddlReasonForLeaving.Items.Count > 0)
                     ddlReasonForLeaving.SelectedIndex = 0;
 
+                if (txtSuspensionOrg != null)
+                    txtSuspensionOrg.Text = "";
+
+                if (txtSuspensionDesignation != null)
+                    txtSuspensionDesignation.Text = "";
+
                 if (txtSuspensionDetails != null)
                     txtSuspensionDetails.Text = "";
             }
             catch
             {
-                // Silent fail - controls might not be fully initialized
+                // Silent fail
             }
         }
 
@@ -365,17 +395,35 @@ namespace WebApplication4
 
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // Disable suspension details validator if "No" is selected
-            if (rblSuspensionTermination.SelectedValue == "No")
+            // ============ SUSPENSION FIELDS VALIDATION (RED MESSAGES) ============
+            if (rblSuspensionTermination.SelectedValue == "Yes")
             {
-                rfvSuspensionDetails.Enabled = false;
-                rfvSuspensionDetails.IsValid = true;
-                rfvSuspensionDetails.Visible = false;
-            }
-            else
-            {
-                rfvSuspensionDetails.Enabled = true;
-                rfvSuspensionDetails.Visible = true;
+                bool hasError = false;
+                string errorMsg = "";
+
+                if (string.IsNullOrWhiteSpace(txtSuspensionOrg.Text))
+                {
+                    errorMsg = "Please enter organization name.";
+                    hasError = true;
+                }
+                else if (string.IsNullOrWhiteSpace(txtSuspensionDesignation.Text))
+                {
+                    errorMsg = "Please enter designation.";
+                    hasError = true;
+                }
+                else if (string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
+                {
+                    errorMsg = "Please provide details and reasons for suspension/termination.";
+                    hasError = true;
+                }
+
+                if (hasError)
+                {
+                    lblMessage.Text = errorMsg;
+                    lblMessage.CssClass = "text-danger";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return;
+                }
             }
 
             // If user selected No for previous employment
@@ -408,23 +456,14 @@ namespace WebApplication4
                 return;
             }
 
-            // SAFETY CHECK: Additional validation for required fields
+            // SAFETY CHECK: Additional validation for previous employment fields
             if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
                 string.IsNullOrWhiteSpace(txtDesignation.Text) ||
                 string.IsNullOrWhiteSpace(txtDuration.Text) ||
                 string.IsNullOrWhiteSpace(ddlCampus.SelectedValue) ||
                 string.IsNullOrWhiteSpace(ddlReasonForLeaving.SelectedValue))
             {
-                lblMessage.Text = "Please complete all required fields.";
-                lblMessage.CssClass = "text-danger";
-                return;
-            }
-
-            // Validate suspension details ONLY if Yes is selected
-            if (rblSuspensionTermination.SelectedValue == "Yes" &&
-                string.IsNullOrWhiteSpace(txtSuspensionDetails.Text))
-            {
-                lblMessage.Text = "Please provide details for suspension/termination.";
+                lblMessage.Text = "Please complete all required fields for previous employment.";
                 lblMessage.CssClass = "text-danger";
                 return;
             }

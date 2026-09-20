@@ -140,6 +140,7 @@
         .text-danger {
             font-size: 13px;
             font-weight: 600;
+            color: #dc3545 !important;
         }
 
         .btn-bu-blue {
@@ -235,7 +236,6 @@
             margin: 30px 0;
         }
 
-        /* Suspension section - subtle background */
         .suspension-box {
             background: #fafbfc;
             border: 1px solid #eef1f8;
@@ -489,6 +489,49 @@
                         </div>
 
                         <div id="pnlSuspensionDetailsWrapper" runat="server" style="display:none;">
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="<%= txtSuspensionOrg.ClientID %>" class="form-label">
+                                        Organization Name
+                                        <span class="required-asterisk">*</span>
+                                    </label>
+
+                                    <asp:TextBox
+                                        ID="txtSuspensionOrg"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        placeholder="Enter organization name" />
+
+                                    <asp:RequiredFieldValidator ID="rfvSuspensionOrg" runat="server"
+                                        ControlToValidate="txtSuspensionOrg"
+                                        ErrorMessage="Please enter organization name."
+                                        CssClass="text-danger d-block mt-1"
+                                        Display="Dynamic"
+                                        ValidationGroup="DeclarationForm" />
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="<%= txtSuspensionDesignation.ClientID %>" class="form-label">
+                                        Designation
+                                        <span class="required-asterisk">*</span>
+                                    </label>
+
+                                    <asp:TextBox
+                                        ID="txtSuspensionDesignation"
+                                        runat="server"
+                                        CssClass="form-control"
+                                        placeholder="Enter designation" />
+
+                                    <asp:RequiredFieldValidator ID="rfvSuspensionDesignation" runat="server"
+                                        ControlToValidate="txtSuspensionDesignation"
+                                        ErrorMessage="Please enter designation."
+                                        CssClass="text-danger d-block mt-1"
+                                        Display="Dynamic"
+                                        ValidationGroup="DeclarationForm" />
+                                </div>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="<%= txtSuspensionDetails.ClientID %>" class="form-label">
                                     If yes, please provide details and the reasons thereof:
@@ -510,6 +553,7 @@
                                     Display="Dynamic"
                                     ValidationGroup="DeclarationForm" />
                             </div>
+
                         </div>
                     </div>
                     <!-- ============ END SUSPENSION / TERMINATION SECTION ============ -->
@@ -534,7 +578,6 @@
 
     <script>
         (function () {
-            // Function to enable/disable validators in a group
             function setValidatorsEnabled(group, enabled) {
                 if (typeof (Page_Validators) === 'undefined') return;
                 for (var i = 0; i < Page_Validators.length; i++) {
@@ -562,7 +605,6 @@
                 var selectedValue = checkedRadio ? checkedRadio.value : "";
                 wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
 
-                // Enable/disable validators for DeclarationForm
                 setValidatorsEnabled('DeclarationForm', selectedValue === 'Yes');
             }
 
@@ -577,24 +619,29 @@
                 );
 
                 var selectedValue = checkedRadio ? checkedRadio.value : "";
-                
-                // Show/hide the details wrapper
+
                 wrapper.style.display = (selectedValue === "Yes") ? "block" : "none";
 
-                // Enable/disable the details validator
-                var validator = document.getElementById('<%= rfvSuspensionDetails.ClientID %>');
-                if (validator) {
-                    var isEnabled = (selectedValue === "Yes");
-                    
-                    // Hide/show the validator
-                    validator.style.display = isEnabled ? '' : 'none';
-                    
-                    if (typeof (Page_Validators) !== 'undefined') {
-                        for (var i = 0; i < Page_Validators.length; i++) {
-                            if (Page_Validators[i].id === validator.id) {
-                                Page_Validators[i].enabled = isEnabled;
-                                Page_Validators[i].isvalid = true;
-                                break;
+                var validatorIds = [
+                    '<%= rfvSuspensionOrg.ClientID %>',
+                    '<%= rfvSuspensionDesignation.ClientID %>',
+                    '<%= rfvSuspensionDetails.ClientID %>'
+                ];
+
+                var isEnabled = (selectedValue === "Yes");
+
+                if (typeof (Page_Validators) !== 'undefined') {
+                    for (var j = 0; j < validatorIds.length; j++) {
+                        var validator = document.getElementById(validatorIds[j]);
+                        if (validator) {
+                            validator.style.display = isEnabled ? '' : 'none';
+
+                            for (var i = 0; i < Page_Validators.length; i++) {
+                                if (Page_Validators[i].id === validator.id) {
+                                    Page_Validators[i].enabled = isEnabled;
+                                    Page_Validators[i].isvalid = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -613,7 +660,6 @@
 
                 ensureToggle(0);
 
-                // Delegate for Previous Employment radio
                 document.getElementById("form1").addEventListener("click", function (e) {
                     if (e.target && e.target.matches("input[type='radio'][name='<%= rblPreviouslyWorked.UniqueID %>']")) {
                         togglePreviousEmploymentDetails();
@@ -624,7 +670,6 @@
                 });
             });
 
-            // Expose functions globally
             window.togglePreviousEmploymentDetails = togglePreviousEmploymentDetails;
             window.toggleSuspensionDetails = toggleSuspensionDetails;
             window.setValidatorsEnabled = setValidatorsEnabled;
