@@ -357,6 +357,33 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPermanentAddress;
 
         /// <summary>
+        /// txtGoogleScholar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtGoogleScholar;
+
+        /// <summary>
+        /// txtLinkedIn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLinkedIn;
+
+        /// <summary>
+        /// txtORCID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtORCID;
+
+        /// <summary>
         /// rblPreviouslyApplied control.
         /// </summary>
         /// <remarks>

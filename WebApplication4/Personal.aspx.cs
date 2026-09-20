@@ -101,6 +101,24 @@ namespace WebApplication4
                         // Declaration
                         bool prevApplied = Convert.ToBoolean(reader["prevdecl"]);
                         rblPreviouslyApplied.SelectedValue = prevApplied ? "Yes" : "No";
+
+                        // Google Scholar Link
+                        if (reader["GoogleScholarLink"] != DBNull.Value)
+                        {
+                            txtGoogleScholar.Text = reader["GoogleScholarLink"].ToString();
+                        }
+
+                        // LinkedIn Link
+                        if (reader["LinkedInLink"] != DBNull.Value)
+                        {
+                            txtLinkedIn.Text = reader["LinkedInLink"].ToString();
+                        }
+
+                        // ORCID Link
+                        if (reader["ORCIDLink"] != DBNull.Value)
+                        {
+                            txtORCID.Text = reader["ORCIDLink"].ToString();
+                        }
                     }
                     else
                     {
@@ -204,7 +222,10 @@ SET
     city = @city,
     curraddress = @curraddress,
     permaddress = @permaddress,
-    prevdecl = @prevdecl
+    prevdecl = @prevdecl,
+    GoogleScholarLink = @GoogleScholarLink,
+    LinkedInLink = @LinkedInLink,
+    ORCIDLink = @ORCIDLink
 WHERE userId = @userId;
 
 IF @@ROWCOUNT = 0
@@ -230,7 +251,10 @@ BEGIN
         city,
         curraddress,
         permaddress,
-        prevdecl
+        prevdecl,
+        GoogleScholarLink,
+        LinkedInLink,
+        ORCIDLink
     )
     VALUES
     (
@@ -253,7 +277,10 @@ BEGIN
         @city,
         @curraddress,
         @permaddress,
-        @prevdecl
+        @prevdecl,
+        @GoogleScholarLink,
+        @LinkedInLink,
+        @ORCIDLink
     )
 END";
 
@@ -287,6 +314,24 @@ END";
                 cmd.Parameters.AddWithValue("@curraddress", txtCurrentAddress.Text.Trim());
                 cmd.Parameters.AddWithValue("@permaddress", txtPermanentAddress.Text.Trim());
                 cmd.Parameters.AddWithValue("@prevdecl", rblPreviouslyApplied.SelectedValue == "Yes");
+
+                // Google Scholar Link
+                cmd.Parameters.AddWithValue("@GoogleScholarLink",
+                    string.IsNullOrWhiteSpace(txtGoogleScholar.Text)
+                    ? (object)DBNull.Value
+                    : txtGoogleScholar.Text.Trim());
+
+                // LinkedIn Link
+                cmd.Parameters.AddWithValue("@LinkedInLink",
+                    string.IsNullOrWhiteSpace(txtLinkedIn.Text)
+                    ? (object)DBNull.Value
+                    : txtLinkedIn.Text.Trim());
+
+                // ORCID Link
+                cmd.Parameters.AddWithValue("@ORCIDLink",
+                    string.IsNullOrWhiteSpace(txtORCID.Text)
+                    ? (object)DBNull.Value
+                    : txtORCID.Text.Trim());
 
                 con.Open();
                 cmd.ExecuteNonQuery();

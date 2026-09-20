@@ -520,6 +520,38 @@
                     </div>
                 </div>
 
+                <!-- SECTION: Online Profiles -->
+                <div class="form-section">
+                    <div class="section-title"><i class="bi bi-link-45deg"></i>Online Profiles</div>
+
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="<%= txtGoogleScholar.ClientID %>" class="form-label">
+                                <i class="bi bi-mortarboard-fill me-1" style="color: #1a3a7a;"></i>
+                                Google Scholar Profile
+                            </label>
+                            <asp:TextBox ID="txtGoogleScholar" runat="server" CssClass="form-control" 
+                                placeholder="https://scholar.google.com/citations?user=..." />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="<%= txtLinkedIn.ClientID %>" class="form-label">
+                                <i class="bi bi-linkedin me-1" style="color: #1a3a7a;"></i>
+                                LinkedIn Profile
+                            </label>
+                            <asp:TextBox ID="txtLinkedIn" runat="server" CssClass="form-control" 
+                                placeholder="https://www.linkedin.com/in/..." />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="<%= txtORCID.ClientID %>" class="form-label">
+                                <i class="bi bi-person-badge me-1" style="color: #1a3a7a;"></i>
+                                ORCID iD
+                            </label>
+                            <asp:TextBox ID="txtORCID" runat="server" CssClass="form-control" 
+                                placeholder="https://orcid.org/0000-0000-0000-0000" />
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Previously Applied Section - No heading, just icon -->
                 <div class="form-section">
                     <div class="form-group mb-0">
