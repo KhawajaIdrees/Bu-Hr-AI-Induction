@@ -20,7 +20,7 @@ namespace WebApplication4
             pnlMessage.Visible = true;
             pnlMessage.Style["display"] = "block";
 
-            // Check required fields (ALL fields)
+            // Check required fields
             if (string.IsNullOrWhiteSpace(txtJobTitle.Text) ||
                 string.IsNullOrWhiteSpace(txtJobID.Text) ||
                 string.IsNullOrWhiteSpace(txtReferenceNo.Text) ||
@@ -29,7 +29,8 @@ namespace WebApplication4
                 string.IsNullOrWhiteSpace(txtSpecialization.Text) ||
                 string.IsNullOrWhiteSpace(ddlEducation.SelectedValue) ||
                 string.IsNullOrWhiteSpace(ddlExperience.SelectedValue) ||
-                string.IsNullOrWhiteSpace(ddlJobType.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlHiringType.SelectedValue) ||
+                string.IsNullOrWhiteSpace(ddlQualificationLevel.SelectedValue) ||
                 string.IsNullOrWhiteSpace(txtPublishedDate.Text) ||
                 string.IsNullOrWhiteSpace(txtDeadlineDate.Text))
             {
@@ -40,7 +41,6 @@ namespace WebApplication4
             DateTime publishedDate;
             DateTime deadlineDate;
 
-            // Parse dates
             if (!DateTime.TryParse(txtPublishedDate.Text, out publishedDate))
             {
                 ShowError("Invalid Published Date. Please use MM/DD/YYYY format.");
@@ -53,7 +53,6 @@ namespace WebApplication4
                 return;
             }
 
-            // Deadline validation
             if (deadlineDate.Date < publishedDate.Date)
             {
                 ShowError("Deadline date cannot be before Published Date.");
@@ -62,15 +61,12 @@ namespace WebApplication4
 
             try
             {
-                // Save to database
                 SaveJobToDatabase();
 
                 ShowSuccess("Teaching Job Created Successfully!");
 
-                // Clear form
                 ClearForm();
 
-                // Redirect after 2 seconds
                 ScriptManager.RegisterStartupScript(this, GetType(), "redirect",
                     "setTimeout(function(){ window.location.href = 'AdminDashboard.aspx'; }, 2000);", true);
             }
@@ -86,10 +82,12 @@ namespace WebApplication4
 
             string query = @"INSERT INTO JobPostings 
                             (JobTitle, JobID, ReferenceNo, Campus, Department, Specialization, 
-                             EducationRequired, ExperienceRequired, JobType, PublishedDate, DeadlineDate, CreatedAt) 
+                             EducationRequired, ExperienceRequired, JobType, HiringType, QualificationLevel, 
+                             PublishedDate, DeadlineDate, CreatedAt) 
                             VALUES 
                             (@JobTitle, @JobID, @ReferenceNo, @Campus, @Department, @Specialization,
-                             @EducationRequired, @ExperienceRequired, @JobType, @PublishedDate, @DeadlineDate, GETDATE())";
+                             @EducationRequired, @ExperienceRequired, @JobType, @HiringType, @QualificationLevel, 
+                             @PublishedDate, @DeadlineDate, GETDATE())";
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
@@ -102,7 +100,9 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@Specialization", txtSpecialization.Text.Trim());
                 cmd.Parameters.AddWithValue("@EducationRequired", ddlEducation.SelectedValue);
                 cmd.Parameters.AddWithValue("@ExperienceRequired", ddlExperience.SelectedValue);
-                cmd.Parameters.AddWithValue("@JobType", ddlJobType.SelectedValue);
+                cmd.Parameters.AddWithValue("@JobType", "Teaching");
+                cmd.Parameters.AddWithValue("@HiringType", ddlHiringType.SelectedValue);
+                cmd.Parameters.AddWithValue("@QualificationLevel", ddlQualificationLevel.SelectedValue);
                 cmd.Parameters.AddWithValue("@PublishedDate", Convert.ToDateTime(txtPublishedDate.Text));
                 cmd.Parameters.AddWithValue("@DeadlineDate", Convert.ToDateTime(txtDeadlineDate.Text));
 
@@ -121,7 +121,8 @@ namespace WebApplication4
             txtSpecialization.Text = "";
             ddlEducation.SelectedIndex = 0;
             ddlExperience.SelectedIndex = 0;
-            ddlJobType.SelectedIndex = 0;
+            ddlHiringType.SelectedIndex = 0;
+            ddlQualificationLevel.SelectedIndex = 0;
             txtPublishedDate.Text = "";
             txtDeadlineDate.Text = "";
         }

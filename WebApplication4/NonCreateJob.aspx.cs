@@ -20,8 +20,8 @@ namespace WebApplication4
             pnlMessage.Visible = true;
             pnlMessage.Style["display"] = "block";
 
-            // Check required fields (ALL fields except Job Type)
-            if (string.IsNullOrWhiteSpace(txtJobTitle.Text) ||
+            // Check required fields (Position Title is now a dropdown)
+            if (string.IsNullOrWhiteSpace(ddlPositionTitle.SelectedValue) ||
                 string.IsNullOrWhiteSpace(txtJobID.Text) ||
                 string.IsNullOrWhiteSpace(txtReferenceNo.Text) ||
                 string.IsNullOrWhiteSpace(txtCampus.Text) ||
@@ -39,7 +39,6 @@ namespace WebApplication4
             DateTime publishedDate;
             DateTime deadlineDate;
 
-            // Parse dates
             if (!DateTime.TryParse(txtPublishedDate.Text, out publishedDate))
             {
                 ShowError("Invalid Published Date. Please use MM/DD/YYYY format.");
@@ -52,7 +51,6 @@ namespace WebApplication4
                 return;
             }
 
-            // Deadline validation
             if (deadlineDate.Date < publishedDate.Date)
             {
                 ShowError("Deadline date cannot be before Published Date.");
@@ -61,15 +59,12 @@ namespace WebApplication4
 
             try
             {
-                // Save to database
                 SaveJobToDatabase();
 
                 ShowSuccess("Non-Teaching Job Created Successfully!");
 
-                // Clear form
                 ClearForm();
 
-                // Redirect after 2 seconds
                 ScriptManager.RegisterStartupScript(this, GetType(), "redirect",
                     "setTimeout(function(){ window.location.href = 'AdminDashboard.aspx'; }, 2000);", true);
             }
@@ -93,7 +88,7 @@ namespace WebApplication4
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                cmd.Parameters.AddWithValue("@JobTitle", txtJobTitle.Text.Trim());
+                cmd.Parameters.AddWithValue("@JobTitle", ddlPositionTitle.SelectedValue);
                 cmd.Parameters.AddWithValue("@JobID", txtJobID.Text.Trim());
                 cmd.Parameters.AddWithValue("@ReferenceNo", txtReferenceNo.Text.Trim());
                 cmd.Parameters.AddWithValue("@Campus", txtCampus.Text.Trim());
@@ -112,7 +107,7 @@ namespace WebApplication4
 
         private void ClearForm()
         {
-            txtJobTitle.Text = "";
+            ddlPositionTitle.SelectedIndex = 0;
             txtJobID.Text = "";
             txtReferenceNo.Text = "";
             txtCampus.Text = "";

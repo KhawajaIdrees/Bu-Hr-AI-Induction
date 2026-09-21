@@ -11,21 +11,13 @@
     <title>Create Teaching Job</title>
 
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-          rel="stylesheet" />
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
-
         body {
             background: #f0f4f8;
             font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -194,7 +186,6 @@
             .page-card { padding: 35px 30px; }
             .submit-btn { width: 260px; }
         }
-
     </style>
 
 </head>
@@ -225,10 +216,6 @@
     <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="message-panel">
         <asp:Label ID="lblMessage" runat="server"></asp:Label>
     </asp:Panel>
-
-    <!-- ============================================================ -->
-    <!-- ALL FIELDS -->
-    <!-- ============================================================ -->
 
     <div class="row g-4">
 
@@ -294,13 +281,15 @@
             </asp:DropDownList>
         </div>
 
+        <!-- NEW: Hiring Type -->
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-            <label class="form-label">Job Type <span class="required">*</span></label>
-            <asp:DropDownList ID="ddlJobType" runat="server" CssClass="form-select">
-                <asp:ListItem Value="">-- Select Job Type --</asp:ListItem>
+            <label class="form-label">Hiring Type <span class="required">*</span></label>
+            <asp:DropDownList ID="ddlHiringType" runat="server" CssClass="form-select">
+                <asp:ListItem Value="">-- Select Hiring Type --</asp:ListItem>
                 <asp:ListItem Value="Permanent Faculty">Permanent Faculty</asp:ListItem>
                 <asp:ListItem Value="Visiting Faculty">Visiting Faculty</asp:ListItem>
                 <asp:ListItem Value="POP">POP</asp:ListItem>
+                <asp:ListItem Value="Adjunct">Adjunct</asp:ListItem>
             </asp:DropDownList>
         </div>
 
@@ -308,14 +297,24 @@
 
     <div class="row g-4 mt-1">
 
+        <!-- NEW: Qualification Level -->
+        <div class="col-xl-4 col-lg-4 col-md-6 col-12">
+            <label class="form-label">Qualification Level <span class="required">*</span></label>
+            <asp:DropDownList ID="ddlQualificationLevel" runat="server" CssClass="form-select">
+                <asp:ListItem Value="">-- Select Qualification --</asp:ListItem>
+                <asp:ListItem Value="PhD">PhD</asp:ListItem>
+                <asp:ListItem Value="Non-PhD">Non-PhD</asp:ListItem>
+            </asp:DropDownList>
+        </div>
+
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Published Date <span class="required">*</span></label>
-            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control" TextMode="Date" placeholder="MM/DD/YYYY"></asp:TextBox>
+            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
         </div>
 
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Deadline Date <span class="required">*</span></label>
-            <asp:TextBox ID="txtDeadlineDate" runat="server" CssClass="form-control" TextMode="Date" placeholder="MM/DD/YYYY"></asp:TextBox>
+            <asp:TextBox ID="txtDeadlineDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
         </div>
 
     </div>

@@ -114,13 +114,22 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.DropDownList ddlExperience;
 
         /// <summary>
-        /// ddlJobType control.
+        /// ddlHiringType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlJobType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlHiringType;
+
+        /// <summary>
+        /// ddlQualificationLevel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlQualificationLevel;
 
         /// <summary>
         /// txtPublishedDate control.

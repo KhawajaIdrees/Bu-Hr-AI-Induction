@@ -11,21 +11,13 @@
     <title>Create Non-Teaching Job</title>
 
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-          rel="stylesheet" />
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
-
         body {
             background: #f0f4f8;
             font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -194,7 +186,6 @@
             .page-card { padding: 35px 30px; }
             .submit-btn { width: 260px; }
         }
-
     </style>
 
 </head>
@@ -227,14 +218,27 @@
     </asp:Panel>
 
     <!-- ============================================================ -->
-    <!-- ALL FIELDS (NO Job Type) -->
+    <!-- ALL FIELDS -->
     <!-- ============================================================ -->
 
     <div class="row g-4">
 
+        <!-- Position Title (Dropdown) -->
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
-            <label class="form-label">Job Title <span class="required">*</span></label>
-            <asp:TextBox ID="txtJobTitle" runat="server" CssClass="form-control" placeholder="Enter Job Title"></asp:TextBox>
+            <label class="form-label">Position Title <span class="required">*</span></label>
+            <asp:DropDownList ID="ddlPositionTitle" runat="server" CssClass="form-select">
+                <asp:ListItem Value="">-- Select Position --</asp:ListItem>
+                <asp:ListItem Value="Lab Engineer">Lab Engineer</asp:ListItem>
+                <asp:ListItem Value="IT Officer">IT Officer</asp:ListItem>
+                <asp:ListItem Value="Deputy Director">Deputy Director</asp:ListItem>
+                <asp:ListItem Value="Assistant Director">Assistant Director</asp:ListItem>
+                <asp:ListItem Value="Network Administrator">Network Administrator</asp:ListItem>
+                <asp:ListItem Value="HR Officer">HR Officer</asp:ListItem>
+                <asp:ListItem Value="Accounts Officer">Accounts Officer</asp:ListItem>
+                <asp:ListItem Value="Admin Officer">Admin Officer</asp:ListItem>
+                <asp:ListItem Value="Office Assistant">Office Assistant</asp:ListItem>
+                <asp:ListItem Value="Other">Other</asp:ListItem>
+            </asp:DropDownList>
         </div>
 
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
@@ -293,20 +297,18 @@
             </asp:DropDownList>
         </div>
 
-        <!-- NO JOB TYPE DROPDOWN FOR NON-TEACHING -->
-
     </div>
 
     <div class="row g-4 mt-1">
 
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Published Date <span class="required">*</span></label>
-            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control" TextMode="Date" placeholder="MM/DD/YYYY"></asp:TextBox>
+            <asp:TextBox ID="txtPublishedDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
         </div>
 
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Deadline Date <span class="required">*</span></label>
-            <asp:TextBox ID="txtDeadlineDate" runat="server" CssClass="form-control" TextMode="Date" placeholder="MM/DD/YYYY"></asp:TextBox>
+            <asp:TextBox ID="txtDeadlineDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
         </div>
 
     </div>
