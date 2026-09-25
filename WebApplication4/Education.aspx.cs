@@ -171,7 +171,7 @@ namespace WebApplication4
             // =============================================
             // STEP 2: CALCULATE ACADEMIC SCORES
             // =============================================
-            AcademicScores scores = CalculateAcademicScores(sscPer, hsscPer, bsPer, msPer, phdPer);
+            AcademicScores scores = CalculateAcademicScores(sscPer, hsscPer, bsPer, msPer, phdPer, postdocPer);
 
             // =============================================
             // STEP 3: SAVE EDUCATION + SCORES TO DATABASE
@@ -196,42 +196,39 @@ namespace WebApplication4
         }
 
         // =============================================
-        // ACADEMIC SCORING CALCULATION
+        // ACADEMIC SCORING CALCULATION  (NEW RUBRIC — MAX 40)
+        //   Matric = 2, FSc = 3, BS = 5, MS = 5, PhD = 10, PostDoc = 10
+        //   CGPA (one slot) = 5 if >= 75%, else 3
+        //   Total capped at 40
         // =============================================
-        private AcademicScores CalculateAcademicScores(decimal sscPer, decimal hsscPer, decimal bsPer, decimal msPer, decimal phdPer)
+        private AcademicScores CalculateAcademicScores(decimal sscPer, decimal hsscPer, decimal bsPer, decimal msPer, decimal phdPer, decimal postdocPer)
         {
             var scores = new AcademicScores();
 
-            // =============================================
-            // QUALIFICATION SCORE (Max 40)
-            // =============================================
-            if (sscPer > 0) scores.QualificationScore += 5;   // Matric
-            if (hsscPer > 0) scores.QualificationScore += 5;  // FSc
-            if (bsPer > 0) scores.QualificationScore += 5;    // BS
-            if (msPer > 0) scores.QualificationScore += 10;   // MS/MPhil
-            if (phdPer > 0) scores.QualificationScore += 15;  // PhD
+            // ---------- Degree-based marks (max 35) ----------
+            decimal degreeScore = 0;
+            if (sscPer > 0) degreeScore += 2;   // Matric
+            if (hsscPer > 0) degreeScore += 3;   // FSc / FA / Diploma
+            if (bsPer > 0) degreeScore += 5;   // BS
+            if (msPer > 0) degreeScore += 5;   // MS / MPhil
+            if (phdPer > 0) degreeScore += 10;  // PhD
+            if (postdocPer > 0) degreeScore += 10;  // PostDoc
 
-            // =============================================
-            // GPA/PERCENTAGE SCORE (Max 10)
-            // =============================================
-            // BS GPA Score (Max 5)
-            if (bsPer > 0)
-            {
-                scores.BSGPAScore = GetGPAScore(bsPer);
-                scores.TotalGPAScore += scores.BSGPAScore;
-            }
+            if (degreeScore > 35) degreeScore = 35;
+            scores.QualificationScore = degreeScore;
 
-            // MS GPA Score (Max 5)
-            if (msPer > 0)
-            {
-                scores.MSGPAScore = GetGPAScore(msPer);
-                scores.TotalGPAScore += scores.MSGPAScore;
-            }
+            // ---------- CGPA (single slot, max 5) ----------
+            // Use the highest available CGPA/percentage (MS preferred, else BS)
+            decimal bestPercentage = 0;
+            if (msPer > bestPercentage) bestPercentage = msPer;
+            if (bsPer > bestPercentage) bestPercentage = bsPer;
 
-            // =============================================
-            // TOTAL ACADEMIC SCORE (Max 50)
-            // =============================================
+            scores.CGPA_Score = GetGPAScore(bestPercentage);
+            scores.TotalGPAScore = scores.CGPA_Score;
+
+            // ---------- Total (cap 40) ----------
             scores.TotalAcademicScore = scores.QualificationScore + scores.TotalGPAScore;
+            if (scores.TotalAcademicScore > 40) scores.TotalAcademicScore = 40;
 
             return scores;
         }
@@ -248,7 +245,6 @@ namespace WebApplication4
 
         protected bool SecondDivision(decimal result)
         {
-            // Second division check (below 60%)
             if (result >= 60)
                 return false;
             else
@@ -325,6 +321,7 @@ namespace WebApplication4
                         -- SCORES
                         BS_GPAScore=@BS_GPAScore,
                         MS_GPAScore=@MS_GPAScore,
+                        PostDoc_Score=@PostDoc_Score,
                         QualificationScore=@QualificationScore,
                         TotalAcademicScore=@TotalAcademicScore
                     WHERE UserID=@UserID;
@@ -340,7 +337,7 @@ namespace WebApplication4
                         MS_Duration,MS_Specialization,MS_Year,MS_Percentage,MS_University,MS_Country,
                         PhD_Duration,PhD_Specialization,PhD_Year,PhD_Percentage,PhD_University,PhD_Country,
                         PostDoc_Duration,PostDoc_Specialization,PostDoc_Year,PostDoc_Percentage,PostDoc_University,PostDoc_Country,
-                        BS_GPAScore, MS_GPAScore, QualificationScore, TotalAcademicScore
+                        BS_GPAScore, MS_GPAScore, PostDoc_Score, QualificationScore, TotalAcademicScore
                     )
                     VALUES
                     (
@@ -351,7 +348,7 @@ namespace WebApplication4
                         @MS_Duration,@MS_Specialization,@MS_Year,@MS_Percentage,@MS_University,@MS_Country,
                         @PhD_Duration,@PhD_Specialization,@PhD_Year,@PhD_Percentage,@PhD_University,@PhD_Country,
                         @PostDoc_Duration,@PostDoc_Specialization,@PostDoc_Year,@PostDoc_Percentage,@PostDoc_University,@PostDoc_Country,
-                        @BS_GPAScore, @MS_GPAScore, @QualificationScore, @TotalAcademicScore
+                        @BS_GPAScore, @MS_GPAScore, @PostDoc_Score, @QualificationScore, @TotalAcademicScore
                     );
                 END";
 
@@ -412,6 +409,7 @@ namespace WebApplication4
                 // Scores
                 cmd.Parameters.AddWithValue("@BS_GPAScore", scores.BSGPAScore);
                 cmd.Parameters.AddWithValue("@MS_GPAScore", scores.MSGPAScore);
+                cmd.Parameters.AddWithValue("@PostDoc_Score", scores.PostDocScore);
                 cmd.Parameters.AddWithValue("@QualificationScore", scores.QualificationScore);
                 cmd.Parameters.AddWithValue("@TotalAcademicScore", scores.TotalAcademicScore);
 
@@ -492,15 +490,17 @@ namespace WebApplication4
     }
 
     // =============================================
-    // ACADEMIC SCORES MODEL
+    // ACADEMIC SCORES MODEL — NEW RUBRIC (MAX 40)
     // =============================================
     public class AcademicScores
     {
-        public decimal QualificationScore { get; set; }  // Max 40
-        public decimal BSGPAScore { get; set; }          // Max 5
-        public decimal MSGPAScore { get; set; }          // Max 5
-        public decimal TotalGPAScore { get; set; }       // Max 10
-        public decimal TotalAcademicScore { get; set; }  // Max 50
+        public decimal QualificationScore { get; set; }   // Degree-based, max 35
+        public decimal BSGPAScore { get; set; }           // kept for DB compat (not used for total now)
+        public decimal MSGPAScore { get; set; }           // kept for DB compat (not used for total now)
+        public decimal CGPA_Score { get; set; }           // single CGPA slot, max 5
+        public decimal TotalGPAScore { get; set; }        // = CGPA_Score
+        public decimal PostDocScore { get; set; }         // PostDoc component, max 10
+        public decimal TotalAcademicScore { get; set; }   // max 40
     }
 
     // =============================================

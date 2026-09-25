@@ -281,15 +281,16 @@
             </asp:DropDownList>
         </div>
 
-        <!-- NEW: Hiring Type -->
+                <!-- UPDATED: Hiring Type -->
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Hiring Type <span class="required">*</span></label>
             <asp:DropDownList ID="ddlHiringType" runat="server" CssClass="form-select">
                 <asp:ListItem Value="">-- Select Hiring Type --</asp:ListItem>
-                <asp:ListItem Value="Permanent Faculty">Permanent Faculty</asp:ListItem>
-                <asp:ListItem Value="Visiting Faculty">Visiting Faculty</asp:ListItem>
-                <asp:ListItem Value="POP">POP</asp:ListItem>
-                <asp:ListItem Value="Adjunct">Adjunct</asp:ListItem>
+                <asp:ListItem Value="Permanent Faculty Member (PFM)">Permanent Faculty Member (PFM)</asp:ListItem>
+                <asp:ListItem Value="Visiting Faculty Member (VFM)">Visiting Faculty Member (VFM)</asp:ListItem>
+                <asp:ListItem Value="Professor of Practice (PoP)">Professor of Practice (PoP)</asp:ListItem>
+                <asp:ListItem Value="Adjunct Faculty">Adjunct Faculty</asp:ListItem>
+                <asp:ListItem Value="Research Track Faculty (RTF)">Research Track Faculty (RTF)</asp:ListItem>
             </asp:DropDownList>
         </div>
 

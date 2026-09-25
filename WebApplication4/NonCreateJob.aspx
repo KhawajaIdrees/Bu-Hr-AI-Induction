@@ -223,21 +223,17 @@
 
     <div class="row g-4">
 
-        <!-- Position Title (Dropdown) -->
+                <!-- UPDATED: Position Title (Dropdown) -->
         <div class="col-xl-4 col-lg-4 col-md-6 col-12">
             <label class="form-label">Position Title <span class="required">*</span></label>
             <asp:DropDownList ID="ddlPositionTitle" runat="server" CssClass="form-select">
                 <asp:ListItem Value="">-- Select Position --</asp:ListItem>
-                <asp:ListItem Value="Lab Engineer">Lab Engineer</asp:ListItem>
-                <asp:ListItem Value="IT Officer">IT Officer</asp:ListItem>
                 <asp:ListItem Value="Deputy Director">Deputy Director</asp:ListItem>
                 <asp:ListItem Value="Assistant Director">Assistant Director</asp:ListItem>
-                <asp:ListItem Value="Network Administrator">Network Administrator</asp:ListItem>
-                <asp:ListItem Value="HR Officer">HR Officer</asp:ListItem>
-                <asp:ListItem Value="Accounts Officer">Accounts Officer</asp:ListItem>
-                <asp:ListItem Value="Admin Officer">Admin Officer</asp:ListItem>
-                <asp:ListItem Value="Office Assistant">Office Assistant</asp:ListItem>
-                <asp:ListItem Value="Other">Other</asp:ListItem>
+                <asp:ListItem Value="Manager">Manager</asp:ListItem>
+                <asp:ListItem Value="Assistant Manager">Assistant Manager</asp:ListItem>
+                <asp:ListItem Value="Departmental Coordinator">Departmental Coordinator</asp:ListItem>
+                <asp:ListItem Value="Web Developer">Web Developer</asp:ListItem>
             </asp:DropDownList>
         </div>
 

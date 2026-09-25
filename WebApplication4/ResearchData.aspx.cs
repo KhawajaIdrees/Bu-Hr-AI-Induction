@@ -71,7 +71,6 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            // ============ AUTHOR TYPE INCLUDED IN SELECT ============
             string query = @"SELECT 
                                 id as PublicationID,
                                 PublicationType,
@@ -141,6 +140,10 @@ namespace WebApplication4
             }
         }
 
+        // =============================================
+        // NEW RUBRIC: Research max 15
+        //   W max 6, X max 4, Y max 2, FundedProjects max 3 (flat)
+        // =============================================
         private int CalculateResearchScore()
         {
             int wCount = 0;
@@ -177,10 +180,14 @@ namespace WebApplication4
                 }
             }
 
-            int researchScore = (wCount * 5) + (xCount * 3) + (yCount * 1) + (fundedProjects * 5);
+            // Per-category caps
+            int wPoints = wCount > 0 ? 6 : 0;                // W category: max 6 (flat if any)
+            int xPoints = xCount > 0 ? 4 : 0;                // X category: max 4 (flat if any)
+            int yPoints = yCount > 0 ? 2 : 0;                // Y category: max 2 (flat if any)
+            int fPoints = fundedProjects > 0 ? 3 : 0;        // Funded projects: max 3 (flat if any)
 
-            if (researchScore > 25)
-                researchScore = 25;
+            int researchScore = wPoints + xPoints + yPoints + fPoints;
+            if (researchScore > 15) researchScore = 15;
 
             return researchScore;
         }
@@ -278,37 +285,55 @@ namespace WebApplication4
                 }
             }
 
-            int researchSupervisionScore = (msStudents * 1) + (phdStudents * 2);
+            int supervisionPoints = (msStudents * 1) + (phdStudents * 2);
+            if (supervisionPoints > 2) supervisionPoints = 2;
 
-            int experienceScore = 0;
-            string expQuery = "SELECT ISNULL(ExperienceScore, 0) FROM ExperienceScores WHERE UserID = @UserID";
+            // Recompute experience total (call the same scoring pipeline)
+            // Because Experience page owns the logic, we simply refresh the
+            // supervision-related columns via ExperienceScores.
+            int totalPoints = 0, relevantPoints = 0, postPhdPoints = 0, experienceScore = 0;
+
             using (SqlConnection con = new SqlConnection(cs))
-            using (SqlCommand cmd = new SqlCommand(expQuery, con))
             {
-                cmd.Parameters.AddWithValue("@UserID", userId);
-                con.Open();
-                object result = cmd.ExecuteScalar();
-                if (result != DBNull.Value)
-                    experienceScore = Convert.ToInt32(result);
+                string readQuery = @"SELECT 
+                                        ISNULL(TotalExperiencePoints, 0),
+                                        ISNULL(RelevantExperiencePoints, 0),
+                                        ISNULL(PostPhDExperiencePoints, 0)
+                                     FROM ExperienceScores WHERE UserID = @UserID";
+                using (SqlCommand cmd = new SqlCommand(readQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    con.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            totalPoints = Convert.ToInt32(reader[0]);
+                            relevantPoints = Convert.ToInt32(reader[1]);
+                            postPhdPoints = Convert.ToInt32(reader[2]);
+                        }
+                    }
+                }
             }
 
-            int totalExperienceScore = experienceScore + researchSupervisionScore;
-
-            if (totalExperienceScore > 25) totalExperienceScore = 25;
+            experienceScore = totalPoints + relevantPoints + postPhdPoints + supervisionPoints;
+            if (experienceScore > 15) experienceScore = 15;
 
             string updateQuery = @"
                 UPDATE ExperienceScores 
-                SET ResearchScore = @ResearchScore, 
+                SET ResearchScore        = @ResearchScore, 
                     TotalExperienceScore = @TotalExperienceScore,
-                    UpdatedAt = GETDATE()
+                    SupervisionPoints    = @SupervisionPoints,
+                    UpdatedAt            = GETDATE()
                 WHERE UserID = @UserID";
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(updateQuery, con))
             {
                 cmd.Parameters.AddWithValue("@UserID", userId);
-                cmd.Parameters.AddWithValue("@ResearchScore", researchSupervisionScore);
-                cmd.Parameters.AddWithValue("@TotalExperienceScore", totalExperienceScore);
+                cmd.Parameters.AddWithValue("@ResearchScore", supervisionPoints);
+                cmd.Parameters.AddWithValue("@TotalExperienceScore", experienceScore);
+                cmd.Parameters.AddWithValue("@SupervisionPoints", supervisionPoints);
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -323,7 +348,6 @@ namespace WebApplication4
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            // ============ AUTHOR TYPE INCLUDED IN INSERT ============
             string query = @"
 INSERT INTO Publications
 (
@@ -526,7 +550,6 @@ VALUES
                 return;
             }
 
-            // ============ AUTHOR TYPE VALIDATION ============
             if (string.IsNullOrEmpty(ddlAuthorType.SelectedValue))
             {
                 lblMessage.Text = "Please select Author Type.";
@@ -601,7 +624,6 @@ VALUES
             ddlPublicationType.SelectedIndex = 0;
             ddlCategory.SelectedIndex = 0;
             ddlPublicationStatus.SelectedIndex = 0;
-            // ============ CLEAR AUTHOR TYPE ============
             ddlAuthorType.SelectedIndex = 0;
             txtArticleTitle.Text = string.Empty;
             txtAuthors.Text = string.Empty;
