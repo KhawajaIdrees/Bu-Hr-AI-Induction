@@ -91,7 +91,6 @@ namespace WebApplication4
         {
             using (SqlConnection con = new SqlConnection(cs))
             {
-                // IsRelevant defaults to 1 in DB — the AI updates it later
                 string query = @"INSERT INTO WorkExperience
                                 (UserId,
                                  OrganizationName,
@@ -206,44 +205,47 @@ namespace WebApplication4
 
         // =============================================
         // NEW RUBRIC: Experience max 15
-        //    Total experience   = max 6
-        //    Relevant (IsRelevant) = max 4
-        //    Post-PhD           = max 3
-        //    Supervision        = max 2
+        //   Total experience = 1 mark/year (cap 6)
+        //   Relevant         = 2 marks/year (cap 4)
+        //   Post-PhD         = 1 mark/year (cap 3)
+        //   Supervision      = MS 0.5/student + PhD 1/student (cap 2)
         // =============================================
         private void CalculateAndSaveExperienceScore(int userId)
         {
             int totalYears = GetTotalExperienceYears(userId);
             int relevantYears = GetRelevantExperienceYears(userId);
             int postPhdYears = GetPostPhDExperienceYears(userId);
-            int supervisionPoints = GetSupervisionPoints(userId);
+            decimal supervisionPoints = GetSupervisionPoints(userId);
 
-            int totalPoints = ScoreTotalYears(totalYears);          // 0..6
-            int relevantPoints = ScoreRelevantYears(relevantYears);    // 0..4
-            int postPhdPoints = ScorePostPhdYears(postPhdYears);      // 0..3
+            // Per-year scores with caps
+            int totalPoints = Math.Min(totalYears, 6);                // 1/yr, cap 6
+            int relevantPoints = Math.Min(relevantYears * 2, 4);         // 2/yr, cap 4
+            int postPhdPoints = Math.Min(postPhdYears, 3);              // 1/yr, cap 3
 
-            // Supervision already capped at 2 inside GetSupervisionPoints
+            decimal experienceScoreDec = totalPoints
+                                       + relevantPoints
+                                       + postPhdPoints
+                                       + supervisionPoints;
 
-            int experienceScore = totalPoints + relevantPoints + postPhdPoints + supervisionPoints;
-            if (experienceScore > 15) experienceScore = 15;
+            if (experienceScoreDec > 15) experienceScoreDec = 15;
+
+            int experienceScore = (int)Math.Round(experienceScoreDec);
 
             string experienceLevel = GetExperienceLevel(totalYears);
 
-            // Keep legacy column "ResearchScore" in sync with supervision points
             SaveExperienceScores(
                 userId,
                 experienceScore,
                 experienceLevel,
-                supervisionPoints,
+                (int)Math.Round(supervisionPoints),
                 experienceScore,
                 totalPoints,
                 relevantPoints,
                 postPhdPoints,
-                supervisionPoints
+                (int)Math.Round(supervisionPoints)
             );
         }
 
-        // ---- Total years across all experience ----
         private int GetTotalExperienceYears(int userId)
         {
             using (SqlConnection con = new SqlConnection(cs))
@@ -265,7 +267,6 @@ namespace WebApplication4
             }
         }
 
-        // ---- Years where IsRelevant = 1 ----
         private int GetRelevantExperienceYears(int userId)
         {
             using (SqlConnection con = new SqlConnection(cs))
@@ -287,7 +288,6 @@ namespace WebApplication4
             }
         }
 
-        // ---- Post-PhD years ----
         private int GetPostPhDExperienceYears(int userId)
         {
             int phdYear = 0;
@@ -333,8 +333,8 @@ namespace WebApplication4
             }
         }
 
-        // ---- Supervision points (max 2) ----
-        private int GetSupervisionPoints(int userId)
+        // MS = 0.5 per student, PhD = 1 per student, total cap = 2
+        private decimal GetSupervisionPoints(int userId)
         {
             int msStudents = 0;
             int phdStudents = 0;
@@ -356,41 +356,11 @@ namespace WebApplication4
                 }
             }
 
-            int points = (msStudents * 1) + (phdStudents * 2);
-            if (points > 2) points = 2;
+            decimal points = (msStudents * 0.5m) + (phdStudents * 1m);
+            if (points > 2m) points = 2m;
             return points;
         }
 
-        // ---- Score mappings ----
-        private int ScoreTotalYears(int years)
-        {
-            if (years >= 18) return 6;
-            if (years >= 15) return 5;
-            if (years >= 10) return 4;
-            if (years >= 5) return 3;
-            if (years >= 2) return 2;
-            if (years >= 1) return 1;
-            return 0;
-        }
-
-        private int ScoreRelevantYears(int years)
-        {
-            if (years >= 10) return 4;
-            if (years >= 5) return 3;
-            if (years >= 2) return 2;
-            if (years >= 1) return 1;
-            return 0;
-        }
-
-        private int ScorePostPhdYears(int years)
-        {
-            if (years >= 10) return 3;
-            if (years >= 5) return 2;
-            if (years >= 1) return 1;
-            return 0;
-        }
-
-        // ---- Experience level text (label only) ----
         private string GetExperienceLevel(int totalYears)
         {
             if (totalYears >= 18) return "Professor";
@@ -404,7 +374,7 @@ namespace WebApplication4
             int userId,
             int experienceScore,
             string experienceLevel,
-            int researchScore,       // legacy column = supervision points
+            int researchScore,
             int totalExperienceScore,
             int totalPoints,
             int relevantPoints,

@@ -25,11 +25,9 @@ namespace WebApplication4
             }
         }
 
-        // Load Research Profile (One-to-One)
         protected void LoadResearchProfile()
         {
-            if (Session["UserID"] == null)
-                return;
+            if (Session["UserID"] == null) return;
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -62,11 +60,9 @@ namespace WebApplication4
             }
         }
 
-        // Load Publications (One-to-Many)
         protected void LoadPublications()
         {
-            if (Session["UserID"] == null)
-                return;
+            if (Session["UserID"] == null) return;
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -142,28 +138,36 @@ namespace WebApplication4
 
         // =============================================
         // NEW RUBRIC: Research max 15
-        //   W max 6, X max 4, Y max 2, FundedProjects max 3 (flat)
+        //   W paper  = 1 mark each
+        //   X paper  = 1 mark each
+        //   IF paper = 1 mark each
+        //   Y paper  = 0.5 each, cap 3
+        //   Funded   = 2 each, cap 4
+        //   Total cap 15
         // =============================================
         private int CalculateResearchScore()
         {
             int wCount = 0;
             int xCount = 0;
+            int ifCount = 0;
             int yCount = 0;
             int fundedProjects = 0;
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
-            string query = @"SELECT 
-                                ISNULL(WCount, 0) AS WCount, 
-                                ISNULL(XCount, 0) AS XCount, 
-                                ISNULL(YCount, 0) AS YCount,
-                                ISNULL(TotalFundedProjects, 0) AS TotalFundedProjects
-                            FROM ResearchProfile 
-                            WHERE user_id = @userID";
+            // W, X, Y, IF counts come directly from Publications
+            string pubQuery = @"
+                SELECT 
+                    COUNT(CASE WHEN Category = 'W' THEN 1 END) AS WCount,
+                    COUNT(CASE WHEN Category = 'X' THEN 1 END) AS XCount,
+                    COUNT(CASE WHEN Category = 'IF' THEN 1 END) AS IFCount,
+                    COUNT(CASE WHEN Category = 'Y' THEN 1 END) AS YCount
+                FROM Publications
+                WHERE user_id = @userID";
 
             using (SqlConnection con = new SqlConnection(cs))
-            using (SqlCommand cmd = new SqlCommand(query, con))
+            using (SqlCommand cmd = new SqlCommand(pubQuery, con))
             {
                 cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
                 con.Open();
@@ -172,24 +176,43 @@ namespace WebApplication4
                 {
                     if (reader.Read())
                     {
-                        wCount = Convert.ToInt32(reader["WCount"]);
-                        xCount = Convert.ToInt32(reader["XCount"]);
-                        yCount = Convert.ToInt32(reader["YCount"]);
-                        fundedProjects = Convert.ToInt32(reader["TotalFundedProjects"]);
+                        wCount = reader["WCount"] != DBNull.Value ? Convert.ToInt32(reader["WCount"]) : 0;
+                        xCount = reader["XCount"] != DBNull.Value ? Convert.ToInt32(reader["XCount"]) : 0;
+                        ifCount = reader["IFCount"] != DBNull.Value ? Convert.ToInt32(reader["IFCount"]) : 0;
+                        yCount = reader["YCount"] != DBNull.Value ? Convert.ToInt32(reader["YCount"]) : 0;
                     }
                 }
             }
 
-            // Per-category caps
-            int wPoints = wCount > 0 ? 6 : 0;                // W category: max 6 (flat if any)
-            int xPoints = xCount > 0 ? 4 : 0;                // X category: max 4 (flat if any)
-            int yPoints = yCount > 0 ? 2 : 0;                // Y category: max 2 (flat if any)
-            int fPoints = fundedProjects > 0 ? 3 : 0;        // Funded projects: max 3 (flat if any)
+            // Funded projects come from ResearchProfile
+            string fundQuery = @"SELECT ISNULL(TotalFundedProjects, 0) FROM ResearchProfile WHERE user_id = @userID";
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(fundQuery, con))
+            {
+                cmd.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                con.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                    fundedProjects = Convert.ToInt32(result);
+            }
 
-            int researchScore = wPoints + xPoints + yPoints + fPoints;
-            if (researchScore > 15) researchScore = 15;
+            // W, X, IF → 1 each (no per-tier cap, only overall cap)
+            int wPoints = wCount;
+            int xPoints = xCount;
+            int ifPoints = ifCount;
 
-            return researchScore;
+            // Y → 0.5 each, cap 3
+            decimal yPoints = yCount * 0.5m;
+            if (yPoints > 3m) yPoints = 3m;
+
+            // Funded → 2 each, cap 4
+            int fPoints = fundedProjects * 2;
+            if (fPoints > 4) fPoints = 4;
+
+            decimal total = wPoints + xPoints + ifPoints + yPoints + fPoints;
+            if (total > 15m) total = 15m;
+
+            return (int)Math.Round(total);
         }
 
         private void SaveResearchScore(int userId, int researchScore)
@@ -220,11 +243,12 @@ namespace WebApplication4
                 SELECT 
                     COUNT(CASE WHEN Category = 'W' THEN 1 END) AS WCount,
                     COUNT(CASE WHEN Category = 'X' THEN 1 END) AS XCount,
-                    COUNT(CASE WHEN Category = 'Y' THEN 1 END) AS YCount
+                    COUNT(CASE WHEN Category = 'Y' THEN 1 END) AS YCount,
+                    COUNT(CASE WHEN Category = 'IF' THEN 1 END) AS IFCount
                 FROM Publications
                 WHERE user_id = @userID";
 
-            int wCount = 0, xCount = 0, yCount = 0;
+            int wCount = 0, xCount = 0, yCount = 0, ifCount = 0;
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
@@ -239,6 +263,7 @@ namespace WebApplication4
                         wCount = reader["WCount"] != DBNull.Value ? Convert.ToInt32(reader["WCount"]) : 0;
                         xCount = reader["XCount"] != DBNull.Value ? Convert.ToInt32(reader["XCount"]) : 0;
                         yCount = reader["YCount"] != DBNull.Value ? Convert.ToInt32(reader["YCount"]) : 0;
+                        ifCount = reader["IFCount"] != DBNull.Value ? Convert.ToInt32(reader["IFCount"]) : 0;
                     }
                 }
             }
@@ -248,6 +273,7 @@ namespace WebApplication4
                 SET WCount = @WCount, 
                     XCount = @XCount, 
                     YCount = @YCount,
+                    IFCount = @IFCount,
                     UpdatedAt = GETDATE()
                 WHERE user_id = @userID";
 
@@ -258,6 +284,7 @@ namespace WebApplication4
                 cmd.Parameters.Add("@WCount", SqlDbType.Int).Value = wCount;
                 cmd.Parameters.Add("@XCount", SqlDbType.Int).Value = xCount;
                 cmd.Parameters.Add("@YCount", SqlDbType.Int).Value = yCount;
+                cmd.Parameters.Add("@IFCount", SqlDbType.Int).Value = ifCount;
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -285,12 +312,11 @@ namespace WebApplication4
                 }
             }
 
-            int supervisionPoints = (msStudents * 1) + (phdStudents * 2);
-            if (supervisionPoints > 2) supervisionPoints = 2;
+            // NEW RUBRIC: MS = 0.5 each, PhD = 1 each, cap 2
+            decimal supervisionDec = (msStudents * 0.5m) + (phdStudents * 1m);
+            if (supervisionDec > 2m) supervisionDec = 2m;
+            int supervisionPoints = (int)Math.Round(supervisionDec);
 
-            // Recompute experience total (call the same scoring pipeline)
-            // Because Experience page owns the logic, we simply refresh the
-            // supervision-related columns via ExperienceScores.
             int totalPoints = 0, relevantPoints = 0, postPhdPoints = 0, experienceScore = 0;
 
             using (SqlConnection con = new SqlConnection(cs))
@@ -339,11 +365,9 @@ namespace WebApplication4
             }
         }
 
-        // Add Publication (One-to-Many)
         protected void AddPublication()
         {
-            if (Session["UserID"] == null)
-                return;
+            if (Session["UserID"] == null) return;
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -408,11 +432,9 @@ VALUES
             UpdateExperienceScore(userID);
         }
 
-        // Save Research Profile (One-to-One)
         protected void SaveResearchProfile()
         {
-            if (Session["UserID"] == null)
-                return;
+            if (Session["UserID"] == null) return;
 
             int userID = Convert.ToInt32(Session["UserID"]);
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;

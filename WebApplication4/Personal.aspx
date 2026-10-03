@@ -358,6 +358,40 @@
                         </div>
                     </div>
 
+                    <!-- ============================================ -->
+                    <!-- NEW SECTION: Domicile & Passport No.         -->
+                    <!-- ============================================ -->
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="<%= ddlDomicile.ClientID %>" class="form-label">
+                                Domicile <span class="required-asterisk">*</span>
+                            </label>
+                            <asp:DropDownList ID="ddlDomicile" runat="server" CssClass="form-select">
+                                <asp:ListItem Text="-- Select Domicile --" Value="" />
+                                <asp:ListItem Text="Islamabad / ICT" Value="Islamabad / ICT" />
+                                <asp:ListItem Text="Punjab" Value="Punjab" />
+                                <asp:ListItem Text="Sindh" Value="Sindh" />
+                                <asp:ListItem Text="Balochistan" Value="Balochistan" />
+                                <asp:ListItem Text="Khyber Pakhtunkhwa (KPK)" Value="Khyber Pakhtunkhwa (KPK)" />
+                                <asp:ListItem Text="Gilgit-Baltistan (GB)" Value="Gilgit-Baltistan (GB)" />
+                                <asp:ListItem Text="Azad Jammu &amp; Kashmir (AJK)" Value="Azad Jammu &amp; Kashmir (AJK)" />
+                            </asp:DropDownList>
+                            <asp:RequiredFieldValidator ID="rfvDomicile" runat="server"
+                                ControlToValidate="ddlDomicile"
+                                InitialValue=""
+                                ErrorMessage="Please select a domicile."
+                                CssClass="text-danger d-block mt-1"
+                                Display="Static"
+                                ValidationGroup="PersonalForm" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="<%= txtPassportNo.ClientID %>" class="form-label">
+                                Passport No.
+                            </label>
+                            <asp:TextBox ID="txtPassportNo" runat="server" CssClass="form-control" placeholder="e.g., AB1234567" />
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-4 form-group">
                             <label for="<%= txtCellNumber.ClientID %>" class="form-label">

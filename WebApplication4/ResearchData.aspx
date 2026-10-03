@@ -327,6 +327,7 @@
                                 <asp:ListItem Value="W">W</asp:ListItem>
                                 <asp:ListItem Value="X">X</asp:ListItem>
                                 <asp:ListItem Value="Y">Y</asp:ListItem>
+                                <asp:ListItem Value="IF">IF (Impact Factor)</asp:ListItem>
                                 <asp:ListItem Value="Other">Other</asp:ListItem>
                             </asp:DropDownList>
                         </div>

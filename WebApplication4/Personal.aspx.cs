@@ -76,6 +76,18 @@ namespace WebApplication4
                         if (ddlGender.Items.FindByValue(reader["gender"].ToString()) != null)
                             ddlGender.SelectedValue = reader["gender"].ToString();
 
+                        // NEW: Domicile
+                        if (reader["Domicile"] != DBNull.Value)
+                        {
+                            string dom = reader["Domicile"].ToString();
+                            if (ddlDomicile.Items.FindByValue(dom) != null)
+                                ddlDomicile.SelectedValue = dom;
+                        }
+
+                        // NEW: Passport No.
+                        if (reader["PassportNo"] != DBNull.Value)
+                            txtPassportNo.Text = reader["PassportNo"].ToString();
+
                         txtCellNumber.Text = reader["cellNumber"].ToString();
 
                         if (reader["birthdate"] != DBNull.Value)
@@ -211,6 +223,8 @@ SET
     fathername = @fathername,
     cnic = @cnic,
     gender = @gender,
+    Domicile = @Domicile,
+    PassportNo = @PassportNo,
     cellNumber = @cellNumber,
     birthdate = @birthdate,
     marital = @marital,
@@ -240,6 +254,8 @@ BEGIN
         fathername,
         cnic,
         gender,
+        Domicile,
+        PassportNo,
         cellNumber,
         birthdate,
         marital,
@@ -266,6 +282,8 @@ BEGIN
         @fathername,
         @cnic,
         @gender,
+        @Domicile,
+        @PassportNo,
         @cellNumber,
         @birthdate,
         @marital,
@@ -302,6 +320,16 @@ END";
                 cmd.Parameters.AddWithValue("@fathername", txtFatherName.Text.Trim());
                 cmd.Parameters.AddWithValue("@cnic", txtCnic.Text.Trim());
                 cmd.Parameters.AddWithValue("@gender", ddlGender.SelectedValue);
+
+                // NEW: Domicile (required)
+                cmd.Parameters.AddWithValue("@Domicile", ddlDomicile.SelectedValue);
+
+                // NEW: Passport No. (optional)
+                cmd.Parameters.AddWithValue("@PassportNo",
+                    string.IsNullOrWhiteSpace(txtPassportNo.Text)
+                    ? (object)DBNull.Value
+                    : txtPassportNo.Text.Trim());
+
                 cmd.Parameters.AddWithValue("@cellNumber", txtCellNumber.Text.Trim());
                 cmd.Parameters.AddWithValue("@birthdate", Convert.ToDateTime(txtBirthDate.Text));
                 cmd.Parameters.AddWithValue("@marital", ddlMaritalStatus.SelectedValue);
