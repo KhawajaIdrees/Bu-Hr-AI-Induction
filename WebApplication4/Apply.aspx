@@ -1,468 +1,191 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Apply.aspx.cs" Inherits="WebApplication4.candApply" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Apply.aspx.cs" Inherits="WebApplication4.Apply" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Candidate Application</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />  
-    <style type="text/css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Apply for Position</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
-        .message {
-            color: green;
-            font-weight: bold;
+    <style>
+        :root {
+            --page-bg:#F8F7F3; --card-bg:#FFFFFF;
+            --primary-navy:#12304A; --action-blue:#1769A8;
+            --action-blue-hover:#125789; --body-text:#334155;
+            --muted-text:#718096; --border:#D9E1E8;
+            --divider:#E2E6EA; --radius:6px; --radius-lg:8px;
         }
-        
-        .station-list input {
-    margin-right: 5px;
-}
+        * { box-sizing: border-box; }
+        html, body { margin:0; padding:0; }
+        body {
+            background: var(--page-bg);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size:14px; color: var(--body-text);
+            -webkit-font-smoothing: antialiased;
+        }
+        .page-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 48px 60px; }
+        .page-header { display:flex; align-items:center; gap:14px; margin-bottom:36px; }
+        .page-header .logo { height: 56px; width: auto; }
+        .page-header .uni-name { font-weight:600; font-size:24px; color:var(--primary-navy); line-height:1.2; }
+        .page-header .hr-portal { font-size:14px; color: var(--muted-text); margin-top:2px; }
 
-.station-list label {
-    margin-right: 30px;
-    cursor: pointer;
-}
+        .main-heading {
+            font-family: Georgia, serif; font-weight:600; font-size:40px;
+            color: var(--primary-navy); margin: 0 0 8px 0; letter-spacing:-0.3px;
+        }
+        .main-subtitle { font-size:16px; color: var(--muted-text); margin: 0 0 32px 0; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 24px 28px;
+            margin-bottom: 16px; box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+        }
+
+        .job-title { font-family: Georgia, serif; font-weight: 600; font-size: 24px; color: var(--primary-navy); margin: 0 0 18px 0; }
+
+        .detail-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 14px 32px;
+        }
+        .detail-item { display: flex; flex-direction: column; gap: 3px; }
+        .detail-label { font-size: 11px; font-weight: 700; color: var(--muted-text); text-transform: uppercase; letter-spacing: 0.5px; }
+        .detail-value { font-size: 14px; color: var(--body-text); font-weight: 500; }
+
+        .badge { display:inline-block; padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
+        .badge-teaching { background:#DBEAFE; color:#1E40AF; }
+        .badge-nonteaching { background:#FEF3C7; color:#92400E; }
+
+        .choice-heading {
+            font-family: Georgia, serif; font-weight: 600; font-size: 22px;
+            color: var(--primary-navy); margin: 4px 0 20px 0;
+        }
+
+        .choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .choice-card {
+            background: var(--card-bg); border: 2px solid var(--border);
+            border-radius: var(--radius-lg); padding: 28px 24px;
+            text-align: center; cursor: pointer;
+            transition: all .2s ease;
+            text-decoration: none; color: inherit;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+        }
+        .choice-card:hover {
+            border-color: var(--action-blue);
+            box-shadow: 0 8px 24px rgba(23,105,168,0.12);
+            transform: translateY(-2px);
+        }
+        .choice-icon {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #EFF6FF; color: var(--action-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+        }
+        .choice-title { font-family: Georgia, serif; font-weight: 600; font-size: 20px; color: var(--primary-navy); }
+        .choice-desc { font-size: 13px; color: var(--muted-text); line-height: 1.5; }
+
+        .error-box {
+            background: #FEE2E2; border-left: 5px solid #DC2626;
+            color: #991B1B; padding: 16px 20px; border-radius: var(--radius);
+            font-weight: 500;
+        }
+
+        @media (max-width: 800px) {
+            .page-wrap { padding: 20px 16px 40px; }
+            .main-heading { font-size: 30px; }
+            .detail-grid { grid-template-columns: 1fr; gap: 12px; }
+            .choice-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
-
-<form id="form1" runat="server">
-
-<div class="container py-4">
-
-    <div class="text-left mb-4">
-        <h4 class="fw-bold text-primary">Application</h4>
-        <h5 class="text-secondary">Bahria University HR Portal</h5>
-        <hr />
-    </div>
-
-
-    <!-- Station Selection -->
-    <div class="row mb-3">
-
-        <!-- Location -->
-        <div class="col-md-6">
-
-            <label class="form-label fw-bold">
-                Location
-            </label>
-
-            <br />
-
-            <asp:RadioButtonList
-                ID="rblStation"
-                runat="server"
-                CssClass="station-list"
-                RepeatDirection="Horizontal"
-                RepeatLayout="Flow">
-
-                <asp:ListItem Text="Islamabad" Value="Islamabad"></asp:ListItem>
-                <asp:ListItem Text="Lahore" Value="Lahore"></asp:ListItem>
-                <asp:ListItem Text="Karachi" Value="Karachi"></asp:ListItem>
-
-            </asp:RadioButtonList>
-
-
-            <asp:RequiredFieldValidator
-                ID="rfvStation"
-                runat="server"
-                ControlToValidate="rblStation"
-                InitialValue=""
-                ValidationGroup="Register"
-                ErrorMessage="Please select a location."
-                CssClass="text-danger"
-                Display="Dynamic">
-            </asp:RequiredFieldValidator>
-
-        </div>
-
-
-
-        <!-- Advertisement Date -->
-        <div class="col-md-6">
-
-            <asp:Label 
-                ID="lblAdvertisementDate" 
-                runat="server"
-                Text="Advertisement Date"
-                CssClass="form-label fw-bold">
-            </asp:Label>
-
-
-            <asp:TextBox
-                ID="txtAdvertisementDate"
-                runat="server"
-                CssClass="form-control"
-                TextMode="Date">
-            </asp:TextBox>
-
-
-            <asp:RequiredFieldValidator
-                ID="rfvAdvertisementDate"
-                runat="server"
-                ControlToValidate="txtAdvertisementDate"
-                ValidationGroup="Register"
-                ErrorMessage="Please select advertisement date."
-                CssClass="text-danger"
-                Display="Dynamic">
-            </asp:RequiredFieldValidator>
-
-        </div>
-
-    </div>
-
-
-
-
-    <!-- Job Selection -->
-
-    <div class="row mb-3">
-
-
-        <!-- Job Applied -->
-        <div class="col-md-6">
-
-
-            <label class="form-label fw-bold">
-                Job Applied For
-            </label>
-
-
-            <asp:DropDownList
-                ID="ddlJobApplied"
-                runat="server"
-                CssClass="form-select"
-                onchange="loadJobOptions();">
-
-
-                <asp:ListItem 
-                    Text="-- Select Post --" 
-                    Value="">
-                </asp:ListItem>
-
-
-                <asp:ListItem 
-                    Text="Teaching" 
-                    Value="Faculty">
-                </asp:ListItem>
-
-
-                <asp:ListItem 
-                    Text="Non Teaching" 
-                    Value="NonTeaching">
-                </asp:ListItem>
-
-
-            </asp:DropDownList>
-
-
-            <asp:RequiredFieldValidator
-                ID="rfvJobApplied"
-                runat="server"
-                ControlToValidate="ddlJobApplied"
-                InitialValue=""
-                ValidationGroup="Register"
-                ErrorMessage="Please select job type."
-                CssClass="text-danger"
-                Display="Dynamic">
-            </asp:RequiredFieldValidator>
-
-
-        </div>
-
-
-
-
-        <!-- CV Upload -->
-
-        <div class="col-md-6">
-
-
-            <label class="form-label fw-bold">
-
-                Upload CV
-
-                <small class="text-muted">
-                    (PDF only, Maximum 5 MB)
-                </small>
-
-            </label>
-
-
-            <asp:FileUpload
-                ID="fuCV"
-                runat="server"
-                CssClass="form-control" />
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-
-
-    <!-- Position -->
-
-    <div class="mb-3">
-
-
-        <label class="form-label fw-bold">
-            Select Position
-        </label>
-
-
-        <asp:DropDownList
-            ID="ddlJobCategory"
-            runat="server"
-            CssClass="form-select">
-
-
-            <asp:ListItem
-                Text="-- Select Position --"
-                Value="">
-            </asp:ListItem>
-
-
-        </asp:DropDownList>
-
-
-    </div>
-
-
-
-
-
-
-
-    <!-- Teaching Details -->
-
-    <div id="teachingDetails" style="display:none;">
-
-
-        <div class="row mb-3">
-
-
-            <!-- Department -->
-
-            <div class="col-md-6">
-
-
-                <label class="form-label fw-bold">
-                    Department
-                </label>
-
-
-                <asp:TextBox
-                    ID="txtDepartment"
-                    runat="server"
-                    CssClass="form-control"
-                    placeholder="Enter Department">
-                </asp:TextBox>
-
-
+    <form id="form1" runat="server">
+        <div class="page-wrap">
+
+            <div class="page-header">
+                <img src="Images/bu_logo.png" alt="Bahria University" class="logo" />
+                <div>
+                    <div class="uni-name">Bahria University</div>
+                    <div class="hr-portal">HR Portal</div>
+                </div>
             </div>
 
+            <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="card">
+                <div class="error-box">
+                    <asp:Label ID="lblError" runat="server"></asp:Label>
+                </div>
+            </asp:Panel>
 
+            <asp:Panel ID="pnlContent" runat="server" Visible="false">
 
+                <h1 class="main-heading">Apply for Position</h1>
+                <p class="main-subtitle">Review the job details below, then choose how you'd like to apply.</p>
 
+                <div class="card">
+                    <h2 class="job-title">
+                        <asp:Label ID="lblJobTitle" runat="server"></asp:Label>
+                    </h2>
 
-            <!-- Specialization -->
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Reference No</span>
+                            <span class="detail-value"><asp:Label ID="lblReferenceNo" runat="server"></asp:Label></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Job Type</span>
+                            <span class="detail-value"><asp:Label ID="lblJobType" runat="server"></asp:Label></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Campus</span>
+                            <span class="detail-value"><asp:Label ID="lblCampus" runat="server"></asp:Label></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Department</span>
+                            <span class="detail-value"><asp:Label ID="lblDepartment" runat="server"></asp:Label></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Specialization</span>
+                            <span class="detail-value"><asp:Label ID="lblSpecialization" runat="server"></asp:Label></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Deadline</span>
+                            <span class="detail-value"><asp:Label ID="lblDeadline" runat="server"></asp:Label></span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="col-md-6">
+                <div class="card">
+                    <h2 class="choice-heading">How would you like to apply?</h2>
 
+                    <div class="choice-row">
 
-                <label class="form-label fw-bold">
-                    Specialization
-                </label>
+                        <asp:LinkButton ID="btnApplyManual" runat="server"
+                            CssClass="choice-card"
+                            OnClick="ApplyManual_Click">
+                            <div class="choice-icon"><i class="bi bi-pencil-square"></i></div>
+                            <div class="choice-title">Apply Manually</div>
+                            <div class="choice-desc">Fill out your profile information step by step through the portal.</div>
+                        </asp:LinkButton>
 
+                        <asp:LinkButton ID="btnApplyCV" runat="server"
+                            CssClass="choice-card"
+                            OnClick="ApplyCV_Click">
+                            <div class="choice-icon"><i class="bi bi-file-earmark-person"></i></div>
+                            <div class="choice-title">Apply with CV</div>
+                            <div class="choice-desc">Use your saved CV from your profile (upload coming soon).</div>
+                        </asp:LinkButton>
 
-                <asp:TextBox
-                    ID="txtSpecialization"
-                    runat="server"
-                    CssClass="form-control"
-                    placeholder="Enter Specialization">
-                </asp:TextBox>
+                    </div>
+                </div>
 
-
-            </div>
-
+            </asp:Panel>
 
         </div>
-
-
-    </div>
-
-
-
-
-
-    <!-- Submit -->
-
-    <div class="text-center mt-4">
-
-
-        <asp:Button
-            ID="btnSubmit"
-            runat="server"
-            Text="Save and Continue"
-            CssClass="btn btn-primary"
-            ValidationGroup="Register"
-            OnClick="BtnSubmit_Click" />
-
-
-        <asp:Label
-            ID="lblMessage"
-            runat="server"
-            CssClass="d-block mt-3">
-        </asp:Label>
-
-
-    </div>
-
-
-
-</div>
-
-
-
-
-
-<script type="text/javascript">
-
-
-    function loadJobOptions() {
-
-        var jobType =
-            document.getElementById('<%= ddlJobApplied.ClientID %>').value;
-
-
-    var ddlCategory =
-        document.getElementById('<%= ddlJobCategory.ClientID %>');
-
-
-        var teachingDetails =
-            document.getElementById("teachingDetails");
-
-
-
-        ddlCategory.innerHTML = "";
-
-
-
-        var defaultOption =
-            document.createElement("option");
-
-
-        defaultOption.text =
-            "-- Select Position --";
-
-
-        defaultOption.value = "";
-
-
-        ddlCategory.add(defaultOption);
-
-
-
-
-        if (jobType === "Faculty") {
-
-
-            teachingDetails.style.display = "block";
-
-
-
-            var teachingOptions =
-                [
-                    "Permanent Faculty",
-                    "Visiting Faculty",
-                    "Professor of Practice"
-                ];
-
-
-
-            for (var i = 0; i < teachingOptions.length; i++) {
-
-                var option =
-                    document.createElement("option");
-
-
-                option.text =
-                    teachingOptions[i];
-
-
-                option.value =
-                    teachingOptions[i];
-
-
-                ddlCategory.add(option);
-
-            }
-
-
-        }
-
-
-        else if (jobType === "NonTeaching") {
-
-
-            teachingDetails.style.display = "none";
-
-
-
-            var nonTeachingOptions =
-                [
-                    "Officers",
-                    "Staff"
-                ];
-
-
-
-            for (var i = 0; i < nonTeachingOptions.length; i++) {
-
-                var option =
-                    document.createElement("option");
-
-
-                option.text =
-                    nonTeachingOptions[i];
-
-
-                option.value =
-                    nonTeachingOptions[i];
-
-
-                ddlCategory.add(option);
-
-            }
-
-
-        }
-
-
-        else {
-
-            teachingDetails.style.display = "none";
-
-        }
-
-
-    }
-
-
-</script>
-
-
-
-</form>
-    <!--EndFragment-->
+    </form>
 </body>
 </html>
-
- 
-

@@ -14,17 +14,9 @@ namespace WebApplication4
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // If already logged in, redirect based on role
             if (!IsPostBack && Session["UserID"] != null)
             {
-                if (Session["UserRole"] != null && Session["UserRole"].ToString() == "Admin")
-                {
-                    Response.Redirect("AdminDashboard.aspx");
-                }
-                else
-                {
-                    Response.Redirect("Personal.aspx");
-                }
+                RedirectAfterLogin();
             }
         }
 
@@ -41,9 +33,8 @@ namespace WebApplication4
             }
 
             string query = @"SELECT id, email, password, Role
-                 FROM Users
-                 WHERE email = @Email
-                 AND password = @Password";
+                             FROM Users
+                             WHERE email = @Email AND password = @Password";
 
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
@@ -54,7 +45,6 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@Password", password);
 
                 con.Open();
-
                 SqlDataReader dr = cmd.ExecuteReader();
 
                 if (dr.Read())
@@ -62,28 +52,41 @@ namespace WebApplication4
                     string userId = dr["id"].ToString();
                     string role = dr["Role"].ToString();
 
-                    // Store in session
                     Session["UserID"] = userId;
                     Session["UserRole"] = role;
 
-                    // Redirect based on role
-                    if (role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Response.Redirect("AdminDashboard.aspx");
-                    }
-                    else
-                    {
-                        Response.Redirect("Personal.aspx");
-                    }
+                    dr.Close();
+                    RedirectAfterLogin();
                 }
                 else
                 {
                     lblMessage.Text = "Invalid email or password.";
                     lblMessage.ForeColor = System.Drawing.Color.Red;
+                    dr.Close();
                 }
-
-                dr.Close();
             }
+        }
+
+        // Redirects based on role, but respects a pending job application
+        private void RedirectAfterLogin()
+        {
+            string role = Session["UserRole"] != null ? Session["UserRole"].ToString() : "";
+
+            if (role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                Response.Redirect("AdminDashboard.aspx");
+                return;
+            }
+
+            // If there's a pending job application, continue the normal profile flow.
+            // ApplicationSummary will insert the JobApplication row at the end.
+            if (Session["PendingJobId"] != null)
+            {
+                Response.Redirect("Personal.aspx");
+                return;
+            }
+
+            Response.Redirect("Personal.aspx");
         }
     }
 }

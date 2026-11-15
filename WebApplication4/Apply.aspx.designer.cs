@@ -11,7 +11,7 @@ namespace WebApplication4
 {
 
 
-    public partial class candApply
+    public partial class Apply
     {
 
         /// <summary>
@@ -24,120 +24,111 @@ namespace WebApplication4
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// rblStation control.
+        /// pnlError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblStation;
+        protected global::System.Web.UI.WebControls.Panel pnlError;
 
         /// <summary>
-        /// rfvStation control.
+        /// lblError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvStation;
+        protected global::System.Web.UI.WebControls.Label lblError;
 
         /// <summary>
-        /// lblAdvertisementDate control.
+        /// pnlContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAdvertisementDate;
+        protected global::System.Web.UI.WebControls.Panel pnlContent;
 
         /// <summary>
-        /// txtAdvertisementDate control.
+        /// lblJobTitle control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAdvertisementDate;
+        protected global::System.Web.UI.WebControls.Label lblJobTitle;
 
         /// <summary>
-        /// rfvAdvertisementDate control.
+        /// lblReferenceNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvAdvertisementDate;
+        protected global::System.Web.UI.WebControls.Label lblReferenceNo;
 
         /// <summary>
-        /// ddlJobApplied control.
+        /// lblJobType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlJobApplied;
+        protected global::System.Web.UI.WebControls.Label lblJobType;
 
         /// <summary>
-        /// rfvJobApplied control.
+        /// lblCampus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvJobApplied;
+        protected global::System.Web.UI.WebControls.Label lblCampus;
 
         /// <summary>
-        /// fuCV control.
+        /// lblDepartment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuCV;
+        protected global::System.Web.UI.WebControls.Label lblDepartment;
 
         /// <summary>
-        /// ddlJobCategory control.
+        /// lblSpecialization control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlJobCategory;
+        protected global::System.Web.UI.WebControls.Label lblSpecialization;
 
         /// <summary>
-        /// txtDepartment control.
+        /// lblDeadline control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDepartment;
+        protected global::System.Web.UI.WebControls.Label lblDeadline;
 
         /// <summary>
-        /// txtSpecialization control.
+        /// btnApplyManual control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSpecialization;
+        protected global::System.Web.UI.WebControls.LinkButton btnApplyManual;
 
         /// <summary>
-        /// btnSubmit control.
+        /// btnApplyCV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSubmit;
-
-        /// <summary>
-        /// lblMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.LinkButton btnApplyCV;
     }
 }

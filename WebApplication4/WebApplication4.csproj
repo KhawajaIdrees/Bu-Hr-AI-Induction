@@ -137,6 +137,7 @@
     <Content Include="FriendDeclaration.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Images\bu_logo.png" />
+    <Content Include="JobApps.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="NonCreateJob.aspx" />
     <Content Include="Personal.aspx" />
@@ -290,6 +291,13 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="JobApps.aspx.cs">
+      <DependentUpon>JobApps.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JobApps.aspx.designer.cs">
+      <DependentUpon>JobApps.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

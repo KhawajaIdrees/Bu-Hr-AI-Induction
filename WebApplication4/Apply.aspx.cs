@@ -1,144 +1,122 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-
 
 namespace WebApplication4
 {
-    public partial class candApply : System.Web.UI.Page
+    public partial class Apply : System.Web.UI.Page
     {
+        private string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            
-        }
-    
-        
-            
-        
-       
-        protected void RblApplyFor_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /* pnlFaculty.Visible = (rblApplyFor.SelectedValue == "Faculty");
-
-            if (rblApplyFor.SelectedValue == "Faculty")
+            if (!IsPostBack)
             {
-                //cblPositions.Items.Clear();
-                Session["ApplyFor"] = "Faculty";
-                //rblPhD.ClearSelection();
-            } */
-        }
-        private string UploadCV()
-        {
-            if (!fuCV.HasFile)
-                return null;
-
-
-            string extension =
-                System.IO.Path.GetExtension(fuCV.FileName).ToLower();
-
-
-            if (extension != ".pdf")
-            {
-                lblMessage.Text = "Only PDF files are allowed.";
-                return null;
+                LoadJobDetails();
             }
-
-
-            if (fuCV.PostedFile.ContentLength > 5242880)
-            {
-                lblMessage.Text = "CV size cannot exceed 5 MB.";
-                return null;
-            }
-
-
-            string fileName =
-                Guid.NewGuid().ToString() + extension;
-
-
-            string folder =
-                Server.MapPath("~/Uploads/CV/");
-
-
-            if (!System.IO.Directory.Exists(folder))
-                System.IO.Directory.CreateDirectory(folder);
-
-
-            string fullPath =
-                System.IO.Path.Combine(folder, fileName);
-
-
-            fuCV.SaveAs(fullPath);
-
-
-            return "~/Uploads/CV/" + fileName;
         }
-        protected void BtnSubmit_Click(object sender, EventArgs e)
+
+        private void LoadJobDetails()
         {
-           /* if (Session["UserID"] == null)
+            int jobId;
+            if (!int.TryParse(Request.QueryString["jobId"], out jobId))
             {
-                lblMessage.Text = "User session expired.";
+                ShowError("Invalid or missing job reference. Please return to the Open Positions page.");
                 return;
             }
 
-
-            // Teaching validation
-            if (ddlJobApplied.SelectedValue == "Faculty")
-            {
-                if (string.IsNullOrWhiteSpace(txtDepartment.Text) ||
-                    string.IsNullOrWhiteSpace(txtSpecialization.Text))
-                {
-                    lblMessage.Text =
-                        "Department and Specialization are required for Teaching.";
-
-                    lblMessage.CssClass = "text-danger";
-                    return;
-                }
-            }
-
-
-            string cvPath = UploadCV();
-
-
-            SaveApplication(cvPath);
-
-
-            lblMessage.Text = "Application saved successfully.";
-            lblMessage.CssClass = "text-success";  */
-        }
-
-
-        protected void SaveApplication(int @uid, string @station, string @department, string @specialization, string path)
-        {
-            // Connection String
-            string cs = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=HR;Integrated Security=True";
-            string query = @"INSERT INTO Application VALUES (@uid, @station, @department, @specialization,@CVFileName)";
+            string query = @"
+                SELECT JobPostingID, JobTitle, ReferenceNo, Campus, Department,
+                       Specialization, JobType, HiringType, DeadlineDate
+                FROM JobPostings
+                WHERE JobPostingID = @JobId";
 
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                cmd.Parameters.AddWithValue("@uid", @uid);
-                cmd.Parameters.AddWithValue("@station", @station);
-                cmd.Parameters.AddWithValue("@department", @department);
-                cmd.Parameters.AddWithValue("@specialization", @specialization);
-                cmd.Parameters.AddWithValue("@CVFileName", @path);
+                cmd.Parameters.AddWithValue("@JobId", jobId);
                 con.Open();
-                cmd.ExecuteScalar();
-                con.Close();
+
+                using (SqlDataReader r = cmd.ExecuteReader())
+                {
+                    if (r.Read())
+                    {
+                        DateTime deadline = Convert.ToDateTime(r["DeadlineDate"]);
+                        if (deadline.Date < DateTime.Today)
+                        {
+                            ShowError("The application deadline for this position has passed.");
+                            return;
+                        }
+
+                        lblJobTitle.Text = r["JobTitle"].ToString();
+                        lblReferenceNo.Text = r["ReferenceNo"].ToString();
+                        lblCampus.Text = r["Campus"].ToString();
+                        lblDepartment.Text = r["Department"].ToString();
+                        lblSpecialization.Text = r["Specialization"].ToString();
+                        lblJobType.Text = r["JobType"].ToString();
+                        lblDeadline.Text = deadline.ToString("MMM dd, yyyy");
+
+                        ViewState["JobPostingID"] = jobId;
+                        pnlContent.Visible = true;
+                    }
+                    else
+                    {
+                        ShowError("The requested job posting could not be found.");
+                    }
+                }
             }
-            //lblMessage.Text = "Apply for info saved";
         }
 
-        
-    }
+        protected void ApplyManual_Click(object sender, EventArgs e)
+        {
+            StartApplication();
+        }
 
+        protected void ApplyCV_Click(object sender, EventArgs e)
+        {
+            // For now, both buttons do the same thing.
+            // CV upload will be added later.
+            StartApplication();
+        }
+
+        private void StartApplication()
+        {
+            if (ViewState["JobPostingID"] == null)
+            {
+                ShowError("Job information missing. Please return to Open Positions.");
+                return;
+            }
+
+            int jobId = Convert.ToInt32(ViewState["JobPostingID"]);
+
+            // Remember the job the user is applying for across the login + profile flow
+            Session["PendingJobId"] = jobId;
+
+            // If already logged in as Candidate, jump straight to the profile flow.
+            // Otherwise, send them to Login.
+            if (Session["UserID"] != null)
+            {
+                string role = Session["UserRole"] != null ? Session["UserRole"].ToString() : "";
+                if (role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    ShowError("Administrators cannot apply for jobs. Please log in with a candidate account.");
+                    return;
+                }
+                Response.Redirect("Personal.aspx");
+            }
+            else
+            {
+                Response.Redirect("Login.aspx");
+            }
+        }
+
+        private void ShowError(string message)
+        {
+            lblError.Text = message;
+            pnlError.Visible = true;
+            pnlContent.Visible = false;
+        }
+    }
 }

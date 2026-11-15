@@ -4,909 +4,568 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Educational Information</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
     <style>
-        /* ============================================
-           BASE STYLES
-           ============================================ */
-        * {
-            box-sizing: border-box;
+        :root {
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-heading: Georgia, 'Times New Roman', serif;
+
+            --page-bg: #F8F7F3;
+            --card-bg: #FFFFFF;
+            --input-bg: #FCFCFB;
+            --primary-navy: #12304A;
+            --secondary-navy: #315A7D;
+            --action-blue: #1769A8;
+            --action-blue-hover: #125789;
+            --body-text: #334155;
+            --muted-text: #718096;
+            --placeholder: #94A3B8;
+            --border: #D9E1E8;
+            --divider: #E2E6EA;
+            --error-red: #DC3B3B;
+            --radius: 6px;
+            --radius-lg: 8px;
         }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
 
         body {
-            background: #f0f4f8;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 17px;
-            min-height: 100vh;
+            background: var(--page-bg);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--body-text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ============================================
-           PAGE HEADER
-           ============================================ */
-        .page-title h4 {
-            color: #1a3a7a;
-            font-weight: 700;
-            font-size: clamp(20px, 3vw, 28px);
+        .page-wrap {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 48px 60px;
         }
 
-        .page-title h5 {
-            color: #6c757d;
-            font-size: clamp(14px, 1.5vw, 18px);
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 36px;
         }
 
-        .page-title hr {
-            border-top: 3px solid #1a3a7a;
-            opacity: 0.2;
-            width: 100%;
-            margin-top: 5px;
+        .page-header .logo { height: 56px; width: auto; }
+
+        .page-header .uni-name {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 24px;
+            color: var(--primary-navy);
+            line-height: 1.2;
         }
 
-        /* ============================================
-           CARDS
-           ============================================ */
-        .card-main {
-            border-radius: 16px;
-            border: none;
-            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
-            overflow: hidden;
+        .page-header .hr-portal {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--muted-text);
+            line-height: 1.2;
+            margin-top: 2px;
         }
 
-        .card-header-blue {
-            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
-            color: white;
-            padding: 18px 25px;
-            border: none;
+        .main-heading {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 42px;
+            color: var(--primary-navy);
+            line-height: 1.15;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.3px;
         }
 
-        .card-header-blue h5 {
+        .main-subtitle {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--muted-text);
+            margin: 0 0 32px 0;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        }
+
+        .section-card:last-of-type { margin-bottom: 0; }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h3 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 22px;
+            color: var(--primary-navy);
             margin: 0;
-            font-weight: 600;
-            font-size: clamp(16px, 1.8vw, 20px);
-        }
-
-        .card-header-blue i {
-            margin-right: 10px;
-        }
-
-        .card-body {
-            padding: 25px 30px;
-        }
-
-        /* ============================================
-           TABLES - FIXED FOR MOBILE
-           ============================================ */
-        .education-table th {
-            background: #e8edf5;
-            color: #1a3a7a;
-            font-weight: 700;
-            font-size: clamp(12px, 1vw, 13px);
-            text-align: center;
-            vertical-align: middle;
-            border-bottom: 2px solid #1a3a7a;
-            white-space: nowrap;
-            padding: 10px 12px;
-        }
-
-        .education-table td {
-            vertical-align: middle;
-            text-align: center;
-            padding: 10px 8px;
-            min-width: 70px;
-        }
-
-        .education-table td:first-child {
-            font-weight: 600;
-            color: #1a3a7a;
-            background: #f8faff;
-            text-align: left;
-            padding-left: 15px;
-            min-width: 100px;
             white-space: nowrap;
         }
 
-        /* ============================================
-           INPUTS - BIGGER ON MOBILE
-           ============================================ */
-        .education-table input,
+        .section-heading::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--divider);
+        }
+
+        .info-text {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--muted-text);
+            margin: 0 0 18px 0;
+        }
+
+        /* TABLE WRAPPER */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .table-responsive::-webkit-scrollbar { height: 6px; }
+        .table-responsive::-webkit-scrollbar-track { background: #F0F2F5; border-radius: 10px; }
+        .table-responsive::-webkit-scrollbar-thumb { background: var(--action-blue); border-radius: 10px; }
+
+        .edu-table,
+        .other-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-ui);
+            margin: 0;
+        }
+
+        .edu-table th,
+        .other-table th {
+            background: #F8FAFC !important;
+            color: var(--muted-text) !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            text-transform: uppercase !important;
+            letter-spacing: .5px !important;
+            border-bottom: 1px solid var(--border) !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            padding: 12px 10px !important;
+            white-space: nowrap;
+        }
+
+        .edu-table td,
+        .other-table td {
+            vertical-align: middle !important;
+            text-align: center !important;
+            padding: 10px 8px !important;
+            border-bottom: 1px solid #F1F4F9 !important;
+            font-size: 13px !important;
+            color: var(--body-text) !important;
+        }
+
+        .edu-table td:first-child,
+        .other-table td:first-child {
+            font-weight: 600;
+            color: var(--primary-navy);
+            background: #FAFBFD;
+            text-align: left !important;
+            padding-left: 14px !important;
+            white-space: nowrap;
+        }
+
+        .edu-table tbody tr:hover,
+        .other-table tbody tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        /* INPUTS inside tables */
+        .edu-table input,
+        .edu-table select,
         .other-table input {
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 8px 12px;
-            font-size: clamp(14px, 1vw, 15px);
-            transition: all 0.2s;
             width: 100%;
-            background: #f8faff;
-            color: #1a2332;
-            box-sizing: border-box;
-            min-height: 40px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            height: 38px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--body-text);
+            padding: 0 10px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            min-width: 60px;
         }
 
-        .education-table input:focus,
-        .education-table select:focus,
+        .edu-table input:focus,
+        .edu-table select:focus,
         .other-table input:focus {
-            border-color: #1a3a7a;
-            box-shadow: 0 0 0 0.2rem rgba(26, 58, 122, 0.15);
             outline: none;
+            border-color: var(--action-blue);
+            box-shadow: 0 0 0 2px rgba(23, 105, 168, 0.08);
         }
 
-        .education-table select {
-            border-radius: 6px;
-            border: 1px solid #d0d7e6;
-            padding: 8px 12px;
-            font-size: clamp(14px, 1vw, 15px);
-            transition: all 0.2s;
-            width: 100%;
-            background: #f8faff;
-            color: #1a3a7a;
-            box-sizing: border-box;
-            min-height: 40px;
-            font-weight: 600;
-            cursor: pointer;
+        .edu-table input::placeholder,
+        .other-table input::placeholder {
+            color: var(--placeholder);
+            font-weight: 400;
         }
 
-        /* ============================================
-           INPUT WIDTHS - FIXED
-           ============================================ */
-        
-        /* Duration */
-        .education-table input[id$="_duration"] {
-            min-width: 70px;
-            max-width: 120px;
-            text-align: center;
-        }
-
-        /* BS/BSc Dropdown */
-        .education-table select[id$="_type"] {
-            min-width: 120px;
-            max-width: 180px;
-            text-align: center;
-        }
-
-        /* Specialization - LONG */
-        .education-table input[id$="_specialization"] {
-            min-width: 120px;
-            max-width: none;
-            text-align: left;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Year */
-        .education-table input[id$="_year"] {
-            min-width: 70px;
-            max-width: 95px;
-            text-align: center;
-        }
-
-        /* Percentage/CGPA */
-        .education-table input[id$="_cgpa"], 
-        .education-table input[id$="per"] {
-            min-width: 70px;
-            max-width: 95px;
-            text-align: center;
-        }
-
-        /* Institute - LONG */
-        .education-table input[id$="_uni"] {
-            min-width: 140px;
-            max-width: none;
-            text-align: left;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* Country */
-        .education-table input[id$="_country"] {
-            min-width: 120px;
-            max-width: none;
-            text-align: left;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        /* ============================================
-           DEGREE LABEL
-           ============================================ */
+        /* Degree label wrapper */
         .degree-label {
             display: flex;
             align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
+            gap: 6px;
+            flex-wrap: nowrap;
         }
 
         .degree-label .required-star {
-            color: #dc3545;
+            color: var(--error-red);
             font-weight: 700;
-            font-size: clamp(14px, 1.2vw, 16px);
+            font-size: 14px;
             flex-shrink: 0;
         }
 
         .degree-label select {
-            border: none;
-            background: transparent;
+            border: none !important;
+            background: transparent !important;
             font-weight: 700;
-            font-size: clamp(14px, 1.2vw, 15px);
-            color: #1a3a7a;
-            padding: 0;
+            font-size: 13px;
+            color: var(--primary-navy);
+            padding: 0 !important;
             width: auto;
             min-width: 130px;
             cursor: pointer;
-            font-family: inherit;
-            min-height: auto;
+            box-shadow: none !important;
+            height: auto !important;
         }
 
-        .degree-label select:focus {
-            outline: none;
-            box-shadow: none;
-        }
+        .degree-label select:focus { outline: none; box-shadow: none !important; }
 
-        /* ============================================
-           OTHER QUALIFICATIONS
-           ============================================ */
-        .other-table th {
-            background: #e8edf5;
-            color: #1a3a7a;
-            font-weight: 700;
-            font-size: clamp(12px, 1vw, 13px);
-            text-align: center;
-            vertical-align: middle;
-            border-bottom: 2px solid #1a3a7a;
-            white-space: nowrap;
-            padding: 10px 12px;
-        }
-
-        .other-table td {
-            vertical-align: middle;
-            text-align: center;
-            padding: 8px 6px;
-            min-width: 60px;
-        }
-
-        .other-table input {
-            min-width: 70px;
-            max-width: none;
-            text-align: left;
-            white-space: normal;
-            word-wrap: break-word;
-            min-height: 36px;
-            font-size: clamp(13px, 0.9vw, 14px);
-            padding: 6px 10px;
-        }
-
-        /* ============================================
-           BUTTONS
-           ============================================ */
-        .btn-add-blue {
-            background: #1a3a7a;
-            color: white;
+        /* ADD BUTTON */
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--action-blue);
+            color: #FFFFFF;
             border: none;
-            border-radius: 8px;
-            padding: clamp(10px, 1vw, 12px) clamp(20px, 2vw, 25px);
+            border-radius: var(--radius);
+            height: 42px;
+            padding: 0 22px;
+            font-family: var(--font-ui);
             font-weight: 600;
-            font-size: clamp(14px, 1vw, 16px);
-            transition: all 0.2s;
-        }
-
-        .btn-add-blue:hover {
-            background: #2a5aaa;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
-        }
-
-        .btn-remove {
-            background: transparent;
-            color: #dc3545;
-            border: none;
-            font-size: clamp(18px, 1.2vw, 20px);
+            font-size: 14px;
+            letter-spacing: 0.2px;
             cursor: pointer;
-            padding: 0 5px;
-            transition: all 0.2s;
+            transition: background 0.15s ease;
+            margin-top: 16px;
         }
 
-        .btn-remove:hover {
-            color: #a71d2a;
-            transform: scale(1.2);
-        }
+        .btn-add:hover { background: var(--action-blue-hover); }
 
-        .btn-save-blue {
-            background: #1a3a7a;
+        /* DELETE BUTTON — SAME as Publications / Experience */
+        .btn-delete {
+            background: var(--error-red);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: clamp(14px, 1.2vw, 16px) clamp(40px, 4vw, 55px);
-            font-size: clamp(17px, 1.2vw, 19px);
+            border-radius: var(--radius);
+            padding: 6px 14px;
+            font-size: 12px;
             font-weight: 600;
-            transition: all 0.2s;
-            width: auto;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            transition: background 0.15s ease;
         }
 
-        .btn-save-blue:hover {
-            background: #2a5aaa;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
+        .btn-delete:hover { background: #A71D2A; }
+
+        /* SAVE BUTTON */
+        .save-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 4px;
         }
 
-        /* ============================================
-           REQUIRED STAR
-           ============================================ */
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--action-blue);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius);
+            height: 46px;
+            padding: 0 26px;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-save:hover { background: var(--action-blue-hover); }
+
         .required-star {
-            color: #dc3545;
+            color: var(--error-red);
             font-weight: 700;
-            font-size: clamp(14px, 1.2vw, 16px);
-            flex-shrink: 0;
+            font-size: 14px;
+            margin-right: 4px;
         }
 
-        /* ============================================
-           DEGREE YEARS TEXT
-           ============================================ */
-        .degree-years {
-            color: #6c757d;
-            font-size: clamp(11px, 0.8vw, 12px);
-            font-weight: 400;
+        .text-danger {
+            color: var(--error-red) !important;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 14px;
             display: block;
-            line-height: 1.2;
+            font-family: var(--font-ui);
         }
 
-        /* ============================================
-           RESPONSIVE: TABLET & MOBILE - BIGGER TEXT
-           ============================================ */
-        @media (max-width: 992px) {
-            .card-body {
-                padding: 20px 24px;
-            }
+        @media (max-width: 900px) {
+            .page-wrap { padding: 24px 24px 40px; }
 
-            .education-table td {
-                padding: 8px 6px;
-                min-width: 60px;
-            }
-
-            .education-table td:first-child {
-                min-width: 90px;
-                padding-left: 12px;
-                white-space: normal;
-                font-size: clamp(12px, 0.9vw, 13px);
-            }
-
-            .education-table input,
-            .education-table select {
-                font-size: clamp(13px, 0.9vw, 14px);
-                padding: 6px 10px;
-                min-height: 36px;
-            }
-
-            .education-table input[id$="_duration"] {
-                min-width: 60px;
-                max-width: 100px;
-            }
-
-            .education-table select[id$="_type"] {
-                min-width: 100px;
-                max-width: 140px;
-            }
-
-            .education-table input[id$="_specialization"] {
-                min-width: 100px;
-            }
-
-            .education-table input[id$="_year"] {
-                min-width: 60px;
-                max-width: 80px;
-            }
-
-            .education-table input[id$="_cgpa"],
-            .education-table input[id$="per"] {
-                min-width: 60px;
-                max-width: 80px;
-            }
-
-            .education-table input[id$="_uni"] {
-                min-width: 110px;
-            }
-
-            .education-table input[id$="_country"] {
-                min-width: 100px;
-            }
-
-            .other-table td {
-                padding: 6px 4px;
-                min-width: 50px;
-            }
-
+            .edu-table input,
+            .edu-table select,
             .other-table input {
-                min-width: 60px;
-                font-size: clamp(12px, 0.8vw, 13px);
-                padding: 6px 8px;
-                min-height: 34px;
+                font-size: 12px;
+                padding: 0 8px;
+                height: 36px;
+                min-width: 55px;
             }
 
+            .edu-table th,
             .other-table th {
-                font-size: clamp(11px, 0.8vw, 12px);
-                padding: 8px 6px;
-                white-space: normal;
+                font-size: 10px !important;
+                padding: 10px 8px !important;
+            }
+
+            .edu-table td,
+            .other-table td {
+                padding: 8px 6px !important;
+                font-size: 12px !important;
+            }
+
+            .edu-table td:first-child,
+            .other-table td:first-child {
+                padding-left: 10px !important;
+                font-size: 12px !important;
             }
 
             .degree-label select {
-                font-size: clamp(13px, 1vw, 14px);
+                font-size: 12px;
                 min-width: 110px;
             }
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
+        @media (max-width: 640px) {
+            .page-wrap { padding: 20px 16px 40px; }
+            .main-heading { font-size: 30px; }
+            .section-heading h3 { font-size: 18px; }
 
-            .card-body {
-                padding: 16px 14px;
-            }
+            .btn-save { width: 100%; justify-content: center; }
+            .save-wrap { justify-content: stretch; }
+            .btn-add { width: 100%; justify-content: center; }
 
-            .card-header-blue {
-                padding: 14px 18px;
-            }
-
-            .card-header-blue h5 {
-                font-size: 17px;
-            }
-
-            /* BIGGER TABLE ON MOBILE */
-            .education-table td {
-                padding: 8px 5px;
-                min-width: 70px;
-                font-size: 14px;
-            }
-
-            .education-table td:first-child {
-                min-width: 80px;
-                font-size: 13px;
-                padding-left: 8px;
-            }
-
-            .education-table input,
-            .education-table select {
-                font-size: 14px;
-                padding: 6px 8px;
-                min-height: 36px;
-                border-radius: 5px;
-            }
-
-            .education-table input[id$="_duration"] {
-                min-width: 55px;
-                max-width: 80px;
-            }
-
-            .education-table select[id$="_type"] {
-                min-width: 90px;
-                max-width: 130px;
-                font-size: 13px;
-                padding: 5px 8px;
-            }
-
-            .education-table input[id$="_specialization"] {
-                min-width: 80px;
-            }
-
-            .education-table input[id$="_year"] {
-                min-width: 55px;
-                max-width: 75px;
-            }
-
-            .education-table input[id$="_cgpa"],
-            .education-table input[id$="per"] {
-                min-width: 55px;
-                max-width: 75px;
-            }
-
-            .education-table input[id$="_uni"] {
-                min-width: 90px;
-            }
-
-            .education-table input[id$="_country"] {
-                min-width: 80px;
-            }
-
-            .education-table th {
-                font-size: 11px;
-                padding: 8px 5px;
-                white-space: normal;
-            }
-
-            .other-table td {
-                padding: 6px 4px;
-                min-width: 50px;
-            }
-
+            .edu-table input,
+            .edu-table select,
             .other-table input {
+                font-size: 12px;
+                padding: 0 6px;
+                height: 34px;
                 min-width: 50px;
-                font-size: 13px;
-                padding: 5px 6px;
-                min-height: 32px;
             }
 
+            .edu-table th,
             .other-table th {
-                font-size: 11px;
-                padding: 8px 5px;
-                white-space: normal;
+                font-size: 9px !important;
+                padding: 8px 6px !important;
+            }
+
+            .edu-table td,
+            .other-table td {
+                padding: 6px 5px !important;
+                font-size: 11px !important;
             }
 
             .degree-label select {
-                font-size: 14px;
+                font-size: 11px;
                 min-width: 100px;
             }
-
-            .degree-label .required-star {
-                font-size: 15px;
-            }
-
-            .btn-save-blue {
-                width: 100%;
-                padding: 14px 20px;
-                font-size: 17px;
-                justify-content: center;
-            }
-
-            .btn-add-blue {
-                padding: 10px 18px;
-                font-size: 15px;
-                width: 100%;
-            }
-
-            .section-divider {
-                margin: 20px 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding-left: 6px;
-                padding-right: 6px;
-            }
-
-            .card-body {
-                padding: 12px 10px;
-            }
-
-            /* EVEN BIGGER ON SMALL MOBILE */
-            .education-table td {
-                padding: 6px 4px;
-                min-width: 60px;
-                font-size: 13px;
-            }
-
-            .education-table td:first-child {
-                min-width: 65px;
-                font-size: 12px;
-                padding-left: 6px;
-            }
-
-            .education-table input,
-            .education-table select {
-                font-size: 13px;
-                padding: 5px 6px;
-                min-height: 32px;
-                border-radius: 4px;
-            }
-
-            .education-table input[id$="_duration"] {
-                min-width: 50px;
-                max-width: 70px;
-            }
-
-            .education-table select[id$="_type"] {
-                min-width: 80px;
-                max-width: 110px;
-                font-size: 12px;
-                padding: 4px 6px;
-            }
-
-            .education-table input[id$="_specialization"] {
-                min-width: 70px;
-            }
-
-            .education-table input[id$="_year"] {
-                min-width: 50px;
-                max-width: 65px;
-            }
-
-            .education-table input[id$="_cgpa"],
-            .education-table input[id$="per"] {
-                min-width: 50px;
-                max-width: 65px;
-            }
-
-            .education-table input[id$="_uni"] {
-                min-width: 75px;
-            }
-
-            .education-table input[id$="_country"] {
-                min-width: 70px;
-            }
-
-            .education-table th {
-                font-size: 10px;
-                padding: 6px 4px;
-                white-space: normal;
-            }
-
-            .other-table td {
-                padding: 4px 3px;
-                min-width: 40px;
-            }
-
-            .other-table input {
-                min-width: 40px;
-                font-size: 12px;
-                padding: 4px 5px;
-                min-height: 28px;
-            }
-
-            .other-table th {
-                font-size: 10px;
-                padding: 6px 4px;
-                white-space: normal;
-            }
-
-            .degree-label select {
-                font-size: 13px;
-                min-width: 80px;
-            }
-
-            .degree-label .required-star {
-                font-size: 13px;
-            }
-
-            .card-header-blue {
-                padding: 12px 14px;
-            }
-
-            .card-header-blue h5 {
-                font-size: 15px;
-            }
-
-            .btn-save-blue {
-                font-size: 15px;
-                padding: 12px 18px;
-            }
-
-            .btn-add-blue {
-                font-size: 13px;
-                padding: 8px 14px;
-            }
-
-            .page-title h4 {
-                font-size: 18px;
-            }
-
-            .page-title h5 {
-                font-size: 13px;
-            }
-        }
-
-        /* ============================================
-           SCROLLABLE TABLE FOR SMALL SCREENS
-           ============================================ */
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 10px;
-            border: 1px solid #eef1f8;
-        }
-
-        .table-responsive::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .table-responsive::-webkit-scrollbar-track {
-            background: #f0f2f5;
-            border-radius: 10px;
-        }
-
-        .table-responsive::-webkit-scrollbar-thumb {
-            background: #1a3a7a;
-            border-radius: 10px;
-        }
-
-        /* ============================================
-           SECTION DIVIDER
-           ============================================ */
-        .section-divider {
-            border-top: 3px dashed #1a3a7a;
-            margin: 30px 0;
-            opacity: 0.3;
-        }
-
-        .text-primary-custom {
-            color: #1a3a7a;
-        }
-
-        .text-muted {
-            color: #6c757d !important;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-3 {
-            margin-top: 1rem;
-        }
-        .mt-4 {
-            margin-top: 1.5rem;
-        }
-        .mb-0 {
-            margin-bottom: 0;
-        }
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-        .me-1 {
-            margin-right: 0.25rem;
-        }
-        .me-2 {
-            margin-right: 0.5rem;
-        }
-        .ms-3 {
-            margin-left: 1rem;
-        }
-        .py-4 {
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
         }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="container py-4">
 
-            <!-- Page Title -->
-            <div class="text-left mb-4 page-title">
-                <h4><i class="bi bi-mortarboard-fill text-primary-custom me-2"></i>Educational Information</h4>
-                <h5>Bahria University HR Portal</h5>
-                <hr />
-            </div>
+        <div class="page-wrap">
 
-            <!-- Main Card -->
-            <div class="card card-main">
-                <div class="card-header-blue">
-                    <h5><i class="bi bi-journal-bookmark-fill"></i> Academic Qualifications</h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle education-table">
-                            <thead>
-                                <tr>
-                                    <th style="min-width: 100px;">Certificate/Degree</th>
-                                    <th style="min-width: 70px;">Duration</th>
-                                    <th style="min-width: 100px;">Specialization</th>
-                                    <th style="min-width: 70px;">Year</th>
-                                    <th style="min-width: 70px;">Percentage</th>
-                                    <th style="min-width: 120px;">Institute</th>
-                                    <th style="min-width: 100px;">Country</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="required-star">*</span> SSC/O'Level</td>
-                                    <td><input type="text" id="ssc_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="ssc_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="ssc_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="sscper" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="ssc_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="ssc_country" runat="server" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td><span class="required-star">*</span> HSSC/A'Level</td>
-                                    <td><input type="text" id="hssc_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="hssc_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="hssc_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="hsscper" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="hssc_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="hssc_country" runat="server" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="degree-label">
-                                            <span class="required-star">*</span>
-                                            <select id="bs_type" runat="server">
-                                                <option value="BS - 16 Years">BS - 16 Years</option>
-                                                <option value="BSc - 14 Years">BSc - 14 Years</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><input type="text" id="bs_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="bs_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="bs_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="bs_cgpa" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="bs_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="bs_country" runat="server" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Masters/MPhil</td>
-                                    <td><input type="text" id="ms_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="ms_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="ms_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="ms_cgpa" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="ms_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="ms_country" runat="server" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td>PhD</td>
-                                    <td><input type="text" id="phd_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="phd_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="phd_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="phd_cgpa" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="phd_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="phd_country" runat="server" class="form-control" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Post Doctorate</td>
-                                    <td><input type="text" id="postdoc_duration" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="postdoc_specialization" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="postdoc_year" runat="server" class="form-control" /></td>
-                                    <td><input type="number" id="postdoc_cgpa" runat="server" class="form-control" step="any" /></td>
-                                    <td><input type="text" id="postdoc_uni" runat="server" class="form-control" /></td>
-                                    <td><input type="text" id="postdoc_country" runat="server" class="form-control" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+            <div class="page-header">
+                <img src="Images/bu_logo.png" alt="Bahria University" class="logo" />
+                <div>
+                    <div class="uni-name">Bahria University</div>
+                    <div class="hr-portal">HR Portal</div>
                 </div>
             </div>
 
-            <!-- Other Qualifications Section -->
-            <div class="card card-main mt-4">
-                <div class="card-header-blue">
-                    <h5><i class="bi bi-plus-circle-fill"></i> Other Qualifications / Certifications</h5>
+            <h1 class="main-heading">Educational Information</h1>
+            <p class="main-subtitle">Provide your academic qualifications starting from SSC/O'Level.</p>
+
+            <!-- ============================================================
+                 ACADEMIC QUALIFICATIONS
+                 ============================================================ -->
+            <div class="section-card">
+                <div class="section-heading">
+                    <h3>Academic Qualifications</h3>
                 </div>
-                <div class="card-body">
 
-                    <p class="text-muted"><i class="bi bi-info-circle"></i> Add any additional certifications, diplomas, or professional qualifications.</p>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle other-table" id="otherTable">
-                            <thead>
-                                <tr>
-                                    <th style="width: 45px;">#</th>
-                                    <th style="min-width: 100px;">Qualification</th>
-                                    <th style="min-width: 70px;">Duration</th>
-                                    <th style="min-width: 90px;">Specialization</th>
-                                    <th style="min-width: 65px;">Year</th>
-                                    <th style="min-width: 65px;">Percentage</th>
-                                    <th style="min-width: 100px;">Institute</th>
-                                    <th style="min-width: 90px;">Country</th>
-                                    <th style="width: 50px;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="otherBody">
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-3">
-                        <button type="button" class="btn btn-add-blue" onclick="addOtherRow()">
-                            <i class="bi bi-plus-circle me-1"></i> Add Qualification
-                        </button>
-                    </div>
-
+                <div class="table-responsive">
+                    <table class="edu-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 130px;">Certificate / Degree</th>
+                                <th style="min-width: 70px;">Duration</th>
+                                <th style="min-width: 110px;">Specialization</th>
+                                <th style="min-width: 70px;">Year</th>
+                                <th style="min-width: 80px;">Percentage</th>
+                                <th style="min-width: 130px;">Institute</th>
+                                <th style="min-width: 100px;">Country</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="required-star">*</span> SSC/O'Level</td>
+                                <td><input type="text" id="ssc_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="ssc_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="ssc_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="sscper" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="ssc_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="ssc_country" runat="server" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td><span class="required-star">*</span> HSSC/A'Level</td>
+                                <td><input type="text" id="hssc_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="hssc_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="hssc_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="hsscper" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="hssc_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="hssc_country" runat="server" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="degree-label">
+                                        <span class="required-star">*</span>
+                                        <select id="bs_type" runat="server">
+                                            <option value="BS - 16 Years">BS - 16 Years</option>
+                                            <option value="BSc - 14 Years">BSc - 14 Years</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><input type="text" id="bs_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="bs_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="bs_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="bs_cgpa" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="bs_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="bs_country" runat="server" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Masters / MPhil</td>
+                                <td><input type="text" id="ms_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="ms_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="ms_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="ms_cgpa" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="ms_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="ms_country" runat="server" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>PhD</td>
+                                <td><input type="text" id="phd_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="phd_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="phd_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="phd_cgpa" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="phd_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="phd_country" runat="server" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Post Doctorate</td>
+                                <td><input type="text" id="postdoc_duration" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="postdoc_specialization" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="postdoc_year" runat="server" class="form-control" /></td>
+                                <td><input type="number" id="postdoc_cgpa" runat="server" class="form-control" step="any" /></td>
+                                <td><input type="text" id="postdoc_uni" runat="server" class="form-control" /></td>
+                                <td><input type="text" id="postdoc_country" runat="server" class="form-control" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Submit Button -->
-            <div class="text-center mt-4">
-                <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue" CssClass="btn btn-save-blue" OnClick="BtnSubmit_Click" />
-                <div class="mt-3">
-                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
+            <!-- ============================================================
+                 OTHER QUALIFICATIONS
+                 ============================================================ -->
+            <div class="section-card">
+                <div class="section-heading">
+                    <h3>Other Qualifications / Certifications</h3>
                 </div>
+
+                <p class="info-text">
+                    Add any additional certifications, diplomas, or professional qualifications.
+                </p>
+
+                <div class="table-responsive">
+                    <table class="other-table" id="otherTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 45px;">#</th>
+                                <th style="min-width: 110px;">Qualification</th>
+                                <th style="min-width: 70px;">Duration</th>
+                                <th style="min-width: 100px;">Specialization</th>
+                                <th style="min-width: 65px;">Year</th>
+                                <th style="min-width: 80px;">Percentage</th>
+                                <th style="min-width: 110px;">Institute</th>
+                                <th style="min-width: 90px;">Country</th>
+                                <th style="width: 90px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="otherBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" class="btn-add" onclick="addOtherRow()">
+                    <i class="bi bi-plus-circle"></i> Add Qualification
+                </button>
             </div>
+
+            <!-- SAVE AND CONTINUE -->
+            <div class="save-wrap">
+                <asp:Button ID="btnSubmit" runat="server" Text="Save and Continue  →"
+                    CssClass="btn-save" OnClick="BtnSubmit_Click" />
+            </div>
+
+            <asp:Label ID="lblMessage" runat="server" CssClass="text-danger"></asp:Label>
 
         </div>
+
     </form>
 
     <script>
@@ -920,18 +579,14 @@
                 input.addEventListener('input', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
                 input.addEventListener('change', function () {
                     if (this.value !== '' && this.value !== '-') {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
@@ -940,9 +595,7 @@
                         this.value = '';
                     } else {
                         var val = parseInt(this.value);
-                        if (val < 0) {
-                            this.value = 0;
-                        }
+                        if (val < 0) { this.value = 0; }
                     }
                 });
 
@@ -977,6 +630,7 @@
             const tr = document.createElement('tr');
             tr.id = 'other_row_' + otherCounter;
 
+            // Delete button now uses the same .btn-delete class as Publications / Experience pages
             tr.innerHTML = `
                 <td>${otherCounter}</td>
                 <td><input type="text" name="other_name_${otherCounter}" class="form-control" /></td>
@@ -987,8 +641,8 @@
                 <td><input type="text" name="other_institute_${otherCounter}" class="form-control" /></td>
                 <td><input type="text" name="other_country_${otherCounter}" class="form-control" /></td>
                 <td>
-                    <button type="button" class="btn-remove" onclick="removeOtherRow('other_row_${otherCounter}')">
-                        <i class="bi bi-trash3"></i>
+                    <button type="button" class="btn-delete" onclick="removeOtherRow('other_row_${otherCounter}')">
+                        Delete
                     </button>
                 </td>
             `;

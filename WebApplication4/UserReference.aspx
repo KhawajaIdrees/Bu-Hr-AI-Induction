@@ -9,389 +9,574 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
     <style>
+        :root {
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-heading: Georgia, 'Times New Roman', serif;
+
+            --page-bg: #F8F7F3;
+            --card-bg: #FFFFFF;
+            --input-bg: #FCFCFB;
+            --primary-navy: #12304A;
+            --secondary-navy: #315A7D;
+            --action-blue: #1769A8;
+            --action-blue-hover: #125789;
+            --body-text: #334155;
+            --muted-text: #718096;
+            --placeholder: #94A3B8;
+            --border: #D9E1E8;
+            --divider: #E2E6EA;
+            --error-red: #DC3B3B;
+            --radius: 6px;
+            --radius-lg: 8px;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+
         body {
-            background: #f0f4f8;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 17px;
+            background: var(--page-bg);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--body-text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .page-title h4 { color: #1a3a7a; font-weight: 700; }
-        .page-title h5 { color: #6c757d; }
-        .page-title hr {
-            border-top: 3px solid #1a3a7a;
-            opacity: 0.2;
-            width: 100%;
-            margin-top: 5px;
+        .page-wrap {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 48px 60px;
         }
 
-        .card-main {
-            border-radius: 16px;
-            border: none;
-            box-shadow: 0 8px 30px rgba(26, 58, 122, 0.10);
-            overflow: hidden;
-            margin-bottom: 30px;
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 36px;
         }
 
-        .card-header-blue {
-            background: linear-gradient(135deg, #1a3a7a 0%, #2a5aaa 100%);
-            color: white;
-            padding: 18px 25px;
-            border: none;
-        }
+        .page-header .logo { height: 56px; width: auto; }
 
-        .card-header-blue h5 {
-            margin: 0;
+        .page-header .uni-name {
+            font-family: var(--font-ui);
             font-weight: 600;
-            font-size: 20px;
+            font-size: 24px;
+            color: var(--primary-navy);
+            line-height: 1.2;
         }
 
-        .card-header-blue i { margin-right: 10px; }
+        .page-header .hr-portal {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--muted-text);
+            line-height: 1.2;
+            margin-top: 2px;
+        }
 
-        .card-body { padding: 25px 30px; }
+        .main-heading {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 42px;
+            color: var(--primary-navy);
+            line-height: 1.15;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .main-subtitle {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--muted-text);
+            margin: 0 0 32px 0;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 26px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        }
+
+        .section-card:last-of-type { margin-bottom: 0; }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h3 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 22px;
+            color: var(--primary-navy);
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .section-heading::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--divider);
+        }
 
         .form-label {
-            font-size: 15px;
-            font-weight: 600;
-            color: #44496b;
-            margin-bottom: 6px;
+            display: block;
+            font-family: var(--font-ui);
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--body-text);
+            margin-bottom: 7px;
         }
 
+        .required-asterisk { color: var(--error-red); margin-left: 2px; }
+
         .form-control {
-            font-size: 15px;
-            height: 48px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-            padding: 10px 14px;
-            transition: all .2s ease-in-out;
-            background: #f8faff;
-            color: #1a2332;
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            height: 44px;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--body-text);
+            padding: 0 12px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-control::placeholder {
+            color: var(--placeholder);
+            font-weight: 400;
         }
 
         .form-control:focus {
-            border-color: #1a3a7a;
-            box-shadow: 0 0 0 .2rem rgba(26, 58, 122, 0.15);
+            outline: none;
+            border-color: var(--action-blue);
+            box-shadow: 0 0 0 2px rgba(23, 105, 168, 0.08);
         }
 
-        .form-group { margin-bottom: 24px; }
+        .ref-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px 26px;
+            margin-bottom: 22px;
+        }
+
+        .form-group { margin: 0; }
 
         .btn-add {
-            background: #1a3a7a;
-            color: white;
-            border-radius: 8px;
-            padding: 12px 34px;
-            font-size: 16px;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--action-blue);
+            color: #FFFFFF;
             border: none;
-            transition: all .2s ease-in-out;
+            border-radius: var(--radius);
+            height: 44px;
+            padding: 0 24px;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            text-decoration: none;
         }
 
-        .btn-add:hover {
-            background: #2a5aaa;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
-        }
+        .btn-add:hover { background: var(--action-blue-hover); color: #FFFFFF; }
 
         .btn-save {
-            background: #1a3a7a !important;
-            color: white !important;
-            border-radius: 8px;
-            padding: 14px 55px;
-            font-size: 17px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--action-blue) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            outline: none !important;
+            border-radius: var(--radius);
+            height: 46px;
+            padding: 0 26px;
+            font-family: var(--font-ui);
             font-weight: 600;
-            border: none;
-            transition: all .2s ease-in-out;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            box-shadow: none !important;
         }
 
-        .btn-save:hover {
-            background: #2a5aaa !important;
-            color: white !important;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(26, 58, 122, 0.35);
+        .btn-save:hover { background: var(--action-blue-hover) !important; color: #FFFFFF !important; }
+
+        .btn-save:focus,
+        .btn-save:active {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .btn-edit {
-            background: #1a3a7a;
+            background: var(--action-blue);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius);
             padding: 6px 14px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            transition: all .2s ease-in-out;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            transition: background 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
-        .btn-edit:hover {
-            background: #2a5aaa;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(26, 58, 122, 0.3);
-        }
+        .btn-edit:hover { background: var(--action-blue-hover); color: white; }
 
         .btn-delete {
-            background: #dc3545;
+            background: var(--error-red);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius);
             padding: 6px 14px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            transition: all .2s ease-in-out;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            transition: background 0.15s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
-        .btn-delete:hover {
-            background: #a71d2a;
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        .btn-delete:hover { background: #A71D2A; color: white; }
+
+        .reference-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
         }
 
         .reference-card {
-            border: 1px solid #eef1f8;
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            background: #fafbff;
-            transition: all .2s ease-in-out;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px 16px;
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .reference-card:hover {
-            border-color: #1a3a7a;
-            box-shadow: 0 4px 16px rgba(26, 58, 122, 0.08);
+            border-color: var(--action-blue);
+            box-shadow: 0 4px 16px rgba(23, 105, 168, 0.08);
+        }
+
+        .reference-card .ref-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--divider);
         }
 
         .reference-card .ref-title {
-            color: #1a3a7a;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary-navy);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reference-card .ref-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #EEF4FB;
+            color: var(--action-blue);
             font-weight: 700;
-            font-size: 17px;
-            margin-bottom: 12px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .reference-card .ref-name {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--primary-navy);
+            margin: 0;
+        }
+
+        .reference-card .ref-role {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--muted-text);
+            margin: 2px 0 0 0;
+        }
+
+        .reference-card .ref-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 14px;
         }
 
         .reference-card .ref-detail {
-            font-size: 14px;
-            color: #44496b;
-            margin-bottom: 4px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--body-text);
+            line-height: 1.4;
+            word-break: break-word;
         }
 
         .reference-card .ref-detail strong {
-            color: #1a3a7a;
-            font-weight: 600;
+            display: block;
+            color: var(--muted-text);
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
         }
 
-        .text-primary-custom { color: #1a3a7a; }
-        .text-muted { color: #6c757d !important; }
+        .ref-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-        .btn-save-wrapper {
-            text-align: center;
-            margin-top: 30px;
+        .ref-top {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .alert {
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            font-size: 13px;
+            font-family: var(--font-ui);
+            margin-bottom: 16px;
+            border: 1px solid;
+        }
+
+        .alert-warning {
+            background: #FFF7ED;
+            border-color: #FED7AA;
+            color: #9A3412;
+        }
+
+        .alert-success {
+            background: #F0FDF4;
+            border-color: #BBF7D0;
+            color: #166534;
+        }
+
+        .save-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 4px;
         }
 
         .section-divider {
-            border-top: 2px dashed #eef1f8;
-            margin: 25px 0;
+            border-top: 1px solid var(--divider);
+            margin: 24px 0;
         }
 
-        @media (max-width: 768px) {
-            body { font-size: 15px; }
-            .card-body { padding: 15px; }
-            .form-label { font-size: 14px; }
-            .form-control { font-size: 14px; height: 44px; }
-            .btn-add, .btn-save { width: 100%; }
-            .btn-edit, .btn-delete { padding: 4px 10px; font-size: 12px; }
-            .container { padding-left: 10px; padding-right: 10px; }
-            .reference-card { padding: 15px 16px; }
+        .subsection-title {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--secondary-navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
         }
 
-        @media (max-width: 480px) {
-            .form-control { height: 40px; font-size: 13px; }
-            .card-header-blue { padding: 14px 18px; }
-            .card-header-blue h5 { font-size: 16px; }
-            .btn-add { font-size: 14px; padding: 10px 20px; }
-            .btn-save { font-size: 15px; padding: 12px 20px; }
-            .reference-card { padding: 12px 14px; }
+        @media (max-width: 900px) {
+            .page-wrap { padding: 24px 24px 40px; }
+            .reference-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .page-wrap { padding: 20px 16px 40px; }
+            .main-heading { font-size: 30px; }
+            .section-heading h3 { font-size: 18px; }
+            .ref-form-grid { grid-template-columns: 1fr; }
+            .btn-save { width: 100%; justify-content: center; }
+            .btn-add { width: 100%; justify-content: center; }
+            .save-wrap { justify-content: stretch; }
+            .reference-card .ref-details { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 
 <body>
     <form id="form1" runat="server" defaultbutton="btnSaveContinue">
-        <div class="container py-4">
+        <div class="page-wrap">
 
-            <!-- Page Title -->
-            <div class="text-left mb-4 page-title">
-                <h4><i class="bi bi-person-lines-fill text-primary-custom me-2"></i>References</h4>
-                <h5>Bahria University HR Portal</h5>
-                <hr />
+            <div class="page-header">
+                <img src="Images/bu_logo.png" alt="Bahria University" class="logo" />
+                <div>
+                    <div class="uni-name">Bahria University</div>
+                    <div class="hr-portal">HR Portal</div>
+                </div>
             </div>
 
-            <!-- ============================================================ -->
-            <!-- SECTION 1: REFERENCES (Optional) -->
-            <!-- ============================================================ -->
-            <div class="card card-main">
-                <div class="card-header-blue">
-                    <h5><i class="bi bi-person-plus-fill"></i> Add Reference (Optional)</h5>
+            <h1 class="main-heading">References</h1>
+            <p class="main-subtitle">Add professional references to complete your application.</p>
+
+            <div class="section-card">
+                <div class="section-heading">
+                    <h3>Add Reference</h3>
                 </div>
-                <div class="card-body">
 
-                    <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="alert alert-warning">
-                        <asp:Label ID="lblMessage" runat="server"></asp:Label>
-                    </asp:Panel>
+                <asp:Panel ID="pnlMessage" runat="server" Visible="false" CssClass="alert alert-warning">
+                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
+                </asp:Panel>
 
-                    <div class="row">
-                        <!-- Reference Name -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Reference Name</label>
-                            <asp:TextBox ID="txtReferenceName" runat="server" CssClass="form-control" />
-                        </div>
-
-                        <!-- Relationship -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Relationship</label>
-                            <asp:TextBox ID="txtRelationship" runat="server" CssClass="form-control" />
-                        </div>
-
-                        <!-- Organization -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Organization / Company</label>
-                            <asp:TextBox ID="txtOrganization" runat="server" CssClass="form-control" />
-                        </div>
-
-                        <!-- Job Title -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Job Title</label>
-                            <asp:TextBox ID="txtJobTitle" runat="server" CssClass="form-control" />
-                        </div>
-
-                        <!-- Email -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Email Address</label>
-                            <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" />
-                        </div>
-
-                        <!-- Phone -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Phone Number</label>
-                            <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" MaxLength="20" oninput="validatePhone(this)" />
-                        </div>
-
-                        <!-- Address -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Work Address</label>
-                            <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control" />
-                        </div>
-
-                        <!-- Years Known -->
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Years Known</label>
-                            <asp:TextBox ID="txtYearsKnown" runat="server" TextMode="Number" CssClass="form-control" />
-                        </div>
-
-                        <!-- Add Button -->
-                        <div class="col-12 text-end mt-2">
-                            <asp:Button ID="btnAddReference" runat="server" Text="Add Reference"
-                                CssClass="btn btn-add"
-                                OnClick="btnAddReference_Click"
-                                CausesValidation="false" />
-                        </div>
+                <div class="ref-form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Reference Name</label>
+                        <asp:TextBox ID="txtReferenceName" runat="server" CssClass="form-control" />
                     </div>
 
-                    <!-- REFERENCES LIST -->
-                    <div class="section-divider"></div>
+                    <div class="form-group">
+                        <label class="form-label">Relationship</label>
+                        <asp:TextBox ID="txtRelationship" runat="server" CssClass="form-control" />
+                    </div>
 
-                    <div class="mt-3">
-                        <h6 class="text-primary-custom fw-bold mb-3">
-                            <i class="bi bi-list-columns-reverse me-2"></i>References List
-                        </h6>
-                        <asp:Repeater ID="rptReferences" runat="server" OnItemCommand="rptReferences_ItemCommand">
-                            <ItemTemplate>
-                                <div class="reference-card">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="ref-title">
-                                            <i class="bi bi-person-badge-fill text-primary-custom me-2"></i>
-                                            Reference <%# Container.ItemIndex + 1 %>
-                                        </div>
-                                        <div>
-                                            <asp:LinkButton ID="btnEdit" runat="server"
-                                                CssClass="btn btn-edit me-1"
-                                                CommandName="EditReference"
-                                                CommandArgument='<%# Container.ItemIndex %>'
-                                                CausesValidation="false">
-                                                <i class="bi bi-pencil-square me-1"></i>Edit
-                                            </asp:LinkButton>
-                                            <asp:LinkButton ID="btnDelete" runat="server"
-                                                CssClass="btn btn-delete"
-                                                CommandName="DeleteReference"
-                                                CommandArgument='<%# Container.ItemIndex %>'
-                                                CausesValidation="false"
-                                                OnClientClick="return confirm('Delete this reference?');">
-                                                <i class="bi bi-trash me-1"></i>Delete
-                                            </asp:LinkButton>
-                                        </div>
-                                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Organization / Company</label>
+                        <asp:TextBox ID="txtOrganization" runat="server" CssClass="form-control" />
+                    </div>
 
-                                    <div class="row mt-2">
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Name:</strong> <%# Eval("ReferenceName") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Relationship:</strong> <%# Eval("Relationship") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Organization:</strong> <%# Eval("Organization") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Job Title:</strong> <%# Eval("JobTitle") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Email:</strong> <%# Eval("Email") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Phone:</strong> <%# Eval("Phone") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Address:</strong> <%# Eval("Address") %>
-                                        </div>
-                                        <div class="col-md-6 ref-detail">
-                                            <strong>Years Known:</strong> <%# Eval("YearsKnown") %>
-                                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Title</label>
+                        <asp:TextBox ID="txtJobTitle" runat="server" CssClass="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" MaxLength="20" oninput="validatePhone(this)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Work Address</label>
+                        <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Years Known</label>
+                        <asp:TextBox ID="txtYearsKnown" runat="server" TextMode="Number" CssClass="form-control" />
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end;">
+                    <asp:Button ID="btnAddReference" runat="server" Text="Add Reference"
+                        CssClass="btn-add"
+                        OnClick="btnAddReference_Click"
+                        CausesValidation="false" />
+                </div>
+
+                <div class="section-divider"></div>
+
+                <div class="subsection-title">References List</div>
+
+                <asp:Repeater ID="rptReferences" runat="server" OnItemCommand="rptReferences_ItemCommand">
+                    <HeaderTemplate>
+                        <div class="reference-list">
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <div class="reference-card">
+                            <div class="ref-card-header">
+                                <div class="ref-title">
+                                    <span class="ref-number"><%# Container.ItemIndex + 1 %></span>
+                                    Reference
+                                </div>
+                                <div class="ref-card-actions">
+                                    <asp:LinkButton ID="btnEdit" runat="server"
+                                        CssClass="btn-edit"
+                                        CommandName="EditReference"
+                                        CommandArgument='<%# Container.ItemIndex %>'
+                                        CausesValidation="false">
+                                        Edit
+                                    </asp:LinkButton>
+                                    <asp:LinkButton ID="btnDelete" runat="server"
+                                        CssClass="btn-delete"
+                                        CommandName="DeleteReference"
+                                        CommandArgument='<%# Container.ItemIndex %>'
+                                        CausesValidation="false"
+                                        OnClientClick="return confirm('Delete this reference?');">
+                                        Delete
+                                    </asp:LinkButton>
+                                </div>
+                            </div>
+
+                            <div class="ref-body">
+                                <div class="ref-top">
+                                    <div class="ref-name"><%# Eval("ReferenceName") %></div>
+                                    <div class="ref-role">
+                                        <%# Eval("JobTitle") %> &nbsp;·&nbsp; <%# Eval("Organization") %>
                                     </div>
                                 </div>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                    </div>
-                </div>
-            </div>
 
-            <!-- ============================================================ -->
-            <!-- SECTION 2: CV UPLOAD -->
-            <!-- ============================================================ -->
-            <div class="card card-main">
-                <div class="card-header-blue">
-                    <h5><i class="bi bi-file-earmark-arrow-up-fill"></i> Upload CV / Resume</h5>
-                </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-label">
-                            Upload Resume <span style="color:#dc3545;font-weight:700;">*</span>
-                        </label>
-                        <asp:FileUpload ID="fuResume" runat="server" CssClass="form-control" />
-                        <div class="text-muted mt-2" style="font-size: 14px;">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Supported formats: <strong>PDF, DOC, DOCX</strong>
-                            &nbsp;|&nbsp; Maximum Size: <strong>15 MB</strong>
+                                <div class="ref-details">
+                                    <div class="ref-detail">
+                                        <strong>Relationship</strong>
+                                        <%# Eval("Relationship") %>
+                                    </div>
+                                    <div class="ref-detail">
+                                        <strong>Years Known</strong>
+                                        <%# Eval("YearsKnown") %>
+                                    </div>
+                                    <div class="ref-detail">
+                                        <strong>Email</strong>
+                                        <%# Eval("Email") %>
+                                    </div>
+                                    <div class="ref-detail">
+                                        <strong>Phone</strong>
+                                        <%# Eval("Phone") %>
+                                    </div>
+                                    <div class="ref-detail" style="grid-column: 1 / -1;">
+                                        <strong>Address</strong>
+                                        <%# Eval("Address") %>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                        </div>
+                    </FooterTemplate>
+                </asp:Repeater>
             </div>
 
-            <!-- SAVE & CONTINUE BUTTON -->
-            <div class="btn-save-wrapper">
-                <asp:Button ID="btnSaveContinue" runat="server" Text="Save and Continue"
-                    CssClass="btn btn-save"
+            <div class="save-wrap">
+                <asp:Button ID="btnSaveContinue" runat="server" Text="Save and Continue  →"
+                    CssClass="btn-save"
                     OnClick="btnSaveContinue_Click"
                     CausesValidation="false" />
             </div>

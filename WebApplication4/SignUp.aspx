@@ -3,141 +3,250 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bahria University HR Portal - Sign Up</title>
+    <title>Sign Up - Bahria University HR Portal</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
 
     <style>
+        :root {
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-heading: Georgia, 'Times New Roman', serif;
+
+            --page-bg: #F8F7F3;
+            --card-bg: #FFFFFF;
+            --input-bg: #FCFCFB;
+            --primary-navy: #12304A;
+            --secondary-navy: #315A7D;
+            --action-blue: #1769A8;
+            --action-blue-hover: #125789;
+            --body-text: #334155;
+            --muted-text: #718096;
+            --placeholder: #94A3B8;
+            --border: #D9E1E8;
+            --divider: #E2E6EA;
+            --error-red: #DC3B3B;
+            --radius: 6px;
+            --radius-lg: 8px;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+
         body {
-            background: linear-gradient(135deg, #f4f7fc 0%, #e8edf7 100%);
-            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--page-bg);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--body-text);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
+        .page-wrap {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 48px 24px 60px;
+        }
+
+        /* HEADER */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .page-header .logo { height: 48px; width: auto; }
+
+        .page-header .uni-name {
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 22px;
+            color: var(--primary-navy);
+            line-height: 1.2;
+        }
+
+        .page-header .hr-portal {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 13px;
+            color: var(--muted-text);
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        .main-heading {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 34px;
+            color: var(--primary-navy);
+            line-height: 1.15;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .main-subtitle {
+            font-family: var(--font-ui);
+            font-weight: 400;
+            font-size: 15px;
+            color: var(--muted-text);
+            margin: 0 0 28px 0;
+        }
+
+        /* SIGNUP CARD */
         .signup-card {
-            max-width: 550px;
-            margin: 60px auto;
-            border: none;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(45, 57, 141, 0.15) !important;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+            padding: 32px 30px;
         }
 
-        .card-header {
-            background: linear-gradient(135deg, #2D398D 0%, #3a4bb0 100%) !important;
-            padding: 1.75rem 1.5rem;
-            border: none;
-        }
-
-        .card-header h3 {
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        .card-header p {
-            margin: 0.25rem 0 0;
-            opacity: 0.85;
-            font-size: 0.9rem;
-        }
-
-        .card-body {
-            padding: 2.25rem 2rem;
-        }
-
-        .text-bu-blue {
-            color: #2D398D !important;
-        }
-
-        .bg-bu-blue {
-            background-color: #2D398D !important;
-            color: #ffffff;
-            border-color: #2D398D;
-        }
-
+        /* FORM LABEL */
         .form-label {
-            color: #2D398D;
-            font-size: 0.92rem;
-            margin-bottom: 0.4rem;
+            display: block;
+            font-family: var(--font-ui);
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--body-text);
+            margin-bottom: 7px;
         }
 
+        /* INPUTS */
         .form-control {
-            border-radius: 8px;
-            border: 1px solid #dde3f0;
-            padding: 0.65rem 0.9rem;
-            transition: all 0.2s ease-in-out;
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            height: 46px;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--body-text);
+            padding: 0 14px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-control::placeholder {
+            color: var(--placeholder);
+            font-weight: 400;
         }
 
         .form-control:focus {
-            border-color: #2D398D;
-            box-shadow: 0 0 0 0.2rem rgba(45, 57, 141, 0.15);
+            outline: none;
+            border-color: var(--action-blue);
+            box-shadow: 0 0 0 2px rgba(23, 105, 168, 0.08);
         }
 
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* HELP TEXT */
         .form-text {
-            font-size: 0.8rem;
-            color: #6c757d;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--muted-text);
+            margin-top: 6px;
+            line-height: 1.4;
         }
 
+        /* VALIDATION */
         .text-danger {
-            font-size: 0.85rem;
+            display: block;
+            color: var(--error-red) !important;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 5px;
+            font-family: var(--font-ui);
         }
 
-        .btn-bu-blue {
-            background-color: #2D398D;
-            color: #ffffff;
+        /* VALIDATION SUMMARY */
+        .alert-danger {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            font-size: 13px;
+            font-family: var(--font-ui);
+            margin-bottom: 20px;
+        }
+
+        .alert-danger ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* BUTTON */
+        .btn-signup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: var(--action-blue);
+            color: #FFFFFF;
             border: none;
-            border-radius: 8px;
-            padding: 0.7rem;
+            border-radius: var(--radius);
+            height: 48px;
+            padding: 0 20px;
+            font-family: var(--font-ui);
             font-weight: 600;
+            font-size: 15px;
             letter-spacing: 0.3px;
-            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            text-decoration: none;
         }
 
-        .btn-bu-blue:hover {
-            background-color: #232c70;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(45, 57, 141, 0.3);
-            color: #ffffff;
+        .btn-signup:hover {
+            background: var(--action-blue-hover);
+            color: #FFFFFF;
         }
 
-        .page-title h4 {
-            color: #2D398D;
-            font-weight: 700;
+        /* MESSAGE */
+        .message-label {
+            display: block;
+            text-align: center;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 14px;
         }
 
-        .page-title hr {
-            border-top: 2px solid #2D398D;
-            opacity: 0.15;
-           
-            margin: 0.75rem 0 0;
+        /* BOTTOM LINKS */
+        .bottom-links {
+            text-align: center;
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid var(--divider);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--muted-text);
         }
 
-        .login-link {
-            color: #2D398D;
+        .bottom-links .login-link {
+            color: var(--action-blue);
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
+            margin-left: 4px;
         }
 
-        .login-link:hover {
-            color: #232c70;
+        .bottom-links .login-link:hover {
             text-decoration: underline;
         }
-        @media(max-width:768px) {
-            .signup-card {
-                margin: 20px 12px;
-                padding: 16px;
-            }
-            .card-body {
-                padding: 16px;
-            }
-            .form-control {
-                height: 44px;
-                font-size: 14px;
-            }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .page-wrap { padding: 32px 16px 40px; }
+            .main-heading { font-size: 28px; }
+            .signup-card { padding: 24px 20px; }
+            .form-control { height: 44px; }
+            .btn-signup { height: 46px; }
         }
     </style>
 </head>
@@ -146,45 +255,42 @@
 
 <form id="form1" runat="server">
 
-<div class="container py-4">
+    <div class="page-wrap">
 
-    <div class="text-left mb-4 page-title">
-        <h4 class="fw-bold">User Registration</h4>
-        <h5 class="text-secondary fw-normal">Bahria University HR Portal</h5>
-        <hr />
-    </div>
-
-    <div class="card shadow signup-card">
-
-        <div class="card-header text-white text-center">
-            <h3><i class="bi bi-person-plus-fill me-2"></i>Create Your Account</h3>
-            <p>Fill in your details to register</p>
+        <!-- HEADER -->
+        <div class="page-header">
+            <img src="Images/bu_logo.png" alt="Bahria University" class="logo" />
+            <div>
+                <div class="uni-name">Bahria University</div>
+                <div class="hr-portal">HR Portal</div>
+            </div>
         </div>
 
-        <div class="card-body">
+        <!-- MAIN HEADING -->
+        <h1 class="main-heading">Create Your Account</h1>
+        <p class="main-subtitle">Fill in your details to register for the HR Portal.</p>
+
+        <!-- SIGNUP CARD -->
+        <div class="signup-card">
 
             <asp:ValidationSummary
                 ID="ValidationSummary1"
                 runat="server"
                 ValidationGroup="Register"
-                CssClass="alert alert-danger" />
+                CssClass="alert-danger" />
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label class="form-label fw-bold">
-                    <i class="bi bi-envelope-fill me-1"></i>Email Address
-                </label>
+            <!-- EMAIL -->
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
 
-                <asp:TextBox
-                    ID="txtEmail"
+                <asp:TextBox ID="txtEmail"
                     runat="server"
                     CssClass="form-control"
                     TextMode="Email"
                     placeholder="Enter your email">
                 </asp:TextBox>
 
-                <asp:RequiredFieldValidator
-                    ID="rfvEmail"
+                <asp:RequiredFieldValidator ID="rfvEmail"
                     runat="server"
                     ControlToValidate="txtEmail"
                     ValidationGroup="Register"
@@ -192,8 +298,7 @@
                     CssClass="text-danger"
                     Display="Dynamic" />
 
-                <asp:RegularExpressionValidator
-                    ID="revEmail"
+                <asp:RegularExpressionValidator ID="revEmail"
                     runat="server"
                     ControlToValidate="txtEmail"
                     ValidationGroup="Register"
@@ -203,14 +308,11 @@
                     ErrorMessage="Please enter a valid email address." />
             </div>
 
-            <!-- Password -->
-            <div class="mb-3">
-                <label class="form-label fw-bold">
-                    <i class="bi bi-lock-fill me-1"></i>Password
-                </label>
+            <!-- PASSWORD -->
+            <div class="form-group">
+                <label class="form-label">Password</label>
 
-                <asp:TextBox
-                    ID="txtPassword"
+                <asp:TextBox ID="txtPassword"
                     runat="server"
                     CssClass="form-control"
                     TextMode="Password"
@@ -221,8 +323,7 @@
                     Must contain at least 8 characters, one uppercase, one lowercase, and one number.
                 </div>
 
-                <asp:RequiredFieldValidator
-                    ID="rfvPassword"
+                <asp:RequiredFieldValidator ID="rfvPassword"
                     runat="server"
                     ControlToValidate="txtPassword"
                     ValidationGroup="Register"
@@ -230,8 +331,7 @@
                     CssClass="text-danger"
                     Display="Dynamic" />
 
-                <asp:RegularExpressionValidator
-                    ID="revPassword"
+                <asp:RegularExpressionValidator ID="revPassword"
                     runat="server"
                     ControlToValidate="txtPassword"
                     ValidationGroup="Register"
@@ -241,22 +341,18 @@
                     ErrorMessage="Password must be at least 8 characters and include uppercase, lowercase and a number." />
             </div>
 
-            <!-- Confirm Password -->
-            <div class="mb-4">
-                <label class="form-label fw-bold">
-                    <i class="bi bi-shield-lock-fill me-1"></i>Confirm Password
-                </label>
+            <!-- CONFIRM PASSWORD -->
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
 
-                <asp:TextBox
-                    ID="txtConfirmPassword"
+                <asp:TextBox ID="txtConfirmPassword"
                     runat="server"
                     CssClass="form-control"
                     TextMode="Password"
                     placeholder="Confirm password">
                 </asp:TextBox>
 
-                <asp:RequiredFieldValidator
-                    ID="rfvConfirmPassword"
+                <asp:RequiredFieldValidator ID="rfvConfirmPassword"
                     runat="server"
                     ControlToValidate="txtConfirmPassword"
                     ValidationGroup="Register"
@@ -264,8 +360,7 @@
                     CssClass="text-danger"
                     Display="Dynamic" />
 
-                <asp:CompareValidator
-                    ID="cvPassword"
+                <asp:CompareValidator ID="cvPassword"
                     runat="server"
                     ControlToValidate="txtConfirmPassword"
                     ControlToCompare="txtPassword"
@@ -275,40 +370,33 @@
                     ErrorMessage="Passwords do not match." />
             </div>
 
-            <!-- Button -->
-            <div class="d-grid">
-                <asp:Button
-                    ID="btnRegister"
-                    runat="server"
-                    Text="Create Account"
-                    CssClass="btn btn-lg btn-bu-blue"
-                    ValidationGroup="Register"
-                    OnClick="BtnRegister_Click" />
-            </div>
+            <!-- SUBMIT BUTTON -->
+            <asp:Button ID="btnRegister"
+                runat="server"
+                Text="Create Account"
+                CssClass="btn-signup"
+                ValidationGroup="Register"
+                OnClick="BtnRegister_Click" />
 
-            <div class="text-center mt-3">
-                <asp:Label
-                    ID="lblMessage"
-                    runat="server"
-                    CssClass="fw-bold">
-                </asp:Label>
-            </div>
+            <!-- MESSAGE -->
+            <asp:Label ID="lblMessage"
+                runat="server"
+                CssClass="message-label">
+            </asp:Label>
 
-            <!-- Login Link -->
-            <div class="text-center mt-4 pt-2 border-top">
-                <span class="text-muted">Already have an account?</span>
-                <a href="Login.aspx" class="login-link ms-1">
-                    <i class="bi bi-box-arrow-in-right me-1"></i>Login Here
-                </a>
+            <!-- LOGIN LINK -->
+            <div class="bottom-links">
+                Already have an account?
+                <a href="Login.aspx" class="login-link">Login Here</a>
             </div>
 
         </div>
 
     </div>
 
-</div>
-
 </form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -13,13 +13,7 @@ namespace WebApplication4
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Clear any existing session when on signup page
-            if (!IsPostBack)
-            {
-                // Optional: Clear session to prevent auto-login issues
-                // Session.Clear();
-                // Session.Abandon();
-            }
+            // Nothing to do here
         }
 
         protected void InsertUser(string email, string password)
@@ -61,14 +55,13 @@ namespace WebApplication4
 
                             int userId = Convert.ToInt32(insertCmd.ExecuteScalar());
 
-                            // ❌ REMOVE THIS LINE - Don't set session on registration
-                            // Session["UserID"] = userId;
-
+                            // Show success message
                             lblMessage.ForeColor = System.Drawing.Color.Green;
-                            lblMessage.Text = "✅ Registration successful! Redirecting to Login...";
+                            lblMessage.Text = "Account created successfully. Redirecting to login...";
 
-                            // ✅ Redirect to Login page after successful registration
-                            Response.Redirect("Login.aspx");
+                            // Redirect after 2 seconds
+                            string script = "setTimeout(function(){ window.location.href = 'Login.aspx'; }, 2000);";
+                            ClientScript.RegisterStartupScript(this.GetType(), "RedirectToLogin", script, true);
                         }
                     }
                 }

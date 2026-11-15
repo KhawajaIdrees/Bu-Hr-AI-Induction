@@ -53,7 +53,6 @@ namespace WebApplication4
                 BindReferences();
             }
 
-            fuResume.Attributes["accept"] = ".pdf,.doc,.docx";
             txtPhone.Attributes["maxlength"] = "20";
             txtPhone.Attributes["oninput"] = "validatePhone(this)";
 
@@ -227,25 +226,6 @@ namespace WebApplication4
             }
         }
 
-        private void SaveCVToDatabase(string filePath)
-        {
-            int userID = Convert.ToInt32(Session["UserID"]);
-            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-
-            string query = @"UPDATE Personal 
-                            SET CVPath = @CVPath, UpdatedAt = GETDATE() 
-                            WHERE userId = @UserID";
-
-            using (SqlConnection con = new SqlConnection(cs))
-            using (SqlCommand cmd = new SqlCommand(query, con))
-            {
-                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
-                cmd.Parameters.Add("@CVPath", SqlDbType.NVarChar).Value = filePath;
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
         protected void rptReferences_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int index = Convert.ToInt32(e.CommandArgument);
@@ -290,56 +270,16 @@ namespace WebApplication4
 
         protected void btnSaveContinue_Click(object sender, EventArgs e)
         {
-            // References are optional - user can continue without adding any
+            // References are optional - user can continue without adding any.
+            // CV is now uploaded on the Personal Information page.
 
-            if (!fuResume.HasFile)
+            // Save references (if any were added)
+            if (References.Count > 0)
             {
-                ShowMessage("Please upload your CV/Resume before continuing.");
-                return;
+                SaveReferencesToDatabase(References);
             }
 
-            string extension = System.IO.Path.GetExtension(fuResume.FileName).ToLower();
-            string[] allowedExtensions = { ".pdf", ".doc", ".docx" };
-
-            if (Array.IndexOf(allowedExtensions, extension) == -1)
-            {
-                ShowMessage("Only PDF, DOC and DOCX files are allowed.");
-                return;
-            }
-
-            if (fuResume.PostedFile.ContentLength > (15 * 1024 * 1024))
-            {
-                ShowMessage("Maximum file size allowed is 15 MB.");
-                return;
-            }
-
-            try
-            {
-                string uploadFolder = Server.MapPath("~/Uploads/Resumes/");
-                if (!System.IO.Directory.Exists(uploadFolder))
-                {
-                    System.IO.Directory.CreateDirectory(uploadFolder);
-                }
-
-                string fileName = Guid.NewGuid().ToString() + extension;
-                string filePath = System.IO.Path.Combine(uploadFolder, fileName);
-
-                fuResume.SaveAs(filePath);
-
-                // Only save references if any were added
-                if (References.Count > 0)
-                {
-                    SaveReferencesToDatabase(References);
-                }
-
-                SaveCVToDatabase("~/Uploads/Resumes/" + fileName);
-
-                Response.Redirect("ApplicationSummary.aspx");
-            }
-            catch (Exception ex)
-            {
-                ShowMessage("Error: " + ex.Message);
-            }
+            Response.Redirect("ApplicationSummary.aspx");
         }
 
         private void BindReferences()

@@ -53,16 +53,22 @@ namespace WebApplication4
                 {
                     if (reader.Read())
                     {
-                        // Profile Picture
+                        // Profile Picture — safe null checks
                         if (reader["PhotoPath"] != DBNull.Value)
                         {
                             string photoPath = reader["PhotoPath"].ToString();
 
                             if (!string.IsNullOrEmpty(photoPath))
                             {
-                                imgPicturePreview.Src = photoPath;
-                                imgPicturePreview.Style["display"] = "inline-block";
-                                picturePlaceholder.Style["display"] = "none";
+                                if (imgPicturePreview != null)
+                                {
+                                    imgPicturePreview.Src = photoPath;
+                                    imgPicturePreview.Style["display"] = "block";
+                                }
+                                if (picturePlaceholder != null)
+                                {
+                                    picturePlaceholder.Style["display"] = "none";
+                                }
                             }
                         }
 
@@ -119,6 +125,19 @@ namespace WebApplication4
                         {
                             txtORCID.Text = reader["ORCIDLink"].ToString();
                         }
+
+                        // Existing CV indicator
+                        if (reader["CVPath"] != DBNull.Value)
+                        {
+                            string cvPath = reader["CVPath"].ToString();
+
+                            if (!string.IsNullOrEmpty(cvPath))
+                            {
+                                pnlCurrentCV.Visible = true;
+                                lnkCurrentCV.NavigateUrl = ResolveUrl(cvPath);
+                                lnkCurrentCV.Text = System.IO.Path.GetFileName(cvPath);
+                            }
+                        }
                     }
                     else
                     {
@@ -156,19 +175,19 @@ namespace WebApplication4
 
                 if (userExists == 0)
                 {
-                    // User doesn't exist! Create one first.
                     lblMessage.Text = "Error: User ID " + userId + " does not exist in Users table. Please sign up first.";
                     lblMessage.CssClass = "text-danger";
                     return;
                 }
             }
 
-            // STEP 2: Upload picture with validation
+            // STEP 2: Upload picture + CV with validation
             string photoPath = null;
+            string cvPath = null;
 
+            // --- Profile picture ---
             if (fuPicture.HasFile)
             {
-                // VALIDATE: Check if file is an image
                 string fileExtension = Path.GetExtension(fuPicture.FileName).ToLower();
                 string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".ico" };
 
@@ -179,7 +198,6 @@ namespace WebApplication4
                     return;
                 }
 
-                // Check file size (10MB max)
                 if (fuPicture.PostedFile.ContentLength > 10 * 1024 * 1024)
                 {
                     lblMessage.Text = "❌ Error: File size must be less than 10MB";
@@ -200,11 +218,70 @@ namespace WebApplication4
                 photoPath = "~/Uploads/ProfilePictures/" + fileName;
             }
 
+            // --- CV / Resume (MANDATORY if not already saved) ---
+
+            // Check if the user already has a CV saved in the database
+            bool hasExistingCV = false;
+            using (SqlConnection conCheck = new SqlConnection(cs))
+            {
+                conCheck.Open();
+                using (SqlCommand cmdCheck = new SqlCommand("SELECT CVPath FROM Personal WHERE userId = @userId", conCheck))
+                {
+                    cmdCheck.Parameters.AddWithValue("@userId", userId);
+                    object result = cmdCheck.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value && !string.IsNullOrWhiteSpace(result.ToString()))
+                    {
+                        hasExistingCV = true;
+                    }
+                }
+            }
+
+            // If no CV is uploaded AND user doesn't have one saved yet → error
+            if (!fuResume.HasFile && !hasExistingCV)
+            {
+                lblMessage.Text = "❌ Error: Please upload your CV before continuing.";
+                lblMessage.CssClass = "text-danger";
+                return;
+            }
+
+            // If a CV file is uploaded, validate and save it
+            if (fuResume.HasFile)
+            {
+                string cvExt = Path.GetExtension(fuResume.FileName).ToLower();
+                string[] allowedCvExt = { ".pdf", ".doc", ".docx" };
+
+                if (!allowedCvExt.Contains(cvExt))
+                {
+                    lblMessage.Text = "❌ Error: CV must be PDF, DOC or DOCX.";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                if (fuResume.PostedFile.ContentLength > (15 * 1024 * 1024))
+                {
+                    lblMessage.Text = "❌ Error: CV file size must be less than 15MB.";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                string cvFileName = Guid.NewGuid().ToString() + cvExt;
+                string cvFolder = Server.MapPath("~/Uploads/Resumes/");
+
+                if (!Directory.Exists(cvFolder))
+                    Directory.CreateDirectory(cvFolder);
+
+                string cvFullPath = Path.Combine(cvFolder, cvFileName);
+                fuResume.SaveAs(cvFullPath);
+                cvPath = "~/Uploads/Resumes/" + cvFileName;
+            }
+
             // STEP 3: Update or Insert into Personal
             string query = @"
 UPDATE Personal
 SET
     PhotoPath = ISNULL(@PhotoPath, PhotoPath),
+    CVPath = ISNULL(@CVPath, CVPath),
     fname = @fname,
     mname = @mname,
     lname = @lname,
@@ -234,6 +311,7 @@ BEGIN
     (
         userId,
         PhotoPath,
+        CVPath,
         fname,
         mname,
         lname,
@@ -260,6 +338,7 @@ BEGIN
     (
         @userId,
         @PhotoPath,
+        @CVPath,
         @fname,
         @mname,
         @lname,
@@ -290,6 +369,7 @@ END";
                 cmd.Parameters.AddWithValue("@userId", userId);
 
                 cmd.Parameters.AddWithValue("@PhotoPath", (object)photoPath ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@CVPath", (object)cvPath ?? DBNull.Value);
 
                 cmd.Parameters.AddWithValue("@fname", txtFirstName.Text.Trim());
 
@@ -315,19 +395,16 @@ END";
                 cmd.Parameters.AddWithValue("@permaddress", txtPermanentAddress.Text.Trim());
                 cmd.Parameters.AddWithValue("@prevdecl", rblPreviouslyApplied.SelectedValue == "Yes");
 
-                // Google Scholar Link
                 cmd.Parameters.AddWithValue("@GoogleScholarLink",
                     string.IsNullOrWhiteSpace(txtGoogleScholar.Text)
                     ? (object)DBNull.Value
                     : txtGoogleScholar.Text.Trim());
 
-                // LinkedIn Link
                 cmd.Parameters.AddWithValue("@LinkedInLink",
                     string.IsNullOrWhiteSpace(txtLinkedIn.Text)
                     ? (object)DBNull.Value
                     : txtLinkedIn.Text.Trim());
 
-                // ORCID Link
                 cmd.Parameters.AddWithValue("@ORCIDLink",
                     string.IsNullOrWhiteSpace(txtORCID.Text)
                     ? (object)DBNull.Value
@@ -345,9 +422,8 @@ END";
         {
             UpdatePersonal();
 
-            // Only redirect if there's no error
-            if (lblMessage.Text != "Error: User not logged in. Please sign up first." &&
-                !lblMessage.Text.Contains("does not exist in Users table"))
+            // Only redirect if save was successful
+            if (lblMessage.Text.StartsWith("✅"))
             {
                 Response.Redirect("PreviousEmployDeclaration.aspx");
             }

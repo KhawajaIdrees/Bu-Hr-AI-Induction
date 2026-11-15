@@ -30,9 +30,6 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // CHECK IF ALREADY SUBMITTED
-        // ============================================
         protected void CheckIfAlreadySubmitted(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -47,12 +44,10 @@ namespace WebApplication4
                 object result = cmd.ExecuteScalar();
                 if (result != null && Convert.ToBoolean(result) == true)
                 {
-                    // Already submitted - disable the button
                     btnSubmit.Enabled = false;
                     btnSubmit.Text = "✅ Already Submitted";
                     btnSubmit.CssClass = "submit-btn submitted";
 
-                    // Disable the checkbox
                     ScriptManager.RegisterStartupScript(this, GetType(), "disableCheckbox",
                         "document.getElementById('agreeDeclaration').disabled = true;", true);
 
@@ -61,15 +56,11 @@ namespace WebApplication4
                 }
                 else
                 {
-                    // Enable submit button (checkbox will control it)
                     btnSubmit.Enabled = false;
                 }
             }
         }
 
-        // ============================================
-        // GET SUBMITTED DATE
-        // ============================================
         private string GetSubmittedDate(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -90,9 +81,6 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // FILL PROFILE IMAGE (from Personal table)
-        // ============================================
         protected void FillProfileImage(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -107,19 +95,12 @@ namespace WebApplication4
                 object result = cmd.ExecuteScalar();
 
                 if (result != null && !string.IsNullOrEmpty(result.ToString()))
-                {
                     imgProfile.ImageUrl = result.ToString();
-                }
                 else
-                {
                     imgProfile.ImageUrl = "~/Images/default-avatar.png";
-                }
             }
         }
 
-        // ============================================
-        // FILL PERSONAL INFORMATION (from Personal table)
-        // ============================================
         protected void FillPersonal(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -142,10 +123,8 @@ namespace WebApplication4
                     txtCell.Text = reader["cellNumber"].ToString();
 
                     string gender = reader["gender"].ToString();
-                    if (gender.ToLower() == "male")
-                        rbMale.Checked = true;
-                    else if (gender.ToLower() == "female")
-                        rbFemale.Checked = true;
+                    if (gender.ToLower() == "male") rbMale.Checked = true;
+                    else if (gender.ToLower() == "female") rbFemale.Checked = true;
 
                     reader.Close();
                 }
@@ -156,9 +135,6 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // FILL EDUCATION INFORMATION (from Education table)
-        // ============================================
         protected void FillEducation(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
@@ -213,146 +189,103 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // FORMAT PERCENTAGE - Remove decimal places
-        // ============================================
         private string FormatPercentage(object value)
         {
-            if (value == null || value == DBNull.Value)
-                return "";
-
+            if (value == null || value == DBNull.Value) return "";
             try
             {
                 decimal percentage = Convert.ToDecimal(value);
                 return Math.Round(percentage, 0).ToString();
             }
-            catch
-            {
-                return value.ToString();
-            }
+            catch { return value.ToString(); }
         }
 
-        // ============================================
-        // FILL WORK EXPERIENCE
-        // ============================================
         protected void FillWorkExperience(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-            string query = @"SELECT 
-                                OrganizationName,
-                                PositionTitle,
-                                StartDate,
-                                EndDate,
-                                IsCurrentJob,
-                                DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE())) AS TotalYears
-                            FROM WorkExperience
-                            WHERE UserId = @UserID
-                            ORDER BY StartDate DESC";
+            string query = @"SELECT OrganizationName, PositionTitle, StartDate, EndDate, IsCurrentJob,
+                                    DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE())) AS TotalYears
+                             FROM WorkExperience
+                             WHERE UserId = @UserID
+                             ORDER BY StartDate DESC";
 
             using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                con.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
-                    con.Open();
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    if (reader.HasRows)
                     {
-                        if (reader.HasRows)
+                        string experienceSummary = "";
+                        int totalYears = 0;
+                        int count = 0;
+
+                        while (reader.Read())
                         {
-                            string experienceSummary = "";
-                            int totalYears = 0;
-                            int count = 0;
+                            count++;
+                            string org = reader["OrganizationName"].ToString();
+                            string pos = reader["PositionTitle"].ToString();
 
-                            while (reader.Read())
-                            {
-                                count++;
+                            string start = reader["StartDate"] == DBNull.Value
+                                ? "N/A" : Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
 
-                                string org = reader["OrganizationName"].ToString();
-                                string pos = reader["PositionTitle"].ToString();
+                            string end;
+                            if (reader["IsCurrentJob"].ToString() == "True" || reader["EndDate"] == DBNull.Value)
+                                end = "Present";
+                            else
+                                end = Convert.ToDateTime(reader["EndDate"]).ToString("MMM yyyy");
 
-                                string start;
-                                if (reader["StartDate"] == DBNull.Value)
-                                {
-                                    start = "N/A";
-                                }
-                                else
-                                {
-                                    start = Convert.ToDateTime(reader["StartDate"]).ToString("MMM yyyy");
-                                }
+                            int years = reader["TotalYears"] != DBNull.Value ? Convert.ToInt32(reader["TotalYears"]) : 0;
+                            totalYears += years;
 
-                                string end;
-                                if (reader["IsCurrentJob"].ToString() == "True")
-                                {
-                                    end = "Present";
-                                }
-                                else if (reader["EndDate"] == DBNull.Value)
-                                {
-                                    end = "Present";
-                                }
-                                else
-                                {
-                                    end = Convert.ToDateTime(reader["EndDate"]).ToString("MMM yyyy");
-                                }
-
-                                int years = 0;
-                                if (reader["TotalYears"] != DBNull.Value)
-                                {
-                                    years = Convert.ToInt32(reader["TotalYears"]);
-                                }
-                                totalYears += years;
-
-                                experienceSummary += $"{org} - {pos} ({start} to {end}) - {years} years\n";
-                            }
-
-                            txtExperienceBeforePhD.Text = $"Total: {totalYears} years across {count} position(s)";
-                            txtExperienceBeforePhD.ToolTip = experienceSummary;
+                            experienceSummary += $"{org} - {pos} ({start} to {end}) - {years} years\n";
                         }
-                        else
-                        {
-                            txtExperienceBeforePhD.Text = "No work experience found.";
-                        }
+
+                        txtExperienceBeforePhD.Text = $"Total: {totalYears} years across {count} position(s)";
+                        txtExperienceBeforePhD.ToolTip = experienceSummary;
+                    }
+                    else
+                    {
+                        txtExperienceBeforePhD.Text = "No work experience found.";
                     }
                 }
             }
         }
 
-        // ============================================
-        // FILL RESEARCH PROFILE (from ResearchProfile table)
-        // ============================================
         protected void FillResearchProfile(int userID)
         {
             string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
             string query = @"SELECT * FROM ResearchProfile WHERE user_id = @UserID";
 
             using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
             {
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
-                    con.Open();
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                con.Open();
 
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
                     {
-                        if (reader.Read())
-                        {
-                            txtHIndex.Text = reader["WCount"].ToString();
-                            txtMSStudents.Text = reader["MS_MPhil_Students"].ToString();
-                            txtPhDStudents.Text = reader["PhDStudents"].ToString();
-                            txtExperienceAfterPhD.Text = reader["TotalFundedProjects"].ToString();
-                        }
-                        else
-                        {
-                            txtHIndex.Text = "No research profile found.";
-                        }
+                        txtHIndex.Text = reader["WCount"].ToString();
+                        txtMSStudents.Text = reader["MS_MPhil_Students"].ToString();
+                        txtPhDStudents.Text = reader["PhDStudents"].ToString();
+                        txtExperienceAfterPhD.Text = reader["TotalFundedProjects"].ToString();
+                    }
+                    else
+                    {
+                        txtHIndex.Text = "No research profile found.";
                     }
                 }
             }
         }
 
-        // ============================================
-        // SUBMIT BUTTON - Saves to Database
-        // ============================================
+        // ============================================================
+        // SUBMIT — also writes a row into JobApplication if a job is pending
+        // ============================================================
         protected void BtnSubmit_Click(object sender, EventArgs e)
         {
             if (Session["UserID"] == null)
@@ -362,11 +295,10 @@ namespace WebApplication4
             }
 
             int userID = Convert.ToInt32(Session["UserID"]);
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
 
             // Check if already submitted
-            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
             string checkQuery = "SELECT IsSubmitted FROM Personal WHERE userId = @userID";
-
             using (SqlConnection con = new SqlConnection(cs))
             using (SqlCommand checkCmd = new SqlCommand(checkQuery, con))
             {
@@ -384,11 +316,10 @@ namespace WebApplication4
 
             try
             {
-                // Update Personal table - Mark as submitted
+                // 1. Mark Personal as submitted
                 string query = @"UPDATE Personal 
-                                SET IsSubmitted = 1, 
-                                    SubmittedDate = GETDATE() 
-                                WHERE userId = @userID";
+                                 SET IsSubmitted = 1, SubmittedDate = GETDATE() 
+                                 WHERE userId = @userID";
 
                 using (SqlConnection con = new SqlConnection(cs))
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -398,15 +329,20 @@ namespace WebApplication4
                     cmd.ExecuteNonQuery();
                 }
 
+                // 2. If there's a pending job, write a JobApplication row
+                if (Session["PendingJobId"] != null)
+                {
+                    int jobId = Convert.ToInt32(Session["PendingJobId"]);
+                    InsertJobApplication(userID, jobId);
+                }
+
                 lblMessage.Text = "Application submitted successfully!";
                 lblMessage.CssClass = "text-success";
 
-                // Disable submit button
                 btnSubmit.Enabled = false;
                 btnSubmit.Text = "Already Submitted";
                 btnSubmit.CssClass = "submit-btn submitted";
 
-                // Disable checkbox
                 ScriptManager.RegisterStartupScript(this, GetType(), "disableCheckbox",
                     "document.getElementById('agreeDeclaration').disabled = true;", true);
             }
@@ -417,22 +353,51 @@ namespace WebApplication4
             }
         }
 
-        // ============================================
-        // BUTTON CLICK EVENTS
-        // ============================================
-        protected void BtnPersonalInfo_Click(object sender, EventArgs e)
+        // Inserts a JobApplication row for the pending job.
+        // Station comes from JobPostings.Campus.
+        // JobCategory = HiringType for Teaching jobs (falls back to JobType).
+        // CVPath comes from Personal.CVPath.
+        private void InsertJobApplication(int userID, int jobId)
         {
-            Response.Redirect("Personal.aspx");
+            string cs = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+
+            string query = @"
+                IF NOT EXISTS (
+                    SELECT 1 FROM JobApplication 
+                    WHERE UserId = @UserId AND JobPostingID = @JobId
+                )
+                BEGIN
+                    INSERT INTO JobApplication
+                    (UserId, JobPostingID, Station, AdvertisementDate, JobType, JobCategory,
+                     CVPath, Department, Specialization, Status)
+                    SELECT 
+                        @UserId,
+                        p.JobPostingID,
+                        p.Campus,
+                        p.PublishedDate,
+                        p.JobType,
+                        ISNULL(NULLIF(p.HiringType, ''), p.JobType),
+                        pers.CVPath,
+                        p.Department,
+                        p.Specialization,
+                        'Pending'
+                    FROM JobPostings p
+                    CROSS JOIN Personal pers
+                    WHERE p.JobPostingID = @JobId AND pers.userId = @UserId;
+                END";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userID);
+                cmd.Parameters.AddWithValue("@JobId", jobId);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
-        protected void BtnEducationalInfo_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Education.aspx");
-        }
-
-        protected void BtnExperienceInfo_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Experience.aspx");
-        }
+        protected void BtnPersonalInfo_Click(object sender, EventArgs e) { Response.Redirect("Personal.aspx"); }
+        protected void BtnEducationalInfo_Click(object sender, EventArgs e) { Response.Redirect("Education.aspx"); }
+        protected void BtnExperienceInfo_Click(object sender, EventArgs e) { Response.Redirect("Experience.aspx"); }
     }
 }
