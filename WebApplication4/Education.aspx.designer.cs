@@ -24,6 +24,15 @@ namespace WebApplication4
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
+        /// ssc_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText ssc_regno;
+
+        /// <summary>
         /// ssc_duration control.
         /// </summary>
         /// <remarks>
@@ -76,6 +85,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText ssc_country;
+
+        /// <summary>
+        /// hssc_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText hssc_regno;
 
         /// <summary>
         /// hssc_duration control.
@@ -141,6 +159,15 @@ namespace WebApplication4
         protected global::System.Web.UI.HtmlControls.HtmlSelect bs_type;
 
         /// <summary>
+        /// bs_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText bs_regno;
+
+        /// <summary>
         /// bs_duration control.
         /// </summary>
         /// <remarks>
@@ -193,6 +220,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText bs_country;
+
+        /// <summary>
+        /// ms_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText ms_regno;
 
         /// <summary>
         /// ms_duration control.
@@ -249,6 +285,15 @@ namespace WebApplication4
         protected global::System.Web.UI.HtmlControls.HtmlInputText ms_country;
 
         /// <summary>
+        /// phd_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText phd_regno;
+
+        /// <summary>
         /// phd_duration control.
         /// </summary>
         /// <remarks>
@@ -301,6 +346,15 @@ namespace WebApplication4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText phd_country;
+
+        /// <summary>
+        /// postdoc_regno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText postdoc_regno;
 
         /// <summary>
         /// postdoc_duration control.

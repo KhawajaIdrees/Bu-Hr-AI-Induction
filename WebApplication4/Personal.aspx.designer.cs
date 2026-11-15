@@ -195,24 +195,6 @@ namespace WebApplication4
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvGender;
 
         /// <summary>
-        /// ddlDomicile control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDomicile;
-
-        /// <summary>
-        /// rfvDomicile control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDomicile;
-
-        /// <summary>
         /// txtPassportNo control.
         /// </summary>
         /// <remarks>

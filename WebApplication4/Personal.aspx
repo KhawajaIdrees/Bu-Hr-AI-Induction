@@ -536,7 +536,7 @@
 
                 <div class="form-group">
                     <label class="field-label">CNIC Number<span class="required-star">*</span></label>
-                    <asp:TextBox ID="txtCnic" runat="server" CssClass="field-input" placeholder="CNIC / Passport Number" />
+                    <asp:TextBox ID="txtCnic" runat="server" CssClass="field-input" placeholder="e.g. 35202-1234567-1" />
                     <asp:RequiredFieldValidator ID="rfvCnic" runat="server"
                         ControlToValidate="txtCnic"
                         ErrorMessage="CNIC number is required."
@@ -564,6 +564,15 @@
             </div>
 
             <div class="form-row">
+                <!-- DOMICILE REMOVED -->
+
+                <!-- Passport No. (optional) -->
+                <div class="form-group">
+                    <label class="field-label">Passport No.</label>
+                    <asp:TextBox ID="txtPassportNo" runat="server" CssClass="field-input"
+                        placeholder="Enter Passport Number (optional)" />
+                </div>
+
                 <div class="form-group">
                     <label class="field-label">Cell Number<span class="required-star">*</span></label>
                     <asp:TextBox ID="txtCellNumber" runat="server" CssClass="field-input" placeholder="e.g. 03001234567" />
@@ -574,7 +583,9 @@
                         Display="Dynamic"
                         ValidationGroup="PersonalForm" />
                 </div>
+            </div>
 
+            <div class="form-row two-col">
                 <div class="form-group">
                     <label class="field-label">Birth Date<span class="required-star">*</span></label>
                     <asp:TextBox ID="txtBirthDate" runat="server" CssClass="field-input" TextMode="Date" />
@@ -690,7 +701,7 @@
             <div class="form-row two-col">
                 <div class="form-group">
                     <label class="field-label">Current Address<span class="required-star">*</span></label>
-                    <asp:TextBox ID="txtCurrentAddress" runat="server" CssClass="field-input" TextMode="MultiLine" placeholder="Enter your current address" />
+                    <asp:TextBox ID="txtCurrentAddress" runat="server" CssClass="field-input" TextMode="MultiLine" MaxLength="500" placeholder="Enter your current address" />
                     <asp:RequiredFieldValidator ID="rfvCurrentAddress" runat="server"
                         ControlToValidate="txtCurrentAddress"
                         ErrorMessage="Current address is required."
@@ -701,7 +712,7 @@
 
                 <div class="form-group">
                     <label class="field-label">Permanent Address<span class="required-star">*</span></label>
-                    <asp:TextBox ID="txtPermanentAddress" runat="server" CssClass="field-input" TextMode="MultiLine" placeholder="Enter your permanent address" />
+                    <asp:TextBox ID="txtPermanentAddress" runat="server" CssClass="field-input" TextMode="MultiLine" MaxLength="500" placeholder="Enter your permanent address" />
                     <asp:RequiredFieldValidator ID="rfvPermanentAddress" runat="server"
                         ControlToValidate="txtPermanentAddress"
                         ErrorMessage="Permanent address is required."

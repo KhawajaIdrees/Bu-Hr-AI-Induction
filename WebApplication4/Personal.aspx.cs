@@ -79,20 +79,21 @@ namespace WebApplication4
                         txtFatherName.Text = reader["fathername"].ToString();
                         txtCnic.Text = reader["cnic"].ToString();
 
-                        if (ddlGender.Items.FindByValue(reader["gender"].ToString()) != null)
-                            ddlGender.SelectedValue = reader["gender"].ToString();
-
-                        // NEW: Domicile
-                        if (reader["Domicile"] != DBNull.Value)
+                        // null guard on ddlGender
+                        if (ddlGender != null && reader["gender"] != DBNull.Value)
                         {
-                            string dom = reader["Domicile"].ToString();
-                            if (ddlDomicile.Items.FindByValue(dom) != null)
-                                ddlDomicile.SelectedValue = dom;
+                            string gender = reader["gender"].ToString();
+                            if (ddlGender.Items.FindByValue(gender) != null)
+                                ddlGender.SelectedValue = gender;
                         }
 
-                        // NEW: Passport No.
-                        if (reader["PassportNo"] != DBNull.Value)
+                        // DOMICILE REMOVED — no longer read from DB
+
+                        // Passport No. — null guard
+                        if (txtPassportNo != null && reader["PassportNo"] != DBNull.Value)
+                        {
                             txtPassportNo.Text = reader["PassportNo"].ToString();
+                        }
 
                         txtCellNumber.Text = reader["cellNumber"].ToString();
 
@@ -101,8 +102,13 @@ namespace WebApplication4
                             txtBirthDate.Text = Convert.ToDateTime(reader["birthdate"]).ToString("yyyy-MM-dd");
                         }
 
-                        if (ddlMaritalStatus.Items.FindByValue(reader["marital"].ToString()) != null)
-                            ddlMaritalStatus.SelectedValue = reader["marital"].ToString();
+                        // null guard on ddlMaritalStatus
+                        if (ddlMaritalStatus != null && reader["marital"] != DBNull.Value)
+                        {
+                            string marital = reader["marital"].ToString();
+                            if (ddlMaritalStatus.Items.FindByValue(marital) != null)
+                                ddlMaritalStatus.SelectedValue = marital;
+                        }
 
                         // Background
                         txtNationality.Text = reader["nationality"].ToString();
@@ -288,7 +294,7 @@ namespace WebApplication4
                 cvPath = "~/Uploads/Resumes/" + cvFileName;
             }
 
-            // STEP 3: Update or Insert into Personal
+            // STEP 3: Update or Insert into Personal (Domicile removed)
             string query = @"
 UPDATE Personal
 SET
@@ -300,7 +306,6 @@ SET
     fathername = @fathername,
     cnic = @cnic,
     gender = @gender,
-    Domicile = @Domicile,
     PassportNo = @PassportNo,
     cellNumber = @cellNumber,
     birthdate = @birthdate,
@@ -316,7 +321,8 @@ SET
     prevdecl = @prevdecl,
     GoogleScholarLink = @GoogleScholarLink,
     LinkedInLink = @LinkedInLink,
-    ORCIDLink = @ORCIDLink
+    ORCIDLink = @ORCIDLink,
+    UpdatedAt = GETDATE()
 WHERE userId = @userId;
 
 IF @@ROWCOUNT = 0
@@ -332,7 +338,6 @@ BEGIN
         fathername,
         cnic,
         gender,
-        Domicile,
         PassportNo,
         cellNumber,
         birthdate,
@@ -361,7 +366,6 @@ BEGIN
         @fathername,
         @cnic,
         @gender,
-        @Domicile,
         @PassportNo,
         @cellNumber,
         @birthdate,
@@ -401,17 +405,26 @@ END";
                 cmd.Parameters.AddWithValue("@cnic", txtCnic.Text.Trim());
                 cmd.Parameters.AddWithValue("@gender", ddlGender.SelectedValue);
 
-                // NEW: Domicile (required)
-                cmd.Parameters.AddWithValue("@Domicile", ddlDomicile.SelectedValue);
+                // DOMICILE REMOVED — @Domicile parameter no longer used
 
-                // NEW: Passport No. (optional)
+                // Passport No. (optional) — null guard for safety
                 cmd.Parameters.AddWithValue("@PassportNo",
-                    string.IsNullOrWhiteSpace(txtPassportNo.Text)
+                    txtPassportNo == null || string.IsNullOrWhiteSpace(txtPassportNo.Text)
                     ? (object)DBNull.Value
                     : txtPassportNo.Text.Trim());
 
                 cmd.Parameters.AddWithValue("@cellNumber", txtCellNumber.Text.Trim());
-                cmd.Parameters.AddWithValue("@birthdate", Convert.ToDateTime(txtBirthDate.Text));
+
+                // safer birthdate parsing
+                DateTime parsedBirthDate;
+                if (!DateTime.TryParse(txtBirthDate.Text, out parsedBirthDate))
+                {
+                    lblMessage.Text = "❌ Error: Please enter a valid Birth Date.";
+                    lblMessage.CssClass = "text-danger";
+                    return;
+                }
+                cmd.Parameters.AddWithValue("@birthdate", parsedBirthDate);
+
                 cmd.Parameters.AddWithValue("@marital", ddlMaritalStatus.SelectedValue);
                 cmd.Parameters.AddWithValue("@nationality", txtNationality.Text.Trim());
                 cmd.Parameters.AddWithValue("@religion", txtReligion.Text.Trim());
@@ -448,12 +461,24 @@ END";
 
         protected void BtnRegister_Click(object sender, EventArgs e)
         {
-            UpdatePersonal();
+            // Honor validators — don't save when required fields are missing
+            if (!Page.IsValid)
+                return;
 
-            // Only redirect if save was successful
-            if (lblMessage.Text.StartsWith("✅"))
+            try
             {
-                Response.Redirect("PreviousEmployDeclaration.aspx");
+                UpdatePersonal();
+
+                // Only redirect if save was successful
+                if (lblMessage.Text.StartsWith("✅"))
+                {
+                    Response.Redirect("PreviousEmployDeclaration.aspx");
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "❌ Error: " + ex.Message;
+                lblMessage.CssClass = "text-danger";
             }
         }
     }

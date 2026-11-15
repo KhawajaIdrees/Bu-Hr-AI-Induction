@@ -27,7 +27,6 @@ namespace WebApplication4
             if (!IsPostBack)
             {
                 LoadExperiences();
-                CalculateAndSaveExperienceScore(Convert.ToInt32(Session["UserID"]));
                 LoadExperienceScores();
             }
         }
@@ -68,36 +67,58 @@ namespace WebApplication4
 
             bool currentJob = chkCurrentJob.Checked;
 
-            SaveExperience(userId, organization, position, startDate, endDate, currentJob);
+            SaveExperience(userId,
+                           organization,
+                           position,
+                           startDate,
+                           endDate,
+                           currentJob);
 
             ClearForm();
             LoadExperiences();
             CalculateAndSaveExperienceScore(userId);
-            LoadExperienceScores();
 
             lblMessage.Text = "Experience added successfully.";
             lblMessage.CssClass = "text-success";
         }
 
-        private void SaveExperience(int userId, string organization, string position,
-                                    DateTime startDate, DateTime? endDate, bool currentJob)
+        private void SaveExperience(int userId,
+                                    string organization,
+                                    string position,
+                                    DateTime startDate,
+                                    DateTime? endDate,
+                                    bool currentJob)
         {
             using (SqlConnection con = new SqlConnection(cs))
             {
+                // IsRelevant defaults to 1 in DB — the AI updates it later
                 string query = @"INSERT INTO WorkExperience
-                                (UserId, OrganizationName, PositionTitle, StartDate, EndDate, IsCurrentJob)
+                                (UserId,
+                                 OrganizationName,
+                                 PositionTitle,
+                                 StartDate,
+                                 EndDate,
+                                 IsCurrentJob)
                                 VALUES
-                                (@UserId, @OrganizationName, @PositionTitle, @StartDate, @EndDate, @IsCurrentJob)";
+                                (@UserId,
+                                 @OrganizationName,
+                                 @PositionTitle,
+                                 @StartDate,
+                                 @EndDate,
+                                 @IsCurrentJob)";
 
                 SqlCommand cmd = new SqlCommand(query, con);
+
                 cmd.Parameters.AddWithValue("@UserId", userId);
                 cmd.Parameters.AddWithValue("@OrganizationName", organization);
                 cmd.Parameters.AddWithValue("@PositionTitle", position);
                 cmd.Parameters.AddWithValue("@StartDate", startDate);
+
                 if (endDate.HasValue)
                     cmd.Parameters.AddWithValue("@EndDate", endDate.Value);
                 else
                     cmd.Parameters.AddWithValue("@EndDate", DBNull.Value);
+
                 cmd.Parameters.AddWithValue("@IsCurrentJob", currentJob);
 
                 con.Open();
@@ -117,10 +138,19 @@ namespace WebApplication4
                         OrganizationName,
                         PositionTitle,
                         StartDate,
-                        CASE WHEN IsCurrentJob = 1 THEN NULL ELSE EndDate END AS EndDate,
+                        CASE
+                            WHEN IsCurrentJob = 1 THEN NULL
+                            ELSE EndDate
+                        END AS EndDate,
                         CONCAT(
-                            DATEDIFF(MONTH, StartDate, ISNULL(EndDate, GETDATE())) / 12, ' Years ',
-                            DATEDIFF(MONTH, StartDate, ISNULL(EndDate, GETDATE())) % 12, ' Months'
+                            DATEDIFF(MONTH,
+                                     StartDate,
+                                     ISNULL(EndDate, GETDATE())) / 12,
+                            ' Years ',
+                            DATEDIFF(MONTH,
+                                     StartDate,
+                                     ISNULL(EndDate, GETDATE())) % 12,
+                            ' Months'
                         ) AS Duration
                     FROM WorkExperience
                     WHERE UserId=@UserId
@@ -144,7 +174,11 @@ namespace WebApplication4
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
-                    SELECT ExperienceScore, ExperienceLevel, ResearchScore, TotalExperienceScore
+                    SELECT 
+                        ExperienceScore,
+                        ExperienceLevel,
+                        ResearchScore,
+                        TotalExperienceScore
                     FROM ExperienceScores
                     WHERE UserID = @UserID";
 
@@ -156,10 +190,15 @@ namespace WebApplication4
                 {
                     if (reader.Read())
                     {
-                        ViewState["ExperienceScore"] = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0;
-                        ViewState["ExperienceLevel"] = reader["ExperienceLevel"] != DBNull.Value ? reader["ExperienceLevel"].ToString() : "None";
-                        ViewState["ResearchScore"] = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
-                        ViewState["TotalExperienceScore"] = reader["TotalExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["TotalExperienceScore"]) : 0;
+                        int expScore = reader["ExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["ExperienceScore"]) : 0;
+                        string expLevel = reader["ExperienceLevel"] != DBNull.Value ? reader["ExperienceLevel"].ToString() : "None";
+                        int researchScore = reader["ResearchScore"] != DBNull.Value ? Convert.ToInt32(reader["ResearchScore"]) : 0;
+                        int totalExpScore = reader["TotalExperienceScore"] != DBNull.Value ? Convert.ToInt32(reader["TotalExperienceScore"]) : 0;
+
+                        ViewState["ExperienceScore"] = expScore;
+                        ViewState["ExperienceLevel"] = expLevel;
+                        ViewState["ResearchScore"] = researchScore;
+                        ViewState["TotalExperienceScore"] = totalExpScore;
                     }
                 }
             }
@@ -167,55 +206,53 @@ namespace WebApplication4
 
         // =============================================
         // NEW RUBRIC: Experience max 15
-        //   Total experience = 1 mark/year (cap 6)
-        //   Relevant         = 2 marks/year (cap 4)
-        //   Post-PhD         = 1 mark/year (cap 3)
-        //   Supervision      = MS 0.5/student + PhD 1/student (cap 2)
+        //    Total experience   = max 6
+        //    Relevant (IsRelevant) = max 4
+        //    Post-PhD           = max 3
+        //    Supervision        = max 2
         // =============================================
         private void CalculateAndSaveExperienceScore(int userId)
         {
             int totalYears = GetTotalExperienceYears(userId);
             int relevantYears = GetRelevantExperienceYears(userId);
             int postPhdYears = GetPostPhDExperienceYears(userId);
-            decimal supervisionPoints = GetSupervisionPoints(userId);
+            int supervisionPoints = GetSupervisionPoints(userId);
 
-            // Per-year scores with caps
-            int totalPoints = Math.Min(totalYears, 6);                // 1/yr, cap 6
-            int relevantPoints = Math.Min(relevantYears * 2, 4);         // 2/yr, cap 4
-            int postPhdPoints = Math.Min(postPhdYears, 3);              // 1/yr, cap 3
+            int totalPoints = ScoreTotalYears(totalYears);          // 0..6
+            int relevantPoints = ScoreRelevantYears(relevantYears);    // 0..4
+            int postPhdPoints = ScorePostPhdYears(postPhdYears);      // 0..3
 
-            decimal experienceScoreDec = totalPoints
-                                       + relevantPoints
-                                       + postPhdPoints
-                                       + supervisionPoints;
+            // Supervision already capped at 2 inside GetSupervisionPoints
 
-            if (experienceScoreDec > 15) experienceScoreDec = 15;
-
-            int experienceScore = (int)Math.Round(experienceScoreDec);
+            int experienceScore = totalPoints + relevantPoints + postPhdPoints + supervisionPoints;
+            if (experienceScore > 15) experienceScore = 15;
 
             string experienceLevel = GetExperienceLevel(totalYears);
 
+            // Keep legacy column "ResearchScore" in sync with supervision points
             SaveExperienceScores(
                 userId,
                 experienceScore,
                 experienceLevel,
-                (int)Math.Round(supervisionPoints),
+                supervisionPoints,
                 experienceScore,
                 totalPoints,
                 relevantPoints,
                 postPhdPoints,
-                (int)Math.Round(supervisionPoints)
+                supervisionPoints
             );
         }
 
+        // ---- Total years across all experience ----
         private int GetTotalExperienceYears(int userId)
         {
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
-                    SELECT ISNULL(SUM(
-                        DATEDIFF(MONTH, StartDate, ISNULL(EndDate, GETDATE())) / 12
-                    ), 0) AS TotalYears
+                    SELECT 
+                        ISNULL(SUM(
+                            DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE()))
+                        ), 0) AS TotalYears
                     FROM WorkExperience
                     WHERE UserId = @UserId";
 
@@ -228,6 +265,7 @@ namespace WebApplication4
             }
         }
 
+        // ---- Years where IsRelevant = 1 ----
         private int GetRelevantExperienceYears(int userId)
         {
             using (SqlConnection con = new SqlConnection(cs))
@@ -249,6 +287,7 @@ namespace WebApplication4
             }
         }
 
+        // ---- Post-PhD years ----
         private int GetPostPhDExperienceYears(int userId)
         {
             int phdYear = 0;
@@ -261,7 +300,9 @@ namespace WebApplication4
 
                 object result = cmd.ExecuteScalar();
                 if (result != null && result != DBNull.Value)
+                {
                     phdYear = Convert.ToInt32(result);
+                }
             }
 
             if (phdYear == 0) return 0;
@@ -269,14 +310,15 @@ namespace WebApplication4
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
-                    SELECT ISNULL(SUM(
-                        CASE 
-                            WHEN YEAR(StartDate) >= @PhdYear THEN 
-                                DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE()))
-                            ELSE 
-                                DATEDIFF(YEAR, @PhdYear, ISNULL(EndDate, GETDATE()))
-                        END
-                    ), 0) AS PostPhdYears
+                    SELECT 
+                        ISNULL(SUM(
+                            CASE 
+                                WHEN YEAR(StartDate) >= @PhdYear THEN 
+                                    DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE()))
+                                ELSE 
+                                    DATEDIFF(YEAR, @PhdYear, ISNULL(EndDate, GETDATE()))
+                            END
+                        ), 0) AS PostPhdYears
                     FROM WorkExperience
                     WHERE UserId = @UserId
                     AND YEAR(ISNULL(EndDate, GETDATE())) >= @PhdYear";
@@ -291,64 +333,8 @@ namespace WebApplication4
             }
         }
 
-        private string GetHighestPosition(int userId)
-        {
-            using (SqlConnection con = new SqlConnection(cs))
-            {
-                string query = @"
-                    SELECT TOP 1 PositionTitle 
-                    FROM WorkExperience 
-                    WHERE UserId = @UserId 
-                    ORDER BY StartDate DESC";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@UserId", userId);
-                con.Open();
-
-                object result = cmd.ExecuteScalar();
-                if (result != null && result != DBNull.Value)
-                    return result.ToString().Trim();
-            }
-            return string.Empty;
-        }
-
-        // FIXED: Uses Contains() so "Assistant Professor (Permanent)" etc. still match
-        private int CalculateExperienceScore(string position, int totalYears, int postPhdYears)
-        {
-            string pos = (position ?? "").Trim().ToLower();
-
-            if (pos.Contains("assistant") && pos.Contains("professor"))
-            {
-                if (postPhdYears >= 5 || totalYears >= 10) return 10;
-            }
-            else if (pos.Contains("associate") && pos.Contains("professor"))
-            {
-                if (postPhdYears >= 5 || totalYears >= 10) return 15;
-            }
-            else if (pos.Contains("professor"))
-            {
-                if (postPhdYears >= 10 || totalYears >= 15) return 20;
-            }
-            else if (pos.Contains("lecturer"))
-            {
-                if (totalYears >= 18) return 5;
-            }
-
-            return 0;
-        }
-
-        private string GetExperienceLevel(string position, int totalYears)
-        {
-            string pos = (position ?? "").Trim().ToLower();
-
-            if (pos.Contains("professor") && !pos.Contains("assistant") && !pos.Contains("associate") && totalYears >= 15) return "Professor";
-            if (pos.Contains("associate") && totalYears >= 10) return "Associate Professor";
-            if (pos.Contains("assistant") && totalYears >= 5) return "Assistant Professor";
-            if (pos.Contains("lecturer") && totalYears >= 2) return "Lecturer";
-            return "No Experience";
-        }
-
-        private int GetResearchScore(int userId)
+        // ---- Supervision points (max 2) ----
+        private int GetSupervisionPoints(int userId)
         {
             int msStudents = 0;
             int phdStudents = 0;
@@ -370,11 +356,41 @@ namespace WebApplication4
                 }
             }
 
-            decimal points = (msStudents * 0.5m) + (phdStudents * 1m);
-            if (points > 2m) points = 2m;
+            int points = (msStudents * 1) + (phdStudents * 2);
+            if (points > 2) points = 2;
             return points;
         }
 
+        // ---- Score mappings ----
+        private int ScoreTotalYears(int years)
+        {
+            if (years >= 18) return 6;
+            if (years >= 15) return 5;
+            if (years >= 10) return 4;
+            if (years >= 5) return 3;
+            if (years >= 2) return 2;
+            if (years >= 1) return 1;
+            return 0;
+        }
+
+        private int ScoreRelevantYears(int years)
+        {
+            if (years >= 10) return 4;
+            if (years >= 5) return 3;
+            if (years >= 2) return 2;
+            if (years >= 1) return 1;
+            return 0;
+        }
+
+        private int ScorePostPhdYears(int years)
+        {
+            if (years >= 10) return 3;
+            if (years >= 5) return 2;
+            if (years >= 1) return 1;
+            return 0;
+        }
+
+        // ---- Experience level text (label only) ----
         private string GetExperienceLevel(int totalYears)
         {
             if (totalYears >= 18) return "Professor";
@@ -384,8 +400,16 @@ namespace WebApplication4
             return "No Experience";
         }
 
-        private void SaveExperienceScores(int userId, int experienceScore, string experienceLevel,
-                                          int researchScore, int totalExperienceScore)
+        private void SaveExperienceScores(
+            int userId,
+            int experienceScore,
+            string experienceLevel,
+            int researchScore,       // legacy column = supervision points
+            int totalExperienceScore,
+            int totalPoints,
+            int relevantPoints,
+            int postPhdPoints,
+            int supervisionPoints)
         {
             using (SqlConnection con = new SqlConnection(cs))
             {
@@ -393,11 +417,16 @@ namespace WebApplication4
                     IF EXISTS (SELECT 1 FROM ExperienceScores WHERE UserID = @UserID)
                     BEGIN
                         UPDATE ExperienceScores
-                        SET ExperienceScore = @ExperienceScore,
-                            ExperienceLevel = @ExperienceLevel,
-                            ResearchScore = @ResearchScore,
-                            TotalExperienceScore = @TotalExperienceScore,
-                            UpdatedAt = GETDATE()
+                        SET 
+                            ExperienceScore          = @ExperienceScore,
+                            ExperienceLevel          = @ExperienceLevel,
+                            ResearchScore            = @ResearchScore,
+                            TotalExperienceScore     = @TotalExperienceScore,
+                            TotalExperiencePoints    = @TotalExperiencePoints,
+                            RelevantExperiencePoints = @RelevantExperiencePoints,
+                            PostPhDExperiencePoints  = @PostPhDExperiencePoints,
+                            SupervisionPoints        = @SupervisionPoints,
+                            UpdatedAt                = GETDATE()
                         WHERE UserID = @UserID
                     END
                     ELSE
@@ -462,7 +491,8 @@ namespace WebApplication4
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"DELETE FROM WorkExperience 
-                                WHERE ExperienceId = @ExperienceId AND UserId = @UserId";
+                                WHERE ExperienceId = @ExperienceId 
+                                AND UserId = @UserId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@ExperienceId", experienceId);
@@ -504,6 +534,7 @@ namespace WebApplication4
             }
 
             CalculateAndSaveExperienceScore(userId);
+
             Response.Redirect("ResearchData.aspx");
         }
     }
