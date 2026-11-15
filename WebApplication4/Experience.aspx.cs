@@ -165,19 +165,47 @@ namespace WebApplication4
             }
         }
 
+        // =============================================
+        // NEW RUBRIC: Experience max 15
+        //   Total experience = 1 mark/year (cap 6)
+        //   Relevant         = 2 marks/year (cap 4)
+        //   Post-PhD         = 1 mark/year (cap 3)
+        //   Supervision      = MS 0.5/student + PhD 1/student (cap 2)
+        // =============================================
         private void CalculateAndSaveExperienceScore(int userId)
         {
-            int totalExperienceYears = GetTotalExperienceYears(userId);
-            int postPhDExperienceYears = GetPostPhDExperienceYears(userId);
-            string highestPosition = GetHighestPosition(userId);
-            int experienceScore = CalculateExperienceScore(highestPosition, totalExperienceYears, postPhDExperienceYears);
-            int researchScore = GetResearchScore(userId);
-            int totalExperienceScore = experienceScore + researchScore;
+            int totalYears = GetTotalExperienceYears(userId);
+            int relevantYears = GetRelevantExperienceYears(userId);
+            int postPhdYears = GetPostPhDExperienceYears(userId);
+            decimal supervisionPoints = GetSupervisionPoints(userId);
 
-            if (totalExperienceScore > 25) totalExperienceScore = 25;
+            // Per-year scores with caps
+            int totalPoints = Math.Min(totalYears, 6);                // 1/yr, cap 6
+            int relevantPoints = Math.Min(relevantYears * 2, 4);         // 2/yr, cap 4
+            int postPhdPoints = Math.Min(postPhdYears, 3);              // 1/yr, cap 3
 
-            string experienceLevel = GetExperienceLevel(highestPosition, totalExperienceYears);
-            SaveExperienceScores(userId, experienceScore, experienceLevel, researchScore, totalExperienceScore);
+            decimal experienceScoreDec = totalPoints
+                                       + relevantPoints
+                                       + postPhdPoints
+                                       + supervisionPoints;
+
+            if (experienceScoreDec > 15) experienceScoreDec = 15;
+
+            int experienceScore = (int)Math.Round(experienceScoreDec);
+
+            string experienceLevel = GetExperienceLevel(totalYears);
+
+            SaveExperienceScores(
+                userId,
+                experienceScore,
+                experienceLevel,
+                (int)Math.Round(supervisionPoints),
+                experienceScore,
+                totalPoints,
+                relevantPoints,
+                postPhdPoints,
+                (int)Math.Round(supervisionPoints)
+            );
         }
 
         private int GetTotalExperienceYears(int userId)
@@ -190,6 +218,27 @@ namespace WebApplication4
                     ), 0) AS TotalYears
                     FROM WorkExperience
                     WHERE UserId = @UserId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+                return result != DBNull.Value ? Convert.ToInt32(result) : 0;
+            }
+        }
+
+        private int GetRelevantExperienceYears(int userId)
+        {
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = @"
+                    SELECT 
+                        ISNULL(SUM(
+                            DATEDIFF(YEAR, StartDate, ISNULL(EndDate, GETDATE()))
+                        ), 0) AS RelevantYears
+                    FROM WorkExperience
+                    WHERE UserId = @UserId AND ISNULL(IsRelevant, 1) = 1";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
@@ -321,7 +370,18 @@ namespace WebApplication4
                 }
             }
 
-            return (msStudents * 1) + (phdStudents * 2);
+            decimal points = (msStudents * 0.5m) + (phdStudents * 1m);
+            if (points > 2m) points = 2m;
+            return points;
+        }
+
+        private string GetExperienceLevel(int totalYears)
+        {
+            if (totalYears >= 18) return "Professor";
+            if (totalYears >= 15) return "Associate Professor";
+            if (totalYears >= 10) return "Assistant Professor";
+            if (totalYears >= 5) return "Lecturer";
+            return "No Experience";
         }
 
         private void SaveExperienceScores(int userId, int experienceScore, string experienceLevel,
@@ -342,8 +402,12 @@ namespace WebApplication4
                     END
                     ELSE
                     BEGIN
-                        INSERT INTO ExperienceScores (UserID, ExperienceScore, ExperienceLevel, ResearchScore, TotalExperienceScore)
-                        VALUES (@UserID, @ExperienceScore, @ExperienceLevel, @ResearchScore, @TotalExperienceScore)
+                        INSERT INTO ExperienceScores
+                            (UserID, ExperienceScore, ExperienceLevel, ResearchScore, TotalExperienceScore,
+                             TotalExperiencePoints, RelevantExperiencePoints, PostPhDExperiencePoints, SupervisionPoints)
+                        VALUES
+                            (@UserID, @ExperienceScore, @ExperienceLevel, @ResearchScore, @TotalExperienceScore,
+                             @TotalExperiencePoints, @RelevantExperiencePoints, @PostPhDExperiencePoints, @SupervisionPoints)
                     END";
 
                 SqlCommand cmd = new SqlCommand(query, con);
@@ -352,6 +416,10 @@ namespace WebApplication4
                 cmd.Parameters.AddWithValue("@ExperienceLevel", experienceLevel);
                 cmd.Parameters.AddWithValue("@ResearchScore", researchScore);
                 cmd.Parameters.AddWithValue("@TotalExperienceScore", totalExperienceScore);
+                cmd.Parameters.AddWithValue("@TotalExperiencePoints", totalPoints);
+                cmd.Parameters.AddWithValue("@RelevantExperiencePoints", relevantPoints);
+                cmd.Parameters.AddWithValue("@PostPhDExperiencePoints", postPhdPoints);
+                cmd.Parameters.AddWithValue("@SupervisionPoints", supervisionPoints);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
