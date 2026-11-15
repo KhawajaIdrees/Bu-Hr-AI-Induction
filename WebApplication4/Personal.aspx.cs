@@ -87,12 +87,28 @@ namespace WebApplication4
                                 ddlGender.SelectedValue = gender;
                         }
 
-                        // DOMICILE REMOVED — no longer read from DB
-
                         // Passport No. — null guard
                         if (txtPassportNo != null && reader["PassportNo"] != DBNull.Value)
                         {
                             txtPassportNo.Text = reader["PassportNo"].ToString();
+                        }
+
+                        // NEW: Disability — null guard (column may not exist on very old DBs)
+                        if (ddlDisability != null)
+                        {
+                            try
+                            {
+                                if (reader["Disability"] != DBNull.Value)
+                                {
+                                    string dis = reader["Disability"].ToString();
+                                    if (ddlDisability.Items.FindByValue(dis) != null)
+                                        ddlDisability.SelectedValue = dis;
+                                }
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                // Column missing — ignore
+                            }
                         }
 
                         txtCellNumber.Text = reader["cellNumber"].ToString();
@@ -294,7 +310,7 @@ namespace WebApplication4
                 cvPath = "~/Uploads/Resumes/" + cvFileName;
             }
 
-            // STEP 3: Update or Insert into Personal (Domicile removed)
+            // STEP 3: Update or Insert into Personal (Disability added)
             string query = @"
 UPDATE Personal
 SET
@@ -307,6 +323,7 @@ SET
     cnic = @cnic,
     gender = @gender,
     PassportNo = @PassportNo,
+    Disability = @Disability,
     cellNumber = @cellNumber,
     birthdate = @birthdate,
     marital = @marital,
@@ -339,6 +356,7 @@ BEGIN
         cnic,
         gender,
         PassportNo,
+        Disability,
         cellNumber,
         birthdate,
         marital,
@@ -367,6 +385,7 @@ BEGIN
         @cnic,
         @gender,
         @PassportNo,
+        @Disability,
         @cellNumber,
         @birthdate,
         @marital,
@@ -405,13 +424,17 @@ END";
                 cmd.Parameters.AddWithValue("@cnic", txtCnic.Text.Trim());
                 cmd.Parameters.AddWithValue("@gender", ddlGender.SelectedValue);
 
-                // DOMICILE REMOVED — @Domicile parameter no longer used
-
                 // Passport No. (optional) — null guard for safety
                 cmd.Parameters.AddWithValue("@PassportNo",
                     txtPassportNo == null || string.IsNullOrWhiteSpace(txtPassportNo.Text)
                     ? (object)DBNull.Value
                     : txtPassportNo.Text.Trim());
+
+                // NEW: Disability (optional) — null guard
+                cmd.Parameters.AddWithValue("@Disability",
+                    ddlDisability == null || string.IsNullOrWhiteSpace(ddlDisability.SelectedValue)
+                    ? (object)DBNull.Value
+                    : ddlDisability.SelectedValue.Trim());
 
                 cmd.Parameters.AddWithValue("@cellNumber", txtCellNumber.Text.Trim());
 

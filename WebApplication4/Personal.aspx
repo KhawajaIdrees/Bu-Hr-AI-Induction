@@ -10,9 +10,9 @@
     <title>Personal Information</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet" />
-
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <style>
         :root {
             --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -564,13 +564,24 @@
             </div>
 
             <div class="form-row">
-                <!-- DOMICILE REMOVED -->
-
                 <!-- Passport No. (optional) -->
                 <div class="form-group">
                     <label class="field-label">Passport No.</label>
                     <asp:TextBox ID="txtPassportNo" runat="server" CssClass="field-input"
                         placeholder="Enter Passport Number (optional)" />
+                </div>
+
+                <!-- Disability (new) -->
+                <div class="form-group">
+                    <label class="field-label">Disability</label>
+                    <asp:DropDownList ID="ddlDisability" runat="server" CssClass="field-select">
+                        <asp:ListItem Text="-- Select --" Value="" />
+                        <asp:ListItem Text="No" Value="No" />
+                        <asp:ListItem Text="Yes (Physical)" Value="Yes (Physical)" />
+                        <asp:ListItem Text="Yes (Visual)" Value="Yes (Visual)" />
+                        <asp:ListItem Text="Yes (Hearing)" Value="Yes (Hearing)" />
+                        <asp:ListItem Text="Yes (Other)" Value="Yes (Other)" />
+                    </asp:DropDownList>
                 </div>
 
                 <div class="form-group">
